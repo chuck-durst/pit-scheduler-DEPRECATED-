@@ -1,0 +1,139 @@
+@font-face {
+    font-family: 'Glyphicons Halflings';
+
+    src: url('../fonts/glyphicons-halflings-regular.eot');
+    src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+body {
+    color: #212121;
+}
+
+.btn {
+    margin: 2px;
+}
+/************ Header ************/
+.pts-header {
+    position: relative;
+    height: 60px;
+    background-color: #00BCD4;
+
+}
+
+.pts-header-right-container {
+    position: absolute;
+    right: 8px;
+    top: 11px;
+}
+
+.pts-header-right-container .pts-active {
+    background-color: #0097A7;
+    color: #fff;
+}
+
+.pts-header-left-container {
+    height: 100%;
+    padding-top: 13px;
+    margin-left: 5px;
+    display: inline-flex;
+}
+
+#header-datetimepicker {
+    max-width: 220px;
+}
+
+.pts-btn-day-view, .pts-btn-month-view,
+.pts-btn-list-view, .pts-btn-next, .pts-btn-previous {
+    background-color: #B2EBF2;
+}
+
+.pts-header-date-display {
+    margin-left: 8px;
+    font-size: 18px;
+    margin-top: 6px;
+}
+
+#header-datetimepicker input {
+    border: 0 !important;
+}
+
+#header-datetimepicker span.input-group-addon {
+    border: 0 !important;
+    background-color: #B2EBF2;
+}
+
+/************ line & column title ************/
+
+.pts-column-title-container {
+    background-color: #B2EBF2;
+    height: 45px;
+    overflow: hidden;
+    position: relative;
+}
+
+.pts-column-title-container div {
+    height: auto;
+    overflow-y: hidden;
+    margin-bottom: -100px;
+    padding-bottom: 100px;
+    overflow-x: auto;
+    width: 3000px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 150px;
+}
+
+.pts-line-title-container {
+    background-color: #B2EBF2;
+    height: 400px;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pts-line-title-container div {
+    overflow-y: auto;
+    max-height: 100%;
+    margin-right: -100px;
+    padding-right: 100px;
+}
+
+.pts-corder-mask {
+    background-color: hsl(187, 71%, 82%);
+    height: 45px;
+    width: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/************ Main content ************/
+
+.pts-main-container {
+    position: relative;
+}
+
+.pts-scheduler-container {
+    position: absolute;
+    height: auto;
+    width: auto;
+    right: 0px;
+    top: 0px;
+    left: 150px;
+    overflow: scroll;
+    top: 45px;
+    bottom: 0px;
+
+}
+/*
+.pts-scheduler-container::-webkit-scrollbar {
+    display: none;
+}*/
+
+.pts-main-content {
+    background-color: chartreuse;
+    height: auto;
+    width: 2000px;
+}
