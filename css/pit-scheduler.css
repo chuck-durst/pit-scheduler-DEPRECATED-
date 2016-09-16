@@ -113,7 +113,7 @@ body {
 
 .pts-line-category-container {
     height: auto;
-    width: 100%;
+    width: 113%;
     position: relative;
 }
 
@@ -132,7 +132,7 @@ body {
 }
 
 .pts-category-user {
-    height: 50px;
+    height: 40px;
     text-align: center;
     padding-top: 14px;
 }
@@ -193,7 +193,7 @@ body {
 
 .pts-main-category-user {
     position: relative;
-    height: 50px;
+    height: 40px;
 }
 
 .pts-main-category-user.bordered {
@@ -205,4 +205,54 @@ body {
     border-right: 1px solid #000;
     height: 100%;
     width: 120px;
+}
+
+.pts-main-category-column > div {
+    border-left: 1px solid #BDBDBD;
+    height: 100%;
+    margin-left: 60px;
+    width: 100%;
+}
+
+/************ Markers ************/
+
+.pts-line-marker {
+    position: absolute;
+    height: 30px;
+    width: 120px;
+    background-color: red;
+    top: 5px;
+}
+
+.pts-line-marker.start {
+    border-radius: 20px 0 0 20px;
+    width: 115px !important;
+    margin-left: 5px;
+}
+
+
+.pts-line-marker.end {
+    border-radius: 0 20px 20px 0;
+    width: 115px !important;
+    margin-right: 5px;
+}
+
+.pts-line-marker.complete {
+    border-radius: 20px;
+    width: 110px !important;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.pts-line-marker-label {
+    z-index: 300;
+    position: absolute;
+    color: #fff;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.pts-line-marker-group {
+    position: absolute;
+    width: 100%;
 }
