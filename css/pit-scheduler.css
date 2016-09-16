@@ -71,7 +71,7 @@ body {
     position: relative;
 }
 
-.pts-column-title-container div {
+.pts-column-title-container > div {
     height: auto;
     overflow-y: hidden;
     margin-bottom: -100px;
@@ -82,6 +82,18 @@ body {
     top: 0;
     bottom: 0;
     left: 150px;
+    display: inline-flex;
+}
+
+.pts-column-element {
+    position: relative;
+    width: 120px;
+    border-right: 1px solid hsl(0, 0%, 0%);
+    text-align: center;
+}
+
+.pts-column-element > p {
+    padding-top: 10px;
 }
 
 .pts-line-title-container {
@@ -92,11 +104,47 @@ body {
     text-overflow: ellipsis;
 }
 
-.pts-line-title-container div {
+.pts-line-title-container > div {
     overflow-y: auto;
     max-height: 100%;
     margin-right: -100px;
     padding-right: 100px;
+}
+
+.pts-line-category-container {
+    height: auto;
+    width: 100%;
+    position: relative;
+}
+
+.pts-category-header {
+    position: relative;
+    background-color: #0097A7;
+    height: 20px;
+}
+
+.pts-category-header > i {
+    position: relative;
+    left: 5px;
+    top: 3px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.pts-category-user {
+    height: 50px;
+    text-align: center;
+    padding-top: 14px;
+}
+
+.pts-category-user.bordered {
+    border-bottom: 1px solid #212121;
+}
+
+.pts-category-header > span {
+    position: relative;
+    left: 15px;
+    color: #fff;
 }
 
 .pts-corder-mask {
@@ -127,13 +175,34 @@ body {
     bottom: 0px;
 
 }
-/*
-.pts-scheduler-container::-webkit-scrollbar {
-    display: none;
-}*/
 
 .pts-main-content {
-    background-color: chartreuse;
     height: auto;
-    width: 2000px;
+    width: auto;
+}
+
+.pts-main-category-header {
+    position: relative;
+    background-color: #0097A7;
+    height: 20px;
+}
+
+.pts-main-category-container {
+    width: 2760px;
+}
+
+.pts-main-category-user {
+    position: relative;
+    height: 50px;
+}
+
+.pts-main-category-user.bordered {
+    border-bottom: 1px solid #212121;
+}
+
+.pts-main-category-column {
+    position: absolute;
+    border-right: 1px solid #000;
+    height: 100%;
+    width: 120px;
 }
