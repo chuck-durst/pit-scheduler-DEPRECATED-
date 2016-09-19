@@ -141,7 +141,7 @@
         console.group();
         console.info('Generation');
 
-        var generateBaseView = function () {
+        var generateHeader = function () {
             var $header =   '<div class="pts-header row">' +
                             '<div class="pts-header-left-container pull-left">' +
                             '<div class="form-group">' +
@@ -160,6 +160,11 @@
                             '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>' +
                             '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>';
 
+            $scheduler.append($header);
+            updateDatePicker();
+        };
+
+        var generateBaseView = function () {
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div class="pts-corder-mask"></div>' +
                                     '<div class="pts-column-title-container">' +
@@ -170,10 +175,13 @@
                                     '<div class="pts-main-content">' +
                                     '</div></div></div>';
 
-            $scheduler.append($header);
             $scheduler.append($mainContainer);
-            updateDatePicker();
+        };
 
+        var generateTableLines = function () {
+
+            $('.pts-column-title-container > div').empty();
+            $('.pts-main-content').empty();
             if (settings.currentDisplay == 'days') {
                 var lineInterval = 0;
                 for (var i=0; i < 25; i++) {
@@ -183,9 +191,17 @@
                     }
                     lineInterval += 120;
                 }
+            } else if (settings.currentDisplay == 'months') {
+                var lineInterval = 0,
+                    daysInMonth = parseInt(moment(settings.date.selected).daysInMonth()) + 1;
+                for (var i=1; i <= daysInMonth; i++) {
+                    $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < daysInMonth  ? "<p>"+i+"</p>" : "") + '</div>');
+                    if (i < daysInMonth) {
+                        $('.pts-main-content').append('<div class="pts-main-category-column" style="left:' + lineInterval + 'px"><div></div></div>');
+                    }
+                    lineInterval += 120;
+                }
             }
-
-            console.log('done');
         };
 
         console.groupEnd();
@@ -195,7 +211,9 @@
         console.group();
         console.log("Initialization");
 
+        generateHeader();
         generateBaseView();
+        generateTableLines();
 
         console.groupEnd();
 
@@ -206,9 +224,11 @@
         /* Change display view*/
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
+            generateTableLines();
         });
         $('.pts-btn-month-view').click( function () {
             updateDisplay('months');
+            generateTableLines();
         });
         $('.pts-btn-list-view').click( function () {
             updateDisplay('list');
@@ -219,9 +239,11 @@
         });
         $('.pts-btn-next').click(function () {
             goForward();
+            generateTableLines();
         });
         $('.pts-btn-previous').click(function () {
             goBackward();
+            generateTableLines();
         });
         $('#header-datetimepicker').on('dp.change', function (e) {
             if (e.date === settings.date.selected) return console.log("EGALE");
