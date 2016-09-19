@@ -106,17 +106,33 @@
         };
 
         var updateDatePicker = function () {
+            $('#header-datetimepicker').datetimepicker();
+            $('#header-datetimepicker').data('DateTimePicker').locale(settings.locale);
+            $('#header-datetimepicker').data('DateTimePicker').defaultDate(settings.date.selected);
+            $('#header-datetimepicker').data('DateTimePicker').date(settings.date.selected);
+            $('#header-datetimepicker').data('DateTimePicker').viewDate(settings.date.selected);
+            $('#header-datetimepicker').data('DateTimePicker').enabledHours(false);
+            $('#header-datetimepicker').data('DateTimePicker').format((settings.currentDisplay === 'months' ? 'MM/YYYY' : 'L'));
+            $('#header-datetimepicker').data('DateTimePicker').viewMode((settings.currentDisplay === 'months' ? 'months' : 'days'));
 
-            if ($('#header-datetimepicker').attr('data-datepicker')) {
-                $('#header-datetimepicker').data('DateTimePicker').destroy();
+        };
+
+        var goForward = function () {
+            if (settings.currentDisplay == 'months') {
+                settings.date.selected = moment(settings.date.selected).add(1, 'months');
+            } else {
+                settings.date.selected = moment(settings.date.selected).add(1, 'day');
             }
-            $('#header-datetimepicker').datetimepicker({
-                locale: settings.locale,
-                defaultDate: settings.date.selected,
-                enabledHours: false,
-                format: (settings.currentDisplay === 'months' ? 'MM/YYYY' : 'L'),
-                viewMode: (settings.currentDisplay === 'months' ? 'months' : 'days')
-            }).attr('data-datepicker', 'true');
+            updateDisplay(settings.currentDisplay);
+        };
+
+        var goBackward = function () {
+            if (settings.currentDisplay == 'months') {
+                settings.date.selected = moment(settings.date.selected).add(-1, 'months');
+            } else {
+                settings.date.selected = moment(settings.date.selected).add(-1, 'day');
+            }
+            updateDisplay(settings.currentDisplay);
         };
 
         console.groupEnd();
@@ -171,10 +187,17 @@
 
             console.log('done');
         };
-        generateBaseView();
 
         console.groupEnd();
 
+
+        /********* Initialization *********/
+        console.group();
+        console.log("Initialization");
+
+        generateBaseView();
+
+        console.groupEnd();
 
         /********* Events *********/
         console.group();
@@ -193,6 +216,17 @@
         $('.pts-scheduler-container').scroll(function () {
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
+        });
+        $('.pts-btn-next').click(function () {
+            goForward();
+        });
+        $('.pts-btn-previous').click(function () {
+            goBackward();
+        });
+        $('#header-datetimepicker').on('dp.change', function (e) {
+            if (e.date === settings.date.selected) return console.log("EGALE");
+            settings.date.selected = e.date;
+            updateDisplay(settings.currentDisplay);
         });
 
         console.groupEnd();
