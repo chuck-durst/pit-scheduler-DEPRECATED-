@@ -77,12 +77,13 @@ body {
     margin-bottom: -100px;
     padding-bottom: 100px;
     overflow-x: auto;
-    width: 3000px;
+    width: 2900px;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 150px;
     display: inline-flex;
+    padding-right: 16px;
 }
 
 .pts-column-element {
@@ -177,7 +178,8 @@ body {
 }
 
 .pts-main-content {
-    height: auto;
+    position: relative;
+    height: 100%;
     width: auto;
 }
 
@@ -185,10 +187,11 @@ body {
     position: relative;
     background-color: #0097A7;
     height: 20px;
+    width: 2880px;
 }
 
 .pts-main-category-container {
-    width: 2760px;
+    width: 100%;
 }
 
 .pts-main-category-user {
@@ -213,6 +216,18 @@ body {
     margin-left: 60px;
     width: 100%;
 }
+
+.pts-main-category-column.last > div {
+    border-right: 1px solid #BDBDBD;
+}
+
+.pts-main-category-border {
+    position: relative;
+    width: 2880px;
+    border-bottom: 1px solid #000;
+
+}
+
 
 /************ Markers ************/
 
