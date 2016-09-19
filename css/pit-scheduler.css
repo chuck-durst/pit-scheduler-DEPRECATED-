@@ -88,7 +88,7 @@ body {
 .pts-column-element {
     position: relative;
     width: 120px;
-    border-right: 1px solid hsl(0, 0%, 0%);
+    border-right: 1px solid #BDBDBD;
     text-align: center;
 }
 
@@ -204,20 +204,20 @@ body {
 
 .pts-main-category-column {
     position: absolute;
-    border-right: 1px solid #000;
+    border-right: 1px solid #BDBDBD;
     height: 100%;
     width: 120px;
 }
 
 .pts-main-category-column > div {
-    border-left: 1px solid #BDBDBD;
+    border-left: 1px solid #eee;
     height: 100%;
     margin-left: 60px;
     width: 100%;
 }
 
 .pts-main-category-column.last > div {
-    border-right: 1px solid #BDBDBD;
+    border-right: 1px solid #eee;
 }
 
 .pts-main-category-border {

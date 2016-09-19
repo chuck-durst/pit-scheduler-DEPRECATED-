@@ -141,6 +141,7 @@
         console.group();
         console.info('Generation');
 
+        /* Generate the header content */
         var generateHeader = function () {
             var $header =   '<div class="pts-header row">' +
                             '<div class="pts-header-left-container pull-left">' +
@@ -164,6 +165,7 @@
             updateDatePicker();
         };
 
+        /* Generate base empty base structure */
         var generateBaseView = function () {
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div class="pts-corder-mask"></div>' +
@@ -178,6 +180,7 @@
             $scheduler.append($mainContainer);
         };
 
+        /* Generate the table columns lines */
         var generateTableLines = function () {
 
             $('.pts-column-title-container > div').empty();
@@ -221,7 +224,6 @@
         console.group();
         console.info('Events');
 
-        /* Change display view*/
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
             generateTableLines();
