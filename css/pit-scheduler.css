@@ -134,8 +134,9 @@ body {
 .pts-group-user {
     /*height: 40px;*/
     text-align: center;
-    padding-top: 14px;
+    padding-top: 12px;
     border-bottom: 1px solid #0097A7;
+    width: 150px;
 }
 
 .pts-group-header > span {
