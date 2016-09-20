@@ -235,7 +235,8 @@
             console.log("Creat group: " + group.name);
             var $groupHeaderContent =   '<div id="user-group-' + index + '" class="pts-line-group-container">' +
                                         '<div class="pts-group-header">' +
-                                        '<i class="glyphicon glyphicon-minus pull-left" data-group="user-group-' + index + '"></i><span>' + group.name + '</span></div>' +
+                                        '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>' +
+                                        '<span>' + group.name + '</span></div>' +
                                         '<div class="pts-group-content"></div></div>';
             var $groupMainContent =     '<div class="pts-main-group-container">' +
                                         '<div class="pts-main-group-header"></div></div>';
@@ -250,7 +251,7 @@
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
                     if (user.group === group.name) {
-                        $('#group-container-' + groupIndex).append('<div index="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + 40 * user.tasks.length + 'px"></div>');
+                        $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + 40 * user.tasks.length + 'px"></div>');
                     }
                 });
             });
@@ -353,6 +354,22 @@
             if (e.date === settings.date.selected) return console.log("EGALE");
             settings.date.selected = e.date;
             updateDisplay(settings.currentDisplay);
+        });
+
+        $('.close-group-panel').click(function () {
+            var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
+            var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
+            if ($(this).attr('data-toggle') === 'opened') {
+                $usersPanel.children('.pts-main-group-user').css('display', 'none');
+                $groupPanel.children('.pts-group-content').css('display', 'none');
+                $(this).attr('data-toggle', 'closed');
+                $(this).addClass('closed-btn');
+            } else {
+                $usersPanel.children('.pts-main-group-user').css('display', 'block');
+                $groupPanel.children('.pts-group-content').css('display', 'block');
+                $(this).attr('data-toggle', 'opened');
+                $(this).removeClass('closed-btn');
+            }
         });
 
         console.groupEnd();

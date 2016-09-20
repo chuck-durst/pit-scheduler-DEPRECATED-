@@ -123,14 +123,6 @@ body {
     height: 20px;
 }
 
-.pts-group-header > i {
-    position: relative;
-    left: 5px;
-    top: 3px;
-    color: #fff;
-    cursor: pointer;
-}
-
 .pts-group-user {
     /*height: 40px;*/
     text-align: center;
@@ -153,6 +145,23 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+.closed-btn {
+    transform: rotate(45deg);
+}
+
+.close-group-panel {
+    position: relative;
+    left: 7px;
+    top: 4px;
+    color: hsl(0, 0%, 100%);
+    cursor: pointer;
+    font-size: 12px;
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
 }
 
 /************ Main content ************/
