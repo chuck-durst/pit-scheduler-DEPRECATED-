@@ -136,7 +136,42 @@
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
             locale: 'fr',
-            defaultDisplay: 'months'
+            defaultDisplay: 'months',
+            groups: [
+                {name: 'Group A'},
+                {name: 'Group B'}
+            ],
+            tasks:  [
+                {
+                    id: 'djJ3d7sjk928S0',
+                    name: 'Ouverture du tiroir caisse',
+                    description: 'Permet d\'ouvrir le tiroir caisse'
+                },
+                {
+                    id: 'fJD67Bd4jh7',
+                    name: 'Accès à l\'inventaire en ligne',
+                    description: 'Permet d\'avoir accès à l\'inventaire en ligne'
+                },
+                {
+                    id: 'dj8aA9nL0Su7',
+                    name: 'Remboursement',
+                    description: 'Permet d\'effectuer des remboursements'
+                }
+            ],
+            users: [
+                {
+                    name: 'Ai WeiWei',
+                    group: 'Group A',
+                    tasks: [
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-20 08:00',
+                            end_date: '2016-09-29 18:30',
+                            description: 'Permet d\'ouvrir ET DE FERMER le tiroir caisse'
+                        }
+                    ]
+                }
+            ]
         });
     });
 

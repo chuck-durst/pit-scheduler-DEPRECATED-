@@ -9,13 +9,15 @@
         fr: {
             days: 'Jours',
             months: 'Mois',
-            list: 'Liste'
+            list: 'Liste',
+            unlisted: 'Non répertorié'
 
         },
         en: {
             days: 'Days',
             months: 'Months',
-            list: 'List'
+            list: 'List',
+            unlisted: 'Unlisted'
         }
     };
     
@@ -207,6 +209,39 @@
             }
         };
 
+        /* Generate the groups panels */
+        var GenerateGroupsPanels = function () {
+            if (!settings.groups) {
+                settings.groups = [{
+                    name: settings.i18n.unlisted
+                }];
+            }
+            settings.groups.added = [];
+            settings.groups.forEach(function (e, i) {
+                generateGroupTab(e, i);
+                settings.groups.added.push({
+                    name: e.name,
+                    id: 'user-group-' + i
+                });
+            })
+
+        };
+
+        /* Add one group to the scheduler */
+        var generateGroupTab = function (group, index) {
+            console.log("Creat group: " + group.name);
+            var $groupHeaderContent =   '<div id="user-group-' + index + '" class="pts-line-group-container">' +
+                                        '<div class="pts-group-header">' +
+                                        '<i class="glyphicon glyphicon-minus pull-left" data-group="user-group-' + index + '"></i><span>' + group.name + '</span></div>' +
+                                        '<div class="pts-group-content"></div></div>';
+            var $groupMainContent =     '<div class="pts-main-group-container">' +
+                                        '<div class="pts-main-group-header"></div>' +
+                                        '<div class="pts-main-group-user"></div>' +
+                                        '<div class="pts-main-group-user"></div></div>';
+            $('.pts-line-title-container > div').append($groupHeaderContent);
+            $('.pts-main-content').append($groupMainContent);
+        };
+
         console.groupEnd();
 
 
@@ -217,6 +252,7 @@
         generateHeader();
         generateBaseView();
         generateTableLines();
+        GenerateGroupsPanels();
 
         console.groupEnd();
 

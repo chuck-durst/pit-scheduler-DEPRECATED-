@@ -195,7 +195,7 @@ body {
 
 .pts-main-group-user {
     position: relative;
-    /*height: 40px;*/
+    height: 40px;
 }
 
 .pts-main-group-user.bordered {
