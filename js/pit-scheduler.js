@@ -210,11 +210,12 @@
         };
 
         /* Generate the groups panels */
-        var GenerateGroupsPanels = function () {
+        var generateGroupsPanels = function () {
             if (!settings.groups) {
                 settings.groups = [{
                     name: settings.i18n.unlisted
                 }];
+                settings.groups.unlisted = 0; //stores the id of the unlisted group
             }
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
@@ -223,8 +224,8 @@
                     name: e.name,
                     id: 'user-group-' + i
                 });
-            })
-
+            });
+            generateGroupMainContent();
         };
 
         /* Add one group to the scheduler */
@@ -235,11 +236,58 @@
                                         '<i class="glyphicon glyphicon-minus pull-left" data-group="user-group-' + index + '"></i><span>' + group.name + '</span></div>' +
                                         '<div class="pts-group-content"></div></div>';
             var $groupMainContent =     '<div class="pts-main-group-container">' +
-                                        '<div class="pts-main-group-header"></div>' +
-                                        '<div class="pts-main-group-user"></div>' +
-                                        '<div class="pts-main-group-user"></div></div>';
+                                        '<div class="pts-main-group-header"></div></div>';
             $('.pts-line-title-container > div').append($groupHeaderContent);
-            $('.pts-main-content').append($groupMainContent);
+        };
+
+        var generateGroupMainContent = function () {
+            var $groupMainContent =     '<div class="pts-main-group-container">' +
+                                        '<div class="pts-main-group-header"></div></div>';
+            settings.groups.forEach(function () {
+                $('.pts-main-content').append($groupMainContent);
+            });
+            if (settings.currentDisplay == 'days') {
+                $('.pts-main-group-header').attr('style', 'width:2880px');
+            } else {
+                $('.pts-main-group-header').attr('style', 'width:' +  (120 * moment(settings.date.selected).daysInMonth()) + 'px');
+            }
+        };
+
+        /* Generate the left list of users */
+        var generateUsersList = function () {
+            if (!settings.users || settings.users.length <= 0) return console.warn('Warning: No user have been set.');
+            settings.users.forEach(function (user) {
+                var group = '';
+                settings.groups.added.forEach(function (_group) {
+                    if (_group.name == user.group || (user.id && _group.users && _group.users.indexOf(user.id) >= 0)) {
+                        group = _group.id;
+                    }
+                });
+                if (!group) {
+                    console.log('User ' + user.name + ' has not group.');
+                    if (!settings.groups.unlisted) {
+                        console.log('Unlisted group do not exist, creating one');
+                        generateGroupTab({name: settings.i18n.unlisted}, settings.groups.added.length);
+                        settings.groups.unlisted = settings.groups.added.length;
+                        settings.groups.added.push({
+                            name: settings.i18n.unlisted,
+                            id: 'user-group-' + settings.groups.added.length
+                        });
+                    }
+                    group = settings.groups.added[settings.groups.unlisted].id;
+                }
+                generateUserLine(user, group)
+            });
+        };
+        
+        /* Add one user line */
+        var generateUserLine = function (user, group) {
+            if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
+            console.log('Generate line for user: ' + user.name + ' in group: ' + group);
+            var taskLen = user.tasks.length;
+            var $userNameUI = '<div class="pts-group-user" style="height:' + 40 * taskLen + 'px"><p>' + user.name + '</p></div>';
+            $('#' + group + ' > .pts-group-content').append($userNameUI);
+
         };
 
         console.groupEnd();
@@ -247,12 +295,13 @@
 
         /********* Initialization *********/
         console.group();
-        console.log("Initialization");
+        console.info("Initialization");
 
         generateHeader();
         generateBaseView();
         generateTableLines();
-        GenerateGroupsPanels();
+        generateGroupsPanels();
+//        generateUsersList();
 
         console.groupEnd();
 
@@ -263,13 +312,12 @@
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
             generateTableLines();
+            generateGroupMainContent();
         });
         $('.pts-btn-month-view').click( function () {
             updateDisplay('months');
             generateTableLines();
-        });
-        $('.pts-btn-list-view').click( function () {
-            updateDisplay('list');
+            generateGroupMainContent();
         });
         $('.pts-scheduler-container').scroll(function () {
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
@@ -278,10 +326,12 @@
         $('.pts-btn-next').click(function () {
             goForward();
             generateTableLines();
+            generateGroupMainContent();
         });
         $('.pts-btn-previous').click(function () {
             goBackward();
             generateTableLines();
+            generateGroupMainContent();
         });
         $('#header-datetimepicker').on('dp.change', function (e) {
             if (e.date === settings.date.selected) return console.log("EGALE");

@@ -138,36 +138,42 @@
             locale: 'fr',
             defaultDisplay: 'months',
             groups: [
-                {name: 'Group A'},
+                {name: 'Group A', users:[]},
                 {name: 'Group B'}
             ],
             tasks:  [
                 {
-                    id: 'djJ3d7sjk928S0',
-                    name: 'Ouverture du tiroir caisse',
+                    id: 'djJ3d7sjk928S0', //Required
+                    name: 'Ouverture du tiroir caisse', //Required
                     description: 'Permet d\'ouvrir le tiroir caisse'
                 },
                 {
-                    id: 'fJD67Bd4jh7',
-                    name: 'Accès à l\'inventaire en ligne',
+                    id: 'fJD67Bd4jh7', //Required
+                    name: 'Accès à l\'inventaire en ligne', //Required
                     description: 'Permet d\'avoir accès à l\'inventaire en ligne'
                 },
                 {
-                    id: 'dj8aA9nL0Su7',
-                    name: 'Remboursement',
+                    id: 'dj8aA9nL0Su7', //Required
+                    name: 'Remboursement', //Required
                     description: 'Permet d\'effectuer des remboursements'
                 }
             ],
             users: [
                 {
-                    name: 'Ai WeiWei',
+                    id: '',
+                    name: 'Ai WeiWei', //Required
                     group: 'Group A',
                     tasks: [
                         {
-                            id: 'djJ3d7sjk928S0',
-                            start_date: '2016-09-20 08:00',
+                            id: 'djJ3d7sjk928S0', //Required
+                            start_date: '2016-09-20 08:00', //Required
                             end_date: '2016-09-29 18:30',
                             description: 'Permet d\'ouvrir ET DE FERMER le tiroir caisse'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7', //Required
+                            start_date: '2016-09-20 10:00', //Required
+                            end_date: '2016-09-22 16:00'
                         }
                     ]
                 }

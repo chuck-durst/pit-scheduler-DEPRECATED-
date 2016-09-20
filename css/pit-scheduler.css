@@ -132,13 +132,10 @@ body {
 }
 
 .pts-group-user {
-    height: 40px;
+    /*height: 40px;*/
     text-align: center;
     padding-top: 14px;
-}
-
-.pts-group-user.bordered {
-    border-bottom: 1px solid #212121;
+    border-bottom: 1px solid #0097A7;
 }
 
 .pts-group-header > span {
@@ -186,7 +183,7 @@ body {
     position: relative;
     background-color: #0097A7;
     height: 20px;
-    width: 2880px;
+    /*width: 2880px;*/
 }
 
 .pts-main-group-container {
@@ -196,10 +193,7 @@ body {
 .pts-main-group-user {
     position: relative;
     /*height: 40px;*/
-}
-
-.pts-main-group-user.bordered {
-    border-bottom: 1px solid #212121;
+    border-bottom: 1px solid #0097A7;
 }
 
 .pts-main-group-column {
