@@ -190,7 +190,7 @@
                 for (var i=0; i < 25; i++) {
                     $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < 24 ? "<p>"+i+":00</p>" : "") + '</div>');
                     if (i < 24) {
-                        $('.pts-main-content').append('<div class="pts-main-category-column" style="left:' + lineInterval + 'px"><div></div></div>');
+                        $('.pts-main-content').append('<div class="pts-main-group-column" style="left:' + lineInterval + 'px"><div></div></div>');
                     }
                     lineInterval += 120;
                 }
@@ -200,7 +200,7 @@
                 for (var i=1; i <= daysInMonth; i++) {
                     $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < daysInMonth  ? "<p>"+i+"</p>" : "") + '</div>');
                     if (i < daysInMonth) {
-                        $('.pts-main-content').append('<div class="pts-main-category-column" style="left:' + lineInterval + 'px"><div></div></div>');
+                        $('.pts-main-content').append('<div class="pts-main-group-column" style="left:' + lineInterval + 'px"><div></div></div>');
                     }
                     lineInterval += 120;
                 }
