@@ -140,6 +140,17 @@
             updateDisplay(settings.currentDisplay);
         };
 
+        /* Return a task from his Id */
+        var getTaskById = function (taskId) {
+            var task;
+            settings.tasks.forEach(function (e) {
+                if (e.id === taskId) {
+                    task = e;
+                }
+            });
+            return task;
+        };
+
         console.groupEnd();
 
         /********* Generation *********/
@@ -254,7 +265,12 @@
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + 40 * user.tasks.length + 'px"></div>');
                     }
                 });
+                //Check if the group panel must be closed
+                if ($('.close-group-panel[data-group='+groupIndex+']').attr('data-toggle') === 'closed') {
+                    $('#group-container-' + groupIndex).children('.pts-main-group-user').css('display', 'none');
+                }
             });
+            //Generate group header line
             if (settings.currentDisplay == 'days') {
                 $('.pts-main-group-header').css('width', '2880px');
                 $('.pts-main-group-user').css('width', '2880px');
@@ -262,6 +278,9 @@
                 $('.pts-main-group-header').css('width', (120 * moment(settings.date.selected).daysInMonth()) + 'px');
                 $('.pts-main-group-user').css('width', (120 * moment(settings.date.selected).daysInMonth()) + 'px');
             }
+            settings.users.forEach(function (user, userIndex) {
+                generateTaskLine(user, userIndex);
+            });
         };
 
         /* Generate the left list of users */
@@ -306,6 +325,52 @@
 
         };
 
+        /* Generate the tasks lines */
+        var generateTaskLine = function (user, userIndex) {
+            var topDistance = 5;
+            user.tasks.forEach(function (e, i) {
+                var task = $.extend(getTaskById(e.id), e);
+                if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
+                if (task.start_date >= task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
+               if (settings.currentDisplay === 'months') {
+                   if (task.end_date) {
+                       if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
+                           && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
+                           if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
+                               && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
+                               $('#content-user-' + userIndex).append('<div class="pts-line-marker-group-' + i + '"></div>');
+                               if (moment(settings.date.selected).get('month') == moment(task.start_date).get('month')) {
+                                   var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0);
+                                   var leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6;
+                                   if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
+                                       var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
+                                   } else {
+                                       var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') - 1) + (splitted == 0 ? 120 : 60);
+                                   }
+                                    var $label = '<div class="pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px"></div>'
+                                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
+                               }
+                               if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
+                                   if (moment(task.start_date).get('month') == moment(settings.date.selected).get('month')) {
+                                       var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
+                                       var leftDistance = (120 * (moment(task.end_date).format('D') - 1)) - splitted;
+                                       var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';"></div>';
+                                       $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
+                                   } else {
+                                       var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
+                                       var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
+                                       var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px"></div>';
+                                       $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
+                                   }
+                               }
+                           }
+                       }
+                   }
+               }
+                topDistance += 40;
+            });
+        };
+
         console.groupEnd();
 
 
@@ -331,25 +396,30 @@
             generateTableLines();
             generateGroupMainContent();
         });
+
         $('.pts-btn-month-view').click( function () {
             updateDisplay('months');
             generateTableLines();
             generateGroupMainContent();
         });
+
         $('.pts-scheduler-container').scroll(function () {
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
         });
+
         $('.pts-btn-next').click(function () {
             goForward();
             generateTableLines();
             generateGroupMainContent();
         });
+
         $('.pts-btn-previous').click(function () {
             goBackward();
             generateTableLines();
             generateGroupMainContent();
         });
+
         $('#header-datetimepicker').on('dp.change', function (e) {
             if (e.date === settings.date.selected) return console.log("EGALE");
             settings.date.selected = e.date;
