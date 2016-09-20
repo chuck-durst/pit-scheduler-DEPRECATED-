@@ -363,6 +363,7 @@
                                        $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
                                    }
                                }
+                               //TODO: Show a complet line if task is not beggining or ending in this month
                            }
                        }
                    }
