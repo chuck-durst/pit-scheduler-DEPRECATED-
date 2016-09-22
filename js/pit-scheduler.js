@@ -256,14 +256,17 @@
                     lineInterval += 120;
                 }
             } else if (settings.currentDisplay == 'months') {
+                var dayDate = moment(settings.date.selected).add(-1 * (moment(settings.date.selected).format('D') - 1), 'day');
+                console.log(dayDate.format('ddd'));
                 var lineInterval = 0,
                     daysInMonth = parseInt(moment(settings.date.selected).daysInMonth()) + 1;
                 for (var i=1; i <= daysInMonth; i++) {
-                    $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < daysInMonth  ? "<p>"+i+"</p>" : "") + '</div>');
+                    $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < daysInMonth  ? "<p>"+ dayDate.locale(settings.locale).format('ddd') + ' ' + i +"</p>" : "") + '</div>');
                     if (i < daysInMonth) {
                         $('.pts-main-content').append('<div class="pts-main-group-column" style="left:' + lineInterval + 'px"><div></div></div>');
                     }
                     lineInterval += 120;
+                    dayDate.add(1, 'day');
                 }
             }
         };
