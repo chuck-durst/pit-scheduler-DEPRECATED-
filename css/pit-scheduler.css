@@ -69,6 +69,16 @@ body {
     background-color: #B2EBF2;
 }
 
+.dropdown > button.dropdown-toggle {
+    top: 3px;
+    position: relative;
+    left: 5px;
+}
+
+.dropdown-menu li {
+    margin-left: 5px;
+}
+
 /************ line & column title ************/
 
 .pts-column-title-container {

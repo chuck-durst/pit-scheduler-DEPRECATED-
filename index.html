@@ -137,6 +137,7 @@
         $("#pit-scheduler").pitScheduler({
             locale: 'fr',
             defaultDisplay: 'months',
+            hideEmptyLines: true,
             groups: [
                 {name: 'Group A', users:[]},
                 {name: 'Group B'}
@@ -195,6 +196,18 @@
                             id: 'djJ3d7sjk928S0', //Required
                             start_date: '2016-08-04 10:00', //Required
                             end_date: '2016-10-12 12:00'
+                        }
+                    ]
+                },
+                {
+                    id: '',
+                    name: 'Jimi Hendrix', //Required
+                    group: 'Group B',
+                    tasks: [
+                        {
+                            id: 'dj8aA9nL0Su7', //Required
+                            start_date: '2016-08-21 17:30', //Required
+                            end_date: '2016-10-24 07:42'
                         }
                     ]
                 }

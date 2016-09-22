@@ -10,18 +10,22 @@
             days: 'Jours',
             months: 'Mois',
             list: 'Liste',
-            unlisted: 'Non répertorié'
+            unlisted: 'Non répertorié',
+            settings: 'Options',
+            hideEmptyLine: 'Masquer les lignes sans tâche'
 
         },
         en: {
             days: 'Days',
             months: 'Months',
             list: 'List',
-            unlisted: 'Unlisted'
+            unlisted: 'Unlisted',
+            settings: 'Settings',
+            hideEmptyLine: 'Hide lines with no task'
         }
     };
     
-    $.fn.pitScheduler = function (options){
+    $.fn.pitScheduler = function (options) {
 
         var $scheduler = $(this);
 
@@ -58,6 +62,10 @@
         }
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
+        
+        if (settings.hideEmptyLines === undefined) {
+            settings.hideEmptyLines = true;
+        }
 
         console.log("Locale: " + settings.locale);
         console.log("Current display: " + settings.currentDisplay);
@@ -73,7 +81,7 @@
         console.group();
         console.info('Main functions');
 
-        /* update display view*/
+        /* update display view */
         var updateDisplay = function (format) {
             switch (format) {
                 case 'days':
@@ -155,11 +163,30 @@
         var getUserLineHeight = function (user) {
             var tasks = [];
             user.tasks.forEach(function (task) {
-                if (tasks.indexOf(task.id) < 0) {
+                if (tasks.indexOf(task.id) < 0 && userLineIsHidden(user) == true) {
                     tasks.push(task.id);
                 }
             });
             return tasks.length * 40;
+        };
+
+        /* Return true if user task must be showed */
+        var userLineIsHidden = function (user) {
+            var response = 0,
+                tasks = [];
+            user.tasks.forEach(function (task) {
+                if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
+                    && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
+                    if (settings.currentDisplay === 'months' && moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
+                        && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
+                        response++;
+                    } else if (settings.currentDisplay === 'days' && moment(settings.date.selected).get('day') >= moment(task.start_date).get('day')
+                        && moment(settings.date.selected).get('day') <= moment(task.end_date).get('day')) {
+                        response++;
+                    }
+                }
+            });
+            return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
         };
 
         console.groupEnd();
@@ -197,7 +224,12 @@
         /* Generate base empty base structure */
         var generateBaseView = function () {
             var $mainContainer =    '<div class="pts-main-container row">' +
-                                    '<div class="pts-corder-mask"></div>' +
+                                    '<div class="pts-corder-mask"><div class="dropdown">' +
+                                    '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                    settings.i18n.settings + ' <span class="caret"></span></button>' +
+                                    '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
+                                    '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" checked="' + settings.hideEmptyLines + '">'+ settings.i18n.hideEmptyLine +'</label></li>' +
+                                    '</div></div>' +
                                     '<div class="pts-column-title-container">' +
                                     '<div></div></div>' +
                                     '<div class="pts-line-title-container"><div>' +
@@ -274,7 +306,7 @@
                                         '<div class="pts-main-group-header"></div></div>';
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
-                    if (user.group === group.name) {
+                    if (user.group === group.name && userLineIsHidden(user) == true) {
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + getUserLineHeight(user) + 'px"></div>');
                     }
                 });
@@ -300,6 +332,7 @@
         var generateUsersList = function () {
             if (!settings.users || settings.users.length <= 0) return console.warn('Warning: No user have been set.');
 
+            $('.pts-group-content').empty();
             settings.users.forEach(function (user) {
                 var group = '';
                 settings.groups.added.forEach(function (_group) {
@@ -329,6 +362,7 @@
         /* Add one user line */
         var generateUserLine = function (user, group) {
             if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
+            if (userLineIsHidden(user) == false) return;
             console.log('Generate line for user: ' + user.name + ' in group: ' + group);
 
             var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px"><p>' + user.name + '</p></div>';
@@ -367,7 +401,6 @@
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
             if (existingTaskLine.length > 0) {
-                console.log("FIND FIND FIND");
                 topDistance = existingTaskLine.css('top');
             }
 
@@ -382,7 +415,7 @@
                 } else {
                     var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') - 1) + (splitted == 0 ? 120 : 60);
                 }
-                var $label = '<div class="pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>'
+                var $label = '<div class="progress-bar-striped pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>'
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
             }
 
@@ -391,19 +424,19 @@
                 if (moment(task.start_date).get('month') == moment(settings.date.selected).get('month')) {
                     var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
                     var leftDistance = (120 * (moment(task.end_date).format('D') - 1)) - splitted;
-                    var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
+                    var $label = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
                 } else {
                     var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
-                    var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>';
+                    var $label = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
                 }
             }
 
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
-                var $label = '<div class="pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
+                var $label = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
             }
             //TODO: Add task label
@@ -451,12 +484,14 @@
             goForward();
             generateTableLines();
             generateGroupMainContent();
+            generateUsersList();
         });
 
         $('.pts-btn-previous').click(function () {
             goBackward();
             generateTableLines();
             generateGroupMainContent();
+            generateUsersList();
         });
 
         $('#header-datetimepicker').on('dp.change', function (e) {
@@ -479,6 +514,13 @@
                 $(this).attr('data-toggle', 'opened');
                 $(this).removeClass('closed-btn');
             }
+        });
+
+        $('#hide-user-btn').change(function (e) {
+            settings.hideEmptyLines = $(this).is(':checked');
+            generateTableLines();
+            generateGroupMainContent();
+            generateUsersList();
         });
 
         console.groupEnd();
