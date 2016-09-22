@@ -20,6 +20,13 @@ body {
 
 }
 
+.pts-nav-buttons {
+    position: relative;
+    left: 5px;
+    bottom: 2px;
+    margin-right: 5px;
+}
+
 .pts-header-right-container {
     position: absolute;
     right: 8px;
@@ -244,22 +251,17 @@ body {
 
 .pts-line-marker.start {
     border-radius: 20px 0 0 20px;
-    width: 115px;
     margin-left: 5px;
 }
 
 
 .pts-line-marker.end {
     border-radius: 0 20px 20px 0;
-    width: 120px;
     margin-right: 5px;
 }
 
-.pts-line-marker.complete {
-    border-radius: 20px;
-    width: 110px !important;
-    margin-left: 5px;
-    margin-right: 5px;
+.pts-line-marker.middle {
+    width: 100%;
 }
 
 .pts-line-marker-label {

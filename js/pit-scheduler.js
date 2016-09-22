@@ -151,6 +151,17 @@
             return task;
         };
 
+        /* Get the height of a user line */
+        var getUserLineHeight = function (user) {
+            var tasks = [];
+            user.tasks.forEach(function (task) {
+                if (tasks.indexOf(task.id) < 0) {
+                    tasks.push(task.id);
+                }
+            });
+            return tasks.length * 40;
+        };
+
         console.groupEnd();
 
         /********* Generation *********/
@@ -167,12 +178,14 @@
                             '<span class="input-group-addon">' +
                             '<span class="glyphicon glyphicon-calendar"></span>' +
                             '</span></div></div>' +
+                            '<div class="pts-nav-buttons">' +
+                            '<button class="btn pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>' +
+                            '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
+                            '</div>' +
                             '<span class="pts-header-date-display">' +
                             (settings.currentDisplay === "months" ? moment(settings.date.selected).locale('fr').format('MMMM YYYY') : moment(settings.date.selected).locale('fr').format('LL')) +
                             '</span></div>' +
                             '<div class="pts-header-right-container pull-right">' +
-                            '<button class="btn btn-sm pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>' +
-                            '<button class="btn btn-sm pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
                             '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>' +
                             '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>' +
                             '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>';
@@ -262,7 +275,7 @@
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
                     if (user.group === group.name) {
-                        $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + 40 * user.tasks.length + 'px"></div>');
+                        $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + getUserLineHeight(user) + 'px"></div>');
                     }
                 });
                 //Check if the group panel must be closed
@@ -279,11 +292,11 @@
                 $('.pts-main-group-user').css('width', (120 * moment(settings.date.selected).daysInMonth()) + 'px');
             }
             settings.users.forEach(function (user, userIndex) {
-                generateTaskLine(user, userIndex);
+                generateTaskLines(user, userIndex);
             });
         };
 
-        /* Generate the left list of users */
+        /* Generate the left users list */
         var generateUsersList = function () {
             if (!settings.users || settings.users.length <= 0) return console.warn('Warning: No user have been set.');
 
@@ -318,18 +331,19 @@
             if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
             console.log('Generate line for user: ' + user.name + ' in group: ' + group);
 
-            var taskLen = user.tasks.length;
-            var $userNameUI = '<div class="pts-group-user" style="height:' + 40 * taskLen + 'px"><p>' + user.name + '</p></div>';
+            var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px"><p>' + user.name + '</p></div>';
 
             $('#' + group + ' > .pts-group-content').append($userNameUI);
 
         };
 
         /* Generate the tasks lines */
-        var generateTaskLine = function (user, userIndex) {
+        var generateTaskLines = function (user, userIndex) {
+            user.userIndex = userIndex;
             var topDistance = 5;
             user.tasks.forEach(function (e, i) {
                 var task = $.extend(getTaskById(e.id), e);
+                task.index = i;
                 if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date >= task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                if (settings.currentDisplay === 'months') {
@@ -338,38 +352,62 @@
                            && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
                            if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
                                && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
-                               $('#content-user-' + userIndex).append('<div class="pts-line-marker-group-' + i + '"></div>');
-                               if (moment(settings.date.selected).get('month') == moment(task.start_date).get('month')) {
-                                   var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0);
-                                   var leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6;
-                                   if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
-                                       var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
-                                   } else {
-                                       var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') - 1) + (splitted == 0 ? 120 : 60);
-                                   }
-                                    var $label = '<div class="pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px"></div>'
-                                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
-                               }
-                               if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
-                                   if (moment(task.start_date).get('month') == moment(settings.date.selected).get('month')) {
-                                       var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
-                                       var leftDistance = (120 * (moment(task.end_date).format('D') - 1)) - splitted;
-                                       var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';"></div>';
-                                       $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
-                                   } else {
-                                       var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
-                                       var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
-                                       var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px"></div>';
-                                       $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + i).append($label);
-                                   }
-                               }
-                               //TODO: Show a complet line if task is not beggining or ending in this month
+                               topDistance += generateTaskLineMonth(user, task, topDistance);
                            }
                        }
                    }
                }
                 topDistance += 40;
             });
+        };
+
+        /* Generate one task on the month view */
+        var generateTaskLineMonth = function (user, task, topDistance) {
+            var userIndex = user.userIndex;
+            var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
+
+            if (existingTaskLine.length > 0) {
+                console.log("FIND FIND FIND");
+                topDistance = existingTaskLine.css('top');
+            }
+
+            $('#content-user-' + userIndex).append('<div class="pts-line-marker-group-' + task.index + '" data-task="' + task.id + '" data-user="' + userIndex + '"></div>');
+
+            // If the task start date is in the current month
+            if (moment(settings.date.selected).get('month') == moment(task.start_date).get('month')) {
+                var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0);
+                var leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6;
+                if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
+                    var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
+                } else {
+                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') - 1) + (splitted == 0 ? 120 : 60);
+                }
+                var $label = '<div class="pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>'
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+            }
+
+            // If the task end date is in the current month
+            if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
+                if (moment(task.start_date).get('month') == moment(settings.date.selected).get('month')) {
+                    var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
+                    var leftDistance = (120 * (moment(task.end_date).format('D') - 1)) - splitted;
+                    var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
+                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+                } else {
+                    var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
+                    var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
+                    var $label = '<div class="pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>';
+                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+                }
+            }
+
+            // If the task start and end dates are not in the current month but the task is
+            if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
+                var $label = '<div class="pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+            }
+            //TODO: Add task label
+            return (existingTaskLine.length > 0 ? -40 : 0);
         };
 
         console.groupEnd();
