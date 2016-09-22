@@ -445,7 +445,6 @@
 
         console.groupEnd();
 
-
         /********* Initialization *********/
         console.group();
         console.info("Initialization");
