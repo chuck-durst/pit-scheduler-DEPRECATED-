@@ -78,9 +78,6 @@
 
         /********* Main functions *********/
 
-        console.group();
-        console.info('Main functions');
-
         /* update display view */
         var updateDisplay = function (format) {
             switch (format) {
@@ -189,11 +186,7 @@
             return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
         };
 
-        console.groupEnd();
-
         /********* Generation *********/
-        console.group();
-        console.info('Generation');
 
         /* Generate the header content */
         var generateHeader = function () {
@@ -257,11 +250,13 @@
                 }
             } else if (settings.currentDisplay == 'months') {
                 var dayDate = moment(settings.date.selected).add(-1 * (moment(settings.date.selected).format('D') - 1), 'day');
-                console.log(dayDate.format('ddd'));
                 var lineInterval = 0,
                     daysInMonth = parseInt(moment(settings.date.selected).daysInMonth()) + 1;
                 for (var i=1; i <= daysInMonth; i++) {
-                    $('.pts-column-title-container > div').append('<div class="pts-column-element">' + (i < daysInMonth  ? "<p>"+ dayDate.locale(settings.locale).format('ddd') + ' ' + i +"</p>" : "") + '</div>');
+                    $('.pts-column-title-container > div').append(
+                        '<div class="pts-column-element" data-date="' + moment(dayDate).format('YYYY-MM-DD') + '">' +
+                        (i < daysInMonth  ? "<p>"+ dayDate.locale(settings.locale).format('ddd') + ' ' + i +"</p>" : "") + '</div>'
+                    );
                     if (i < daysInMonth) {
                         $('.pts-main-content').append('<div class="pts-main-group-column" style="left:' + lineInterval + 'px"><div></div></div>');
                     }
@@ -446,8 +441,6 @@
             return (existingTaskLine.length > 0 ? -40 : 0);
         };
 
-        console.groupEnd();
-
         /********* Initialization *********/
         console.group();
         console.info("Initialization");
@@ -462,8 +455,6 @@
         console.groupEnd();
 
         /********* Events *********/
-        console.group();
-        console.info('Events');
 
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
@@ -525,8 +516,13 @@
             generateUsersList();
         });
 
-        console.groupEnd();
-
+        $('.pts-column-title-container').on('click', '.pts-column-element[data-date]', function () {
+            settings.date.selected = moment($(this).attr('data-date'));
+            updateDisplay('days');
+            generateTableLines();
+            generateGroupMainContent();
+            console.log("OKKKKK");
+        });
 
         return $scheduler;
     };

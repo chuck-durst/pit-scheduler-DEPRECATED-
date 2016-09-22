@@ -102,6 +102,12 @@ body {
     padding-right: 16px;
 }
 
+.pts-column-element[data-date]:hover {
+    background-color: #90e3ed;
+}
+.pts-column-element[data-date] {
+    cursor: pointer;
+}
 .pts-column-element {
     position: relative;
     width: 120px;
@@ -180,6 +186,8 @@ body {
     -o-transition: 0.5s ease-in-out;
     transition: 0.5s ease-in-out;
 }
+
+
 
 /************ Main content ************/
 
