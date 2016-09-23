@@ -188,12 +188,13 @@
 
         /* Move task label on horizontal scroll */
         var setTaskLabelPosition = function () {
-            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)');
+            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)'),
+                limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
             $.each($elements, function(i, $element) {
                 var $label = $(this).next(),
                     right = parseInt($(this).offset().left) + parseInt($(this).width()) - parseInt($label.width()),
                     left = parseInt($(this).offset().left);
-                if (left < 175 && right > 210) {
+                if (left < limit && right > limit + 20) {
                     $label.css('left', $('.pts-scheduler-container').scrollLeft() + 15)
                 } else {
                     $label.css('left', $label.attr('data-left') + 'px');
@@ -433,9 +434,9 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $label = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +'" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
+                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +'" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
                              '<span class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</span>';
-                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
             // If the task end date is in the current month
@@ -446,18 +447,18 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $label = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
+                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
                                  '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
-                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
 
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
                 topDistance = parseInt(topDistance);
-                var $label = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>' +
+                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>' +
                              '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
-                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
             setTaskLabelPosition();
