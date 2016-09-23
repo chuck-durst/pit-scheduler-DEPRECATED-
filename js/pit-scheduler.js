@@ -186,6 +186,22 @@
             return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
         };
 
+        /* Move task label on horizontal scroll */
+        var setTaskLabelPosition = function () {
+            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)');
+            $.each($elements, function(i, $element) {
+                var $label = $(this).next(),
+                    right = parseInt($(this).offset().left) + parseInt($(this).width()) - parseInt($label.width()),
+                    left = parseInt($(this).offset().left);
+                if (left < 175 && right > 210) {
+                    $label.css('left', $('.pts-scheduler-container').scrollLeft() + 15)
+                } else {
+                    $label.css('left', $label.attr('data-left') + 'px');
+                }
+
+            });
+        };
+
         /********* Generation *********/
 
         /* Generate the header content */
@@ -389,7 +405,6 @@
                        }
                    }
                }
-                topDistance += 40;
             });
         };
 
@@ -406,38 +421,33 @@
 
             // If the task start date is in the current month
             if (moment(settings.date.selected).get('month') == moment(task.start_date).get('month')) {
-                var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0);
-                var leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6;
+                var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0),
+                    leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6,
+                    label_end = false;
 
                 if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
                     var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
                 } else {
-                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') - 1) + (splitted == 0 ? 120 : 60);
+                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60);
+                    label_end = true;
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $label = '<div class="progress-bar-striped pts-line-marker start" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
-                             '<span class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px">' + task.name + '</span>';
+                var $label = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +'" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
+                             '<span class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</span>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
             }
 
             // If the task end date is in the current month
             if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
-                if (moment(task.start_date).get('month') == moment(settings.date.selected).get('month')) {
-                    var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
-                    var leftDistance = (120 * (moment(task.end_date).format('D') - 1)) - splitted;
+                if (moment(task.start_date).get('month') < moment(settings.date.selected).get('month')) {
 
-                    topDistance = parseInt(topDistance);
-                    leftDistance = parseInt(leftDistance);
-                    var $label = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:' + leftDistance + 'px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>';
-                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
-                } else {
                     var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
                     var $label = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
-                                 '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px">' + task.name + '</span>';
+                                 '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
                 }
             }
@@ -446,11 +456,12 @@
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
                 topDistance = parseInt(topDistance);
                 var $label = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>' +
-                             '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px">' + task.name + '</span>';
+                             '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($label);
             }
             //TODO: Add task label
-            return (existingTaskLine.length > 0 ? -40 : 0);
+            setTaskLabelPosition();
+            return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
         /********* Initialization *********/
@@ -537,13 +548,7 @@
         });
 
         $('.pts-scheduler-container').scroll(function () {
-            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)');
-            $.each($elements, function(i, $element) {
-                var $label = $(this).next();
-                var $limit = $('.pts-line-title-container');
-                /*console.log(i +' left: ' + $(this).offset().left);
-                console.log(i +' right: ' + parseInt($(this).offset().left) + parseInt($(this).width()));*/
-            });
+            setTaskLabelPosition();
         });
 
         return $scheduler;

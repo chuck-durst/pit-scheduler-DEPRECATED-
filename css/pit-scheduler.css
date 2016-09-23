@@ -267,6 +267,11 @@ body {
     top: 5px;
 }
 
+.pts-line-marker.complete {
+    border-radius: 20px;
+    margin-left: 5px;
+}
+
 .pts-line-marker.start {
     border-radius: 20px 0 0 20px;
     margin-left: 5px;
