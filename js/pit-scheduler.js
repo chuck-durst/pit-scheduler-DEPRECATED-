@@ -51,7 +51,7 @@
         } else {
             settings.defaultDisplay.toLowerCase();
             if (settings.defaultDisplay !== 'days' && settings.defaultDisplay !== 'months' && settings.defaultDisplay !== 'list') {
-                settings.currentDisplay = 'days';
+                settings.currentDisplay = 'months';
             } else
                 settings.currentDisplay = settings.defaultDisplay;
         }
@@ -188,14 +188,15 @@
 
         /* Move task label on horizontal scroll */
         var setTaskLabelPosition = function () {
+            if (settings.disableLabelsMovement) return;
             var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)'),
                 limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
-            $.each($elements, function(i, $element) {
+            $.each($elements, function() {
                 var $label = $(this).next(),
                     right = parseInt($(this).offset().left) + parseInt($(this).width()) - parseInt($label.width()),
                     left = parseInt($(this).offset().left);
                 if (left < limit && right > limit + 20) {
-                    $label.css('left', $('.pts-scheduler-container').scrollLeft() + 15)
+                    $label.css('left', $('.pts-scheduler-container').scrollLeft() + 10)
                 } else {
                     $label.css('left', $label.attr('data-left') + 'px');
                 }
@@ -285,29 +286,43 @@
 
         /* Generate the groups panels */
         var generateGroupsPanels = function () {
-            if (!settings.groups) {
-                settings.groups = [{
-                    name: settings.i18n.unlisted
-                }];
-                settings.groups.unlisted = 0; //stores the id of the unlisted group
+            var keepUnlisted = true;
+
+            settings.groups = [settings.i18n.unlisted];
+                settings.users.forEach(function (e) {
+                    if (e.group === undefined || e.group === '') {
+                        e.group = settings.i18n.unlisted;
+                        keepUnlisted = false;
+                    }
+                    else if (settings.groups.indexOf(e.group) == -1) {
+                        settings.groups.push(e.group);
+                    }
+                });
+            console.log(settings.users);
+            settings.groups.unlisted = 0; //stores the id of the unlisted group
+            if (keepUnlisted) {
+                settings.groups.shift();
             }
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
-                generateGroupTab(e, i);
-                settings.groups.added.push({
-                    name: e.name,
-                    id: 'user-group-' + i
-                });
+                if (i !== 'added' && i !== 'unlisted') {
+                    generateGroupTab(e, i);
+                    settings.groups.added.push({
+                        name: e,
+                        id: 'user-group-' + i
+                    });
+                }
             });
         };
 
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
-            console.log("Creat group: " + group.name);
+            console.log("group: " + group + " index: " + index);
+            console.log("Creat group: " + group);
             var $groupHeaderContent =   '<div id="user-group-' + index + '" class="pts-line-group-container">' +
                                         '<div class="pts-group-header">' +
                                         '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>' +
-                                        '<span>' + group.name + '</span></div>' +
+                                        '<span>' + group + '</span></div>' +
                                         '<div class="pts-group-content"></div></div>';
             var $groupMainContent =     '<div class="pts-main-group-container">' +
                                         '<div class="pts-main-group-header"></div></div>';

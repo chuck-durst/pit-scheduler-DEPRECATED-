@@ -38,7 +38,7 @@
         <a href="static.html"><button class="btn btn-primary">Static version</button></a>
         <div class="col-lg-12 text-center intro">
             <h1 class="text-center">pit-scheduler <small>made with love </small></h1>
-            <small class="extrasmall">(But also with time, nerves, hard working, a lot of coffee and tea, my remaining fingers, some help from internet, a few frameworks and libraries, passion, singleness and obviously with Javascript that is probably the best language ever contrary to what some Java lovers may say... You know, they are like old men who say that their 4l is better than the last Tesla just because they grew up with it and won't ever recognize that the past must belong to the past. Using Java to build a website is like using a nuclear plant to grow carrots. Whatever, Javascript is like Doctor Who: It's magic, and you probably have to know it before loving it.)</small>
+            <small class="extrasmall">(But also with time, nerves, hard working, a lot of coffee and tea, my remaining fingers, some help from internet, a few frameworks and libraries, passion, singleness and obviously with Javascript that is probably the best language ever contrary to what some Java lovers may say... You know, they are like old men who believe that their 4l is better than the last Tesla just because they grew up with it and won't ever recognize that the past must belong to the past. Using Java to build a website is like using a nuclear plant to grow carrots. Whatever, Javascript is like Doctor Who: It's magic, and you probably have to know it before loving it.)</small>
         </div>
         <div class="col-lg-12">
             <!--<div id="pit-scheduler-default">
@@ -136,31 +136,28 @@
 
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
-            locale: 'fr',
-            defaultDisplay: 'months',
-            hideEmptyLines: true,
-            groups: [
-                {name: 'Group A', users:[]},
-                {name: 'Group B'}
-            ],
+            locale: 'fr', //default: en
+            defaultDisplay: 'months', //default: months
+            hideEmptyLines: true, //default: true
+            disableLabelsMovement: false, //default: false
             tasks:  [
                 {
                     id: 'djJ3d7sjk928S0', //Required
                     name: 'Accès Jacuzzi', //Required
                     description: 'Permet d\'accéder au Jacuzzi',
-                    color: '#673AB7'
+                    color: '#673AB7' //recommanded
                 },
                 {
                     id: 'fJD67Bd4jh7', //Required
                     name: 'Accès Piscine et SPA', //Required
                     description: 'Permet d\'avoir accès à la piscine et au SPA',
-                    color: '#E91E63'
+                    color: '#E91E63' //recommanded
                 },
                 {
                     id: 'dj8aA9nL0Su7', //Required
                     name: 'Accès internet', //Required
                     description: 'Permet d\'accéder à internet',
-                    color: '#536DFE'
+                    color: '#536DFE' //recommanded
                 }
             ],
             users: [

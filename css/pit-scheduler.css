@@ -263,7 +263,7 @@ body {
     position: absolute;
     height: 30px;
     width: 120px;
-    background-color: red;
+    background-color: hsl(187, 100%, 42%);
     top: 5px;
 }
 
