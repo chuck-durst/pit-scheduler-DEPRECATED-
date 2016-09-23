@@ -536,6 +536,16 @@
             console.log("OKKKKK");
         });
 
+        $('.pts-scheduler-container').scroll(function () {
+            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)');
+            $.each($elements, function(i, $element) {
+                var $label = $(this).next();
+                var $limit = $('.pts-line-title-container');
+                /*console.log(i +' left: ' + $(this).offset().left);
+                console.log(i +' right: ' + parseInt($(this).offset().left) + parseInt($(this).width()));*/
+            });
+        });
+
         return $scheduler;
     };
 }(jQuery));
