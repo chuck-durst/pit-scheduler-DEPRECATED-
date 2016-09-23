@@ -284,13 +284,24 @@ body {
 
 .pts-line-marker-label {
     z-index: 300;
-    position: relative;
-    color: hsl(0, 0%, 100%);
-    top: 10px;
-    left: 20px;
+    position: absolute;
+    color: #fff;
 }
 
 .pts-line-marker-group {
     position: absolute;
     width: 100%;
+}
+
+/************ Infos view ************/
+
+.pit-info-view-container {
+    background-color: blue;
+    width: 30%;
+    right: 17px;
+    position: absolute;
+    height: auto;
+    z-index: 1000;
+    bottom: 16px;
+    top: 45px;
 }

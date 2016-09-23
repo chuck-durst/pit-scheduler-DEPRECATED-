@@ -270,3 +270,15 @@ body {
     position: absolute;
     width: 100%;
 }
+
+
+.info-view {
+    background-color: blue;
+    width: 30%;
+    right: 17px;
+    position: absolute;
+    height: auto;
+    z-index: 1000;
+    bottom: 16px;
+    top: 45px;
+}
