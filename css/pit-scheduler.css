@@ -304,7 +304,7 @@ body {
 #pts-info-box-container {
     background-color: #fff;
     width: 0%;
-    right: 17px;
+    right: 0px;
     position: absolute;
     height: auto;
     z-index: 1000;
@@ -313,6 +313,8 @@ body {
     -webkit-box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
     -moz-box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
     box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .pts-info-box-close-btn {
@@ -337,4 +339,14 @@ body {
 .pts-info-box-user-list {
     position: relative;
     right: 30px;
+}
+
+.pts-info-box-title {
+    width: 120%;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
+    right: 15px;
+    position: relative;
+    margin-top: -10px;
 }

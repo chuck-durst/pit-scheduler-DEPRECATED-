@@ -549,7 +549,8 @@
             });
             var $content =  '<button class="btn btn-icon btn-rounded btn-sm pts-info-box-close-btn">' +
                             '<i class="glyphicon glyphicon-remove pull-left"></i></button>' +
-                            '<div class="panel-body"><h4 class=" text-semibold heading-divided">' + task.name + '</h4>' +
+                            '<div class="panel-body">' +
+                            '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '</h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + task.description + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
                             '<br><div class="divider"></div></div>' +
