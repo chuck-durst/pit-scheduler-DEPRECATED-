@@ -488,12 +488,13 @@
             var topDistance = 5;
             user.tasks.forEach(function (e, i) {
                 var task = $.extend(getTaskById(e.id), e);
+                task.disabled = false;
                 task.index = i;
                 if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date >= task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                if (settings.currentDisplay === 'months') {
                    task = hideTaskSuperposition(i, task, user);
-                   if (task.end_date && !task.disabled) {
+                   if (task.end_date && task.disabled != true) {
                        if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
                            && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
                            if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
