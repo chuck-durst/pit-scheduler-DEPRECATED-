@@ -16,7 +16,8 @@
             description: 'Description',
             assignedUsers: 'Utilisateurs assignés',
             from: 'Du',
-            to: 'au'
+            to: 'au',
+            notSpecified: 'Non spécifiée'
 
         },
         en: {
@@ -29,7 +30,8 @@
             description: 'Description',
             assignedUsers: 'Assigned users',
             from: 'From',
-            to: 'to'
+            to: 'to',
+            notSpecified: 'Not specified'
         }
     };
     
@@ -209,7 +211,7 @@
         /* Move task label on horizontal scroll */
         var setTaskLabelPosition = function () {
             if (settings.disableLabelsMovement) return;
-            var $elements = $('.pts-line-marker:has(+ span.pts-line-marker-label)'),
+            var $elements = $('.pts-line-marker:has(+ .pts-line-marker-label)'),
                 limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
             $.each($elements, function() {
                 var $label = $(this).next(),
@@ -508,7 +510,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                             '<span class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</span>';
+                             '<p class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</p>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -521,7 +523,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                                 '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
+                                 '<p class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</p>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -530,7 +532,7 @@
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                             '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
+                             '<p class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</p>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
@@ -549,7 +551,7 @@
             });
             var $content =  '<div class="panel-body">' +
                             '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '</h4>' +
-                            '<p><b>' + settings.i18n.description + ' : </b><br>' + task.description + '</p>' +
+                            '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
                             '<br><div class="divider"></div></div>' +
                             '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
@@ -657,6 +659,10 @@
         });
 
         $('#pts-info-box-container').on('click', function () {
+            closeInfoBox();
+        });
+
+        $('.pts-main-content').on('click', '.pts-main-group-column', function () {
             closeInfoBox();
         });
 

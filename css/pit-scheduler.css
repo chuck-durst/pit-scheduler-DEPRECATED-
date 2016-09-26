@@ -292,6 +292,7 @@ body {
     z-index: 300;
     position: absolute;
     color: #fff;
+    display: inline-table;
 }
 
 .pts-line-marker-group {
