@@ -547,9 +547,7 @@
                     userCounterAll++;
                 }
             });
-            var $content =  '<button class="btn btn-icon btn-rounded btn-sm pts-info-box-close-btn">' +
-                            '<i class="glyphicon glyphicon-remove pull-left"></i></button>' +
-                            '<div class="panel-body">' +
+            var $content =  '<div class="panel-body">' +
                             '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '</h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + task.description + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
@@ -658,7 +656,7 @@
             }
         });
 
-        $('#pts-info-box-container').on('click', '.pts-info-box-close-btn', function () {
+        $('#pts-info-box-container').on('click', function () {
             closeInfoBox();
         });
 

@@ -315,6 +315,7 @@ body {
     box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
     overflow-y: scroll;
     overflow-x: hidden;
+    cursor: pointer;
 }
 
 .pts-info-box-close-btn {
@@ -344,9 +345,9 @@ body {
 .pts-info-box-title {
     width: 120%;
     color: #fff;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     padding: 10px;
     right: 15px;
     position: relative;
-    margin-top: -10px;
+    margin-top: -15px;
 }
