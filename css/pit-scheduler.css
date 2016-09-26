@@ -321,3 +321,20 @@ body {
     color: #b2b2b2;
     background-color: transparent;
 }
+
+.divider {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background-color: #dbdbdb;
+}
+
+.pts-info-box-user {
+    position: relative;
+    left: 14px;
+}
+
+.pts-info-box-user-list {
+    position: relative;
+    right: 30px;
+}

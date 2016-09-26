@@ -13,7 +13,10 @@
             unlisted: 'Non répertorié',
             settings: 'Options',
             hideEmptyLine: 'Masquer les lignes sans tâche',
-            description: 'Description'
+            description: 'Description',
+            assignedUsers: 'Utilisateurs assignés',
+            from: 'Du',
+            to: 'au'
 
         },
         en: {
@@ -23,7 +26,10 @@
             unlisted: 'Unlisted',
             settings: 'Settings',
             hideEmptyLine: 'Hide lines with no task',
-            description: 'Description'
+            description: 'Description',
+            assignedUsers: 'Assigned users',
+            from: 'From',
+            to: 'to'
         }
     };
     
@@ -129,6 +135,7 @@
 
         /* Go to the next month/day */
         var goForward = function () {
+            closeInfoBox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(1, 'months');
             } else {
@@ -139,6 +146,7 @@
 
         /* Go to the previous month/day */
         var goBackward = function () {
+            closeInfoBox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'months');
             } else {
@@ -156,6 +164,16 @@
                 }
             });
             return task;
+        };
+
+        /* Return true if the user is asigned to the task */
+        var userHasTask = function (user, taskId) {
+            var response = false;
+            user.tasks.forEach(function (e) {
+                if (e.id === taskId)
+                    response = true;
+            });
+            return response;
         };
 
         /* Get the height of a user line */
@@ -207,17 +225,18 @@
         };
 
         /* Open the info-box panel */
-        var openInfoBox = function (taskId) {
+        var openInfoBox = function (taskId, userIndex) {
             var task = getTaskById(taskId),
                 $markers = $('.pts-line-marker'),
                 $infoBox = $( "#pts-info-box-container" );
 
             $infoBox.empty();
-            generateInfoBoxContent(task);
+            generateInfoBoxContent(task, settings.users[userIndex]);
             $infoBox.animate({
-                width: '30%'
+                width: '35%'
             }, 300);
             $.each($markers, function () {
+                $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
                 if ($(this).attr('data-task') !== taskId) {
                     $(this).css('background-color', '#8e8e8e');
                 }
@@ -487,7 +506,8 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +'" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
+                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
                              '<span class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</span>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
@@ -500,7 +520,7 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '"></div>' +
+                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
                                  '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
@@ -509,7 +529,7 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '"></div>' +
+                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
                              '<span class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</span>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
@@ -519,14 +539,29 @@
         };
 
         /* Generate the structure of the info box */
-        var generateInfoBoxContent = function (task) {
-          var $content =    '<button class="btn btn-icon btn-rounded btn-sm pts-info-box-close-btn">' +
+        var generateInfoBoxContent = function (task, user) {
+            var userCounterAll = 0;
+
+            settings.users.forEach(function (e) {
+                if (userHasTask(e, task.id) === true) {
+                    userCounterAll++;
+                }
+            });
+            var $content =  '<button class="btn btn-icon btn-rounded btn-sm pts-info-box-close-btn">' +
                             '<i class="glyphicon glyphicon-remove pull-left"></i></button>' +
-                            '<div class="panel-heading"><h4 class=" text-semibold heading-divided">' + task.name + '</h4></div>' +
-                            '<div class="panel-body" style="width:100%">' +
+                            '<div class="panel-body"><h4 class=" text-semibold heading-divided">' + task.name + '</h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + task.description + '</p>' +
-                            '</div>';
+                            '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
+                            '<br><div class="divider"></div></div>' +
+                            '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
+                            '<ul class="pts-info-box-user-list"></ul></div>';
+
             $('#pts-info-box-container').append($content);
+            user.tasks.forEach(function (_task) {
+                if (_task.id === task.id) {
+                    $('.pts-info-box-user-list').append('<li><b>' + settings.i18n.from + '</b> ' + _task.start_date + ' <b>' + settings.i18n.to + '</b> ' + _task.end_date + '</li>');
+                }
+            });
         };
 
         /********* Initialization *********/
@@ -616,9 +651,9 @@
             setTaskLabelPosition();
         });
 
-        $('.pts-line-marker').click(function () {
-            if ($(this).attr('data-task')) {
-                openInfoBox($(this).attr('data-task'));
+        $('.pts-scheduler-container').on('click', '.pts-line-marker', function () {
+            if ($(this).attr('data-task') && $(this).attr('data-user')) {
+                openInfoBox($(this).attr('data-task'), $(this).attr('data-user'));
             }
         });
 
