@@ -264,6 +264,25 @@
             $('.pts-main-group-column').css('background-color', '#fff');
         };
 
+        /* Mix tasks that have a superposition */
+        var hideTaskSuperposition = function (originIndex, task, user) {
+            if (user.name != "Michel Petrucciani") return task; //TODO: THIS IS A TEST LINE, REMOVE IT!!
+            task.disabled = false;
+            user.tasks.forEach(function (userTask, index) {
+                if (userTask.id === task.id && index !== originIndex) {
+                    if ((moment(userTask.start_date).format('H') <= 12 && moment(task.end_date).format('H') <= 12) ||
+                        (moment(userTask.start_date).format('H') > 12 && moment(task.end_date).format('H') > 12)) {
+                        task.end_date = userTask.end_date;
+                    }
+                    if ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12) ||
+                        (moment(task.start_date).format('H') > 12 && moment(userTask.end_date).format('H') > 12)) {
+                        task.disabled = true;
+                    }
+                }
+            });
+            return task;
+        };
+
         /********* Generation *********/
 
         /* Generate the header content */
@@ -473,7 +492,8 @@
                 if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date >= task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                if (settings.currentDisplay === 'months') {
-                   if (task.end_date) {
+                   task = hideTaskSuperposition(i, task, user);
+                   if (task.end_date && !task.disabled) {
                        if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
                            && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
                            if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
