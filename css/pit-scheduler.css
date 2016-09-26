@@ -262,10 +262,10 @@ body {
 .pts-line-marker {
     position: absolute;
     height: 30px;
-    width: 120px;
     background-color: hsl(187, 100%, 42%);
     top: 5px;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .pts-line-marker.complete {
@@ -290,7 +290,9 @@ body {
 
 .pts-line-marker-label {
     z-index: 300;
-    position: absolute;
+    position: relative;
+    top: 5px;
+    left: 10px;
     color: #fff;
     display: inline-table;
 }

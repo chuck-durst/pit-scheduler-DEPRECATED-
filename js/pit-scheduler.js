@@ -17,7 +17,8 @@
             assignedUsers: 'Utilisateurs assignés',
             from: 'Du',
             to: 'au',
-            notSpecified: 'Non spécifiée'
+            notSpecified: 'Non spécifiée',
+            disableLabelsMovement: 'Désactiver le mouvement des labels'
 
         },
         en: {
@@ -31,7 +32,8 @@
             assignedUsers: 'Assigned users',
             from: 'From',
             to: 'to',
-            notSpecified: 'Not specified'
+            notSpecified: 'Not specified',
+            disableLabelsMovement: 'Disable labels mouvemen'
         }
     };
     
@@ -211,16 +213,16 @@
         /* Move task label on horizontal scroll */
         var setTaskLabelPosition = function () {
             if (settings.disableLabelsMovement) return;
-            var $elements = $('.pts-line-marker:has(+ .pts-line-marker-label)'),
+            var $elements = $('.pts-line-marker:has(> .pts-line-marker-label)'),
                 limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
             $.each($elements, function() {
-                var $label = $(this).next(),
+                var $label = $(this).children(),
                     right = parseInt($(this).offset().left) + parseInt($(this).width()) - parseInt($label.width()),
                     left = parseInt($(this).offset().left);
                 if (left < limit && right > limit + 20) {
-                    $label.css('left', $('.pts-scheduler-container').scrollLeft() + 10)
+                    $label.css('left', $('.pts-scheduler-container').scrollLeft() - parseInt($(this).css('left')) + 10);
                 } else {
-                    $label.css('left', $label.attr('data-left') + 'px');
+                    $label.css('left', '10px');
                 }
 
             });
@@ -298,7 +300,8 @@
                                     '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                                     settings.i18n.settings + ' <span class="caret"></span></button>' +
                                     '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
-                                    '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" checked="' + settings.hideEmptyLines + '">'+ settings.i18n.hideEmptyLine +'</label></li>' +
+                                    '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
+                                    '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
                                     '</div></div>' +
                                     '<div class="pts-column-title-container">' +
                                     '<div></div></div>' +
@@ -503,18 +506,18 @@
                 if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
                     var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
                 } else {
-                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60);
+                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60) - (moment(task.end_date).format('H') <= 12 ? 60 : 0);
                     label_end = true;
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                             '<p class="pts-line-marker-label" style="left:' + (leftDistance + 20) + 'px;top:' + (topDistance + 5) + 'px" data-left="' + (leftDistance + 20) + '">' + task.name + '</p>';
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
-            // If the task end date is in the current month
+            // If the task end date is in the current month but not the start date
             if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
                 if (moment(task.start_date).get('month') < moment(settings.date.selected).get('month')) {
 
@@ -522,8 +525,8 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                                 '<p class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</p>';
+                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -531,8 +534,8 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '"></div>' +
-                             '<p class="pts-line-marker-label" style="left:10px;top:' + (topDistance + 5) + 'px" data-left="10">' + task.name + '</p>';
+                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
@@ -635,6 +638,13 @@
 
         $('#hide-user-btn').change(function (e) {
             settings.hideEmptyLines = $(this).is(':checked');
+            generateTableLines();
+            generateGroupMainContent();
+            generateUsersList();
+        });
+
+        $('#disable-labels-mov').change(function (e) {
+            settings.disableLabelsMovement = $(this).is(':checked');
             generateTableLines();
             generateGroupMainContent();
             generateUsersList();
