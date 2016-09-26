@@ -491,7 +491,7 @@
                 task.disabled = false;
                 task.index = i;
                 if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
-                if (task.start_date >= task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
+                if (task.start_date > task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                if (settings.currentDisplay === 'months') {
                    task = hideTaskSuperposition(i, task, user);
                    if (task.end_date && task.disabled != true) {
@@ -500,6 +500,26 @@
                            if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
                                && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
                                topDistance += generateTaskLineMonth(user, task, topDistance);
+                           }
+                       }
+                   }
+               }
+               else if (settings.currentDisplay === 'days') {
+                   if (task.end_date) {
+                       if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
+                           && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
+                           console.log("PASS 1");
+                           if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
+                               && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
+                               console.log("PASS 2");
+                               console.log(moment(settings.date.selected).format('D'));
+                               console.log( moment(task.start_date).format('D'));
+                               console.log(moment(task.end_date).format('D'));
+                           if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
+                               && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
+                                    console.log("PASS 3");
+                                    topDistance += generateTaskLineDay(user, task, topDistance);
+                               }
                            }
                        }
                    }
@@ -564,6 +584,62 @@
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
+        /* Generate one task on the month view */
+        var generateTaskLineDay = function (user, task, topDistance) {
+            console.log('ACCEPTED');
+            var userIndex = user.userIndex;
+            var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
+
+            if (existingTaskLine.length > 0) {
+                topDistance = existingTaskLine.css('top');
+            }
+
+            $('#content-user-' + userIndex).append('<div class="pts-line-marker-group-' + task.index + '" data-task="' + task.id + '" data-user="' + userIndex + '"></div>');
+
+            // If the task start date is in the current month
+            if (moment(settings.date.selected).format('YYYYMMDD') == moment(task.start_date).format('YYYYMMDD')) {
+                var splitted = (moment(task.start_date).format('mm') >= 30 ? 60 : 0),
+                    leftDistance = (120 * (moment(task.start_date).format('H') )) + splitted - 6,
+                    label_end = false;
+
+                if (moment(task.end_date).format('YYYYMMDD') > moment(settings.date.selected).format('YYYYMMDD')) {
+                    var taskWidth = 120 * (24 - parseInt(moment(task.start_date).format('H')) - 1) + (splitted == 0 ? 120 : 60);
+                } else {
+                    var taskWidth = 120 * (moment(task.end_date).format('H') - moment(task.start_date).format('H')) + (splitted == 0 ? 120 : 60)  - (moment(task.end_date).format('mm') < 30 ? 120 : 60);
+                    label_end = true;
+                }
+                topDistance = parseInt(topDistance);
+                leftDistance = parseInt(leftDistance);
+                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
+            }
+
+            // If the task end date is in the current month but not the start date
+            if (moment(settings.date.selected).format('YYYYMMDD') == moment(task.end_date).format('YYYYMMDD')) {
+                if (moment(task.start_date).format('YYMMDD') < moment(settings.date.selected).format('YYMMDD')) {
+                    var splitted = (moment(task.end_date).format('mm') < 30 ? 120 : 60);
+                    var taskWidth = 120 * (moment(task.end_date).format('H')) - splitted + 120;
+
+                    topDistance = parseInt(topDistance);
+                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
+                }
+            }
+
+            // If the task start and end dates are not in the current month but the task is
+            if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
+                topDistance = parseInt(topDistance);
+                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
+            };
+            setTaskLabelPosition();
+            return (existingTaskLine.length > 0 ? 0 : 40);
+        };
+
         /* Generate the structure of the info box */
         var generateInfoBoxContent = function (task, user) {
             var userCounterAll = 0;
@@ -614,6 +690,7 @@
             updateDisplay('months');
             generateTableLines();
             generateGroupMainContent();
+            generateUsersList();
         });
 
         $('.pts-scheduler-container').scroll(function () {
