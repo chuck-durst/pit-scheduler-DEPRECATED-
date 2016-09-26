@@ -265,6 +265,7 @@ body {
     width: 120px;
     background-color: hsl(187, 100%, 42%);
     top: 5px;
+    cursor: pointer;
 }
 
 .pts-line-marker.complete {
@@ -300,13 +301,23 @@ body {
 
 /************ Infos view ************/
 
-.pit-info-view-container {
-    background-color: blue;
-    width: 30%;
+#pts-info-box-container {
+    background-color: #fff;
+    width: 0%;
     right: 17px;
     position: absolute;
     height: auto;
     z-index: 1000;
     bottom: 16px;
     top: 45px;
+    -webkit-box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
+    -moz-box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
+    box-shadow: -12px 0px 15px -5px rgba(0,0,0,0.22);
+}
+
+.pts-info-box-close-btn {
+    position: relative;
+    top: 3px;
+    color: #b2b2b2;
+    background-color: transparent;
 }

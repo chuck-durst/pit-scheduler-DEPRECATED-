@@ -12,7 +12,8 @@
             list: 'Liste',
             unlisted: 'Non répertorié',
             settings: 'Options',
-            hideEmptyLine: 'Masquer les lignes sans tâche'
+            hideEmptyLine: 'Masquer les lignes sans tâche',
+            description: 'Description'
 
         },
         en: {
@@ -21,7 +22,8 @@
             list: 'List',
             unlisted: 'Unlisted',
             settings: 'Settings',
-            hideEmptyLine: 'Hide lines with no task'
+            hideEmptyLine: 'Hide lines with no task',
+            description: 'Description'
         }
     };
     
@@ -204,6 +206,41 @@
             });
         };
 
+        /* Open the info-box panel */
+        var openInfoBox = function (taskId) {
+            var task = getTaskById(taskId),
+                $markers = $('.pts-line-marker'),
+                $infoBox = $( "#pts-info-box-container" );
+
+            $infoBox.empty();
+            generateInfoBoxContent(task);
+            $infoBox.animate({
+                width: '30%'
+            }, 300);
+            $.each($markers, function () {
+                if ($(this).attr('data-task') !== taskId) {
+                    $(this).css('background-color', '#8e8e8e');
+                }
+            });
+            $('.pts-main-group-column').css('background-color', '#eee');
+            $infoBox.attr('data-toggle', 'opened');
+        };
+
+        /* Close the info-box panel */
+        var closeInfoBox = function () {
+            var $infoBox = $( "#pts-info-box-container" ),
+                $markers = $('.pts-line-marker');
+            $infoBox.animate({
+                width: '0%'
+            }, 300);
+            $infoBox.attr('data-toggle', 'closed');
+            $infoBox.empty();
+            $.each($markers, function () {
+                $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
+            });
+            $('.pts-main-group-column').css('background-color', '#fff');
+        };
+
         /********* Generation *********/
 
         /* Generate the header content */
@@ -235,6 +272,7 @@
         /* Generate base empty base structure */
         var generateBaseView = function () {
             var $mainContainer =    '<div class="pts-main-container row">' +
+                                    '<div id="pts-info-box-container" data-toggle="closed"></div>' +
                                     '<div class="pts-corder-mask"><div class="dropdown">' +
                                     '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                                     settings.i18n.settings + ' <span class="caret"></span></button>' +
@@ -480,6 +518,17 @@
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
+        /* Generate the structure of the info box */
+        var generateInfoBoxContent = function (task) {
+          var $content =    '<button class="btn btn-icon btn-rounded btn-sm pts-info-box-close-btn">' +
+                            '<i class="glyphicon glyphicon-remove pull-left"></i></button>' +
+                            '<div class="panel-heading"><h4 class=" text-semibold heading-divided">' + task.name + '</h4></div>' +
+                            '<div class="panel-body" style="width:100%">' +
+                            '<p><b>' + settings.i18n.description + ' : </b><br>' + task.description + '</p>' +
+                            '</div>';
+            $('#pts-info-box-container').append($content);
+        };
+
         /********* Initialization *********/
         console.group();
         console.info("Initialization");
@@ -565,6 +614,16 @@
 
         $('.pts-scheduler-container').scroll(function () {
             setTaskLabelPosition();
+        });
+
+        $('.pts-line-marker').click(function () {
+            if ($(this).attr('data-task')) {
+                openInfoBox($(this).attr('data-task'));
+            }
+        });
+
+        $('#pts-info-box-container').on('click', '.pts-info-box-close-btn', function () {
+            closeInfoBox();
         });
 
         return $scheduler;
