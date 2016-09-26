@@ -98,7 +98,7 @@
                     $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
                     $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale('fr').format('LL'));
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'days'
                     updateDatePicker();
                     break;
@@ -107,7 +107,7 @@
                     $('.pts-header-right-container  .pts-btn-month-view').addClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
                     $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale('fr').format('MMMM YYYY'));
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
                     settings.currentDisplay = 'months';
                     updateDatePicker();
                     break;
@@ -116,7 +116,7 @@
                     $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-list-view').addClass('pts-active');
                     $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale('fr').format('LL'));
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
                     updateDatePicker();
                     break;
@@ -201,8 +201,8 @@
                     if (settings.currentDisplay === 'months' && moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
                         && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
                         response++;
-                    } else if (settings.currentDisplay === 'days' && moment(settings.date.selected).get('day') >= moment(task.start_date).get('day')
-                        && moment(settings.date.selected).get('day') <= moment(task.end_date).get('day')) {
+                    } else if (settings.currentDisplay === 'days' && moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
+                        && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
                         response++;
                     }
                 }
@@ -300,7 +300,7 @@
                             '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
                             '</div>' +
                             '<span class="pts-header-date-display">' +
-                            (settings.currentDisplay === "months" ? moment(settings.date.selected).locale('fr').format('MMMM YYYY') : moment(settings.date.selected).locale('fr').format('LL')) +
+                            (settings.currentDisplay === "months" ? moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY') : moment(settings.date.selected).locale(settings.locale).format('LL')) +
                             '</span></div>' +
                             '<div class="pts-header-right-container pull-right">' +
                             '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>' +
@@ -660,7 +660,8 @@
             $('#pts-info-box-container').append($content);
             user.tasks.forEach(function (_task) {
                 if (_task.id === task.id) {
-                    $('.pts-info-box-user-list').append('<li><b>' + settings.i18n.from + '</b> ' + _task.start_date + ' <b>' + settings.i18n.to + '</b> ' + _task.end_date + '</li>');
+                    $('.pts-info-box-user-list').append('<li><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
                 }
             });
         };
