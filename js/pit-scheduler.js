@@ -267,15 +267,13 @@
 
         /* Close the info-box panel */
         var closeInfoBox = function (viewType) {
-            var $infoBox = $("#pts-info-box-container");
-            if (viewType === 'task') {
-                var $markers = $('.pts-line-marker');
-                $.each($markers, function () {
-                    $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
-                });
+            var $infoBox = $("#pts-info-box-container"),
+                $markers = $('.pts-line-marker');
+            $.each($markers, function () {
+                $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
+            });
 
-                $('.pts-main-group-column').css('background-color', '#fff');
-            }
+            $('.pts-main-group-column').css('background-color', '#fff');
             $infoBox.animate({
                 width: '0%'
             }, 300);
@@ -656,7 +654,7 @@
                 }
             });
             var $content =  '<div class="panel-body">' +
-                            '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '</h4>' +
+                            '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
                             '<br><div class="divider"></div></div>' +
@@ -682,14 +680,13 @@
                  sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('llll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('llll'));
             });
             var $content =  '<div class="panel-body">' +
-                '<h4 class=" text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small></h4>' +
+                '<h4 class=" text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                 '<div class="pts-info-box-user-list"></div></div>';
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
-                console.log(i);
-                $('.pts-info-box-user-list').append('<p class="progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '"><b>' +
-                    getTaskById(i).name + '</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
+                $('.pts-info-box-user-list').append('<p class="progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
+                    getTaskById(i).name + ' (' + _task.length + ')</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
                 });
@@ -797,8 +794,8 @@
             }
         });
 
-        $('#pts-info-box-container').on('click', function () {
-            closeInfoBox('task');
+        $('#pts-info-box-container').on('click', '.pts-info-box-title', function () {
+            closeInfoBox();
         });
 
         $('.pts-main-content').on('click', '.pts-main-group-column', function () {
@@ -807,6 +804,11 @@
 
         $('.pts-line-title-container').on('click', ' .pts-group-user[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
+        });
+
+        $('#pts-info-box-container').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
+            console.log('click');
+            openInfoBox($(this).data('task'), $(this).data('user'), 'task');
         });
 
         return $scheduler;
