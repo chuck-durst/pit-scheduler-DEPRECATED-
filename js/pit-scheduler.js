@@ -230,6 +230,7 @@
 
         /* Open the info-box panel */
         var openInfoBox = function (taskId, userIndex) {
+            //TODO: make the animation be more stable
             var task = getTaskById(taskId),
                 $markers = $('.pts-line-marker'),
                 $infoBox = $( "#pts-info-box-container" );
@@ -495,32 +496,18 @@
                if (settings.currentDisplay === 'months') {
                    task = hideTaskSuperposition(i, task, user);
                    if (task.end_date && task.disabled != true) {
-                       if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
-                           && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
-                           if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
-                               && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
-                               topDistance += generateTaskLineMonth(user, task, topDistance);
-                           }
+                       if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
+                           && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
+                           topDistance += generateTaskLineMonth(user, task, topDistance);
                        }
                    }
                }
                else if (settings.currentDisplay === 'days') {
                    if (task.end_date) {
-                       if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
-                           && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
-                           console.log("PASS 1");
-                           if (moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
-                               && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
-                               console.log("PASS 2");
-                               console.log(moment(settings.date.selected).format('D'));
-                               console.log( moment(task.start_date).format('D'));
-                               console.log(moment(task.end_date).format('D'));
+
                            if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
                                && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
-                                    console.log("PASS 3");
                                     topDistance += generateTaskLineDay(user, task, topDistance);
-                               }
-                           }
                        }
                    }
                }
@@ -539,12 +526,12 @@
             $('#content-user-' + userIndex).append('<div class="pts-line-marker-group-' + task.index + '" data-task="' + task.id + '" data-user="' + userIndex + '"></div>');
 
             // If the task start date is in the current month
-            if (moment(settings.date.selected).get('month') == moment(task.start_date).get('month')) {
+            if (moment(settings.date.selected).format('YYYYMM') == moment(task.start_date).format('YYYYMM')) {
                 var splitted = (moment(task.start_date).format('H') >= 12 ? 60 : 0),
                     leftDistance = (120 * (moment(task.start_date).format('D') - 1)) + splitted - 6,
                     label_end = false;
 
-                if (moment(task.end_date).get('month') > moment(settings.date.selected).get('month')) {
+                if (moment(task.end_date).format('YYYYMM') > moment(settings.date.selected).format('YYYYMM')) {
                     var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
                 } else {
                     var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60) - (moment(task.end_date).format('H') <= 12 ? 60 : 0);
@@ -559,8 +546,8 @@
             }
 
             // If the task end date is in the current month but not the start date
-            if (moment(settings.date.selected).get('month') == moment(task.end_date).get('month')) {
-                if (moment(task.start_date).get('month') < moment(settings.date.selected).get('month')) {
+            if (moment(settings.date.selected).format('YYYYMM') == moment(task.end_date).format('YYYYMM')) {
+                if (moment(task.start_date).format('YYYYMM') < moment(settings.date.selected).format('YYYYMM')) {
 
                     var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
@@ -573,7 +560,7 @@
             }
 
             // If the task start and end dates are not in the current month but the task is
-            if (moment(settings.date.selected).get('month') != moment(task.end_date).get('month') && moment(settings.date.selected).get('month') != moment(task.start_date).get('month')) {
+            if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                              '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
@@ -586,7 +573,6 @@
 
         /* Generate one task on the month view */
         var generateTaskLineDay = function (user, task, topDistance) {
-            console.log('ACCEPTED');
             var userIndex = user.userIndex;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
@@ -754,7 +740,6 @@
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
-            console.log("OKKKKK");
         });
 
         $('.pts-scheduler-container').scroll(function () {
