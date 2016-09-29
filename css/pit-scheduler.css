@@ -132,6 +132,7 @@ body {
     max-height: 100%;
     margin-right: -100px;
     padding-right: 100px;
+    padding-bottom: 17px;
 }
 
 .pts-line-group-container {
@@ -152,8 +153,8 @@ body {
     padding-top: 12px;
     border-bottom: 1px solid #0097A7;
     width: 150px;
+    cursor: pointer;
 }
-
 .pts-group-header > span {
     position: relative;
     left: 15px;
@@ -353,4 +354,12 @@ body {
     right: 15px;
     position: relative;
     margin-top: -15px;
+}
+
+.pts-info-box-task-header {
+    position: relative;
+    left: 5px;
+    padding: 5px 20px 5px 20px;
+    color: #fff;
+    border-radius: 0 30px 30px 0;
 }

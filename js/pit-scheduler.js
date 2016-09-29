@@ -75,7 +75,7 @@
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
         
-        if (settings.hideEmptyLines === undefined) {
+        if (!settings.hideEmptyLines || (settings.hideEmptyLines !== true && settings.hideEmptyLines !== false)) {
             settings.hideEmptyLines = true;
         }
 
@@ -143,7 +143,7 @@
 
         /* Go to the next month/day */
         var goForward = function () {
-            closeInfoBox();
+            closeInfoBox('task');
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(1, 'months');
             } else {
@@ -154,7 +154,7 @@
 
         /* Go to the previous month/day */
         var goBackward = function () {
-            closeInfoBox();
+            closeInfoBox('task');
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'months');
             } else {
@@ -233,40 +233,54 @@
         };
 
         /* Open the info-box panel */
-        var openInfoBox = function (taskId, userIndex) {
+        var openInfoBox = function (taskId, userIndex, viewType) {
             //TODO: make the animation be more stable
-            var task = getTaskById(taskId),
-                $markers = $('.pts-line-marker'),
-                $infoBox = $( "#pts-info-box-container" );
-
+            var $infoBox = $("#pts-info-box-container");
             $infoBox.empty();
-            generateInfoBoxContentTask(task, settings.users[userIndex]);
+
+            if (viewType === 'task') {
+                var task = getTaskById(taskId),
+                    $markers = $('.pts-line-marker');
+
+                generateInfoBoxContentTask(task, settings.users[userIndex]);
+                $.each($markers, function () {
+                    $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
+                    if ($(this).attr('data-task') !== taskId) {
+                        $(this).css('background-color', '#8e8e8e');
+                    }
+                });
+                $('.pts-main-group-column').css('background-color', '#eee');
+                $infoBox.attr('data-toggle', 'opened');
+            }
+
+            else if (viewType === 'user') {
+                var user = settings.users[userIndex];
+
+                generateInfoBoxContentUser(user);
+                $infoBox.attr('data-toggle', 'opened');
+            }
+
             $infoBox.animate({
                 width: '35%'
             }, 300);
-            $.each($markers, function () {
-                $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
-                if ($(this).attr('data-task') !== taskId) {
-                    $(this).css('background-color', '#8e8e8e');
-                }
-            });
-            $('.pts-main-group-column').css('background-color', '#eee');
-            $infoBox.attr('data-toggle', 'opened');
         };
 
         /* Close the info-box panel */
-        var closeInfoBox = function () {
-            var $infoBox = $( "#pts-info-box-container" ),
-                $markers = $('.pts-line-marker');
+        var closeInfoBox = function (viewType) {
+            var $infoBox = $("#pts-info-box-container");
+            if (viewType === 'task') {
+                var $markers = $('.pts-line-marker');
+                $.each($markers, function () {
+                    $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
+                });
+
+                $('.pts-main-group-column').css('background-color', '#fff');
+            }
             $infoBox.animate({
                 width: '0%'
             }, 300);
             $infoBox.attr('data-toggle', 'closed');
             $infoBox.empty();
-            $.each($markers, function () {
-                $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
-            });
-            $('.pts-main-group-column').css('background-color', '#fff');
         };
 
         /* Mix tasks that have a superposition */
@@ -376,7 +390,8 @@
 
             settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
             settings.defaultGroupName = settings.groups[0];
-                settings.users.forEach(function (e) {
+                settings.users.forEach(function (e, i) {
+                    e.index = i;
                     if (e.group === undefined || e.group === '') {
                         e.group = settings.defaultGroupName;
                         keepUnlisted = false;
@@ -482,7 +497,7 @@
             if (userLineIsHidden(user) == false) return;
             console.log('Generate line for user: ' + user.name + ' in group: ' + group);
 
-            var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px"><p>' + user.name + '</p></div>';
+            var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
             $('#' + group + ' > .pts-group-content').append($userNameUI);
 
@@ -631,7 +646,7 @@
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
-        /* Generate the structure of the info box */
+        /* Generate the tasks structure of the info box */
         var generateInfoBoxContentTask = function (task, user) {
             var userCounterAll = 0;
 
@@ -654,6 +669,31 @@
                     $('.pts-info-box-user-list').append('<li><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
                 }
+            });
+        };
+
+        /* Generate the users structure of the info box */
+        var generateInfoBoxContentUser = function (user) {
+            var sortedTasks = {};
+            user.tasks.forEach(function (e) {
+                if (!sortedTasks[e.id]) {
+                    sortedTasks[e.id] = [];
+                }
+                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('llll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('llll'));
+            });
+            var $content =  '<div class="panel-body">' +
+                '<h4 class=" text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small></h4>' +
+                '<div class="pts-info-box-user-list"></div></div>';
+
+            $('#pts-info-box-container').append($content);
+            $.each(sortedTasks, function (i, _task) {
+                console.log(i);
+                $('.pts-info-box-user-list').append('<p class="progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '"><b>' +
+                    getTaskById(i).name + '</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
+                _task.forEach(function (_line) {
+                    $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
+                });
+
             });
         };
 
@@ -753,16 +793,20 @@
 
         $('.pts-scheduler-container').on('click', '.pts-line-marker', function () {
             if ($(this).attr('data-task') && $(this).attr('data-user')) {
-                openInfoBox($(this).attr('data-task'), $(this).attr('data-user'));
+                openInfoBox($(this).attr('data-task'), $(this).attr('data-user'), 'task');
             }
         });
 
         $('#pts-info-box-container').on('click', function () {
-            closeInfoBox();
+            closeInfoBox('task');
         });
 
         $('.pts-main-content').on('click', '.pts-main-group-column', function () {
-            closeInfoBox();
+            closeInfoBox('task');
+        });
+
+        $('.pts-line-title-container').on('click', ' .pts-group-user[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'user');
         });
 
         return $scheduler;
