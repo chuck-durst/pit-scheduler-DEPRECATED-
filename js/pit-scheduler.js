@@ -78,7 +78,7 @@
         if (settings.hideEmptyLines === undefined) {
             settings.hideEmptyLines = true;
         }
-        
+
         if (settings.defaultDate !== undefined && moment(settings.defaultDate).isValid()) {
             settings.date.selected = moment(settings.defaultDate);
         }
@@ -240,7 +240,7 @@
                 $infoBox = $( "#pts-info-box-container" );
 
             $infoBox.empty();
-            generateInfoBoxContent(task, settings.users[userIndex]);
+            generateInfoBoxContentTask(task, settings.users[userIndex]);
             $infoBox.animate({
                 width: '35%'
             }, 300);
@@ -475,7 +475,7 @@
                 generateUserLine(user, group)
             });
         };
-        
+
         /* Add one user line */
         var generateUserLine = function (user, group) {
             if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
@@ -632,7 +632,7 @@
         };
 
         /* Generate the structure of the info box */
-        var generateInfoBoxContent = function (task, user) {
+        var generateInfoBoxContentTask = function (task, user) {
             var userCounterAll = 0;
 
             settings.users.forEach(function (e) {
