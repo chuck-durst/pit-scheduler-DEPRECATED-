@@ -211,7 +211,6 @@
                     }
                 }
             });
-            console.log("FOR USER " + user.name + " : " + ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false));
             return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
         };
 
@@ -401,7 +400,6 @@
                         settings.groups.push(e.group);
                     }
                 });
-            console.log(settings.users);
             settings.groups.unlisted = 0; //stores the id of the unlisted group
             if (keepUnlisted) {
                 settings.groups.shift();
@@ -816,7 +814,6 @@
         });
 
         $('#pts-info-box-container').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
-            console.log('click');
             openInfoBox($(this).data('task'), $(this).data('user'), 'task');
         });
 
