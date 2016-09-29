@@ -748,9 +748,12 @@
         });
 
         $('#header-datetimepicker').on('dp.change', function (e) {
-            if (e.date === settings.date.selected) return console.log("EGALE");
+            if (e.date === settings.date.selected) return;
             settings.date.selected = e.date;
             updateDisplay(settings.currentDisplay);
+            generateTableLines();
+            generateGroupMainContent();
+            generateUsersList();
         });
 
         $('.close-group-panel').click(function () {
