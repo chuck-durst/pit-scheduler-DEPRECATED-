@@ -211,6 +211,7 @@
                     }
                 }
             });
+            console.log("FOR USER " + user.name + " : " + ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false));
             return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
         };
 
@@ -269,6 +270,8 @@
         var closeInfoBox = function (viewType) {
             var $infoBox = $("#pts-info-box-container"),
                 $markers = $('.pts-line-marker');
+
+            if ($infoBox.data('toggle') === 'closed') return;
             $.each($markers, function () {
                 $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
             });
@@ -710,12 +713,15 @@
         /********* Events *********/
 
         $('.pts-btn-day-view').click( function () {
+            closeInfoBox();
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
+            generateUsersList();
         });
 
         $('.pts-btn-month-view').click( function () {
+            closeInfoBox();
             updateDisplay('months');
             generateTableLines();
             generateGroupMainContent();
