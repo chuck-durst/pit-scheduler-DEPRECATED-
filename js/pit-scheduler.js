@@ -78,6 +78,10 @@
         if (settings.hideEmptyLines === undefined) {
             settings.hideEmptyLines = true;
         }
+        
+        if (settings.defaultDate !== undefined && moment(settings.defaultDate).isValid()) {
+            settings.date.selected = moment(settings.defaultDate);
+        }
 
         console.log("Locale: " + settings.locale);
         console.log("Current display: " + settings.currentDisplay);
@@ -198,8 +202,8 @@
             user.tasks.forEach(function (task) {
                 if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
                     && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
-                    if (settings.currentDisplay === 'months' && moment(settings.date.selected).get('month') >= moment(task.start_date).get('month')
-                        && moment(settings.date.selected).get('month') <= moment(task.end_date).get('month')) {
+                    if (settings.currentDisplay === 'months' && moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
+                        && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
                         response++;
                     } else if (settings.currentDisplay === 'days' && moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
                         && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
@@ -370,10 +374,11 @@
         var generateGroupsPanels = function () {
             var keepUnlisted = true;
 
-            settings.groups = [settings.i18n.unlisted];
+            settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
+            settings.defaultGroupName = settings.groups[0];
                 settings.users.forEach(function (e) {
                     if (e.group === undefined || e.group === '') {
-                        e.group = settings.i18n.unlisted;
+                        e.group = settings.defaultGroupName;
                         keepUnlisted = false;
                     }
                     else if (settings.groups.indexOf(e.group) == -1) {
@@ -387,7 +392,7 @@
             }
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
-                if (i !== 'added' && i !== 'unlisted') {
+                if (i !== 'added' && i !== settings.defaultGroupName) {
                     generateGroupTab(e, i);
                     settings.groups.added.push({
                         name: e,
