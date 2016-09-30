@@ -109,7 +109,10 @@
         /* update display view */
         var updateDisplay = function (format) {
             closeInfoBox();
-            $('.pts-main-container').remove();
+            $('.pts-main-content').empty();
+            $('.pts-column-title-container > div').empty();
+            $('.pts-line-title-container > div').empty();
+            $('.pts-corner-mask').empty();
             $('.pts-btn-next').removeAttr('disabled');
             $('.pts-btn-previous').removeAttr('disabled');
             $('.pts-header-date-display').css('display', 'block');
@@ -150,8 +153,7 @@
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
-                    $('.pts-main-container').remove();
-                    $('.pts-btn-next').attr('disabled', 'disabled');
+                        $('.pts-btn-next').attr('disabled', 'disabled');
                     $('.pts-btn-previous').attr('disabled', 'disabled');
                     $('.pts-header-date-display').css('display', 'none');
                     $('#header-datetimepicker').data("DateTimePicker").disable();
@@ -387,13 +389,7 @@
             if ($('.pts-main-container').length) return;
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>' +
-                                    '<div class="pts-corder-mask"><div class="dropdown">' +
-                                    '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                    settings.i18n.settings + ' <span class="caret"></span></button>' +
-                                    '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
-                                    '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
-                                    '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
-                                    '</div></div>' +
+                                    '<div class="pts-corner-mask"></div>' +
                                     '<div class="pts-column-title-container">' +
                                     '<div></div></div>' +
                                     '<div class="pts-line-title-container"><div>' +
@@ -410,6 +406,7 @@
 
             $('.pts-column-title-container > div').empty();
             $('.pts-main-content').empty();
+            $('.pts-corner-mask').empty();
             if (settings.currentDisplay == 'days') {
                 var lineInterval = 0;
                 for (var i=0; i < 25; i++) {
@@ -435,6 +432,14 @@
                     dayDate.add(1, 'day');
                 }
             }
+            var $settingsMenu = '<div class="dropdown">' +
+                                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                settings.i18n.settings + ' <span class="caret"></span></button>' +
+                                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
+                                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
+                                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
+                                '</div>';
+            $('.pts-corner-mask').append($settingsMenu);
         };
 
         /* Generate the groups panels */
@@ -877,7 +882,7 @@
             generateGroupMainContent();
         });
 
-        $('#pit-scheduler').on('scroll', '.pts-scheduler-container', function () { //TODO: FUCKING FOCK DOESN'T FUCKING WORK
+        $('.pts-scheduler-container').scroll(function () { //TODO: FUCKING FOCK DOESN'T FUCKING WORK
             console.log("YZGZG");
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
