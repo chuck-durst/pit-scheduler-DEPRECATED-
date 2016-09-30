@@ -403,8 +403,27 @@
             </div>
         </div>
     </div>
+    <div class="colored-tag" style="background-color:#000;height:20px;width:20px">
+        salut
+    </div>
 </div>
 <script>
+
+    var getContrastColor = function ($elem) {
+        var rgb = $elem.css("background-color").match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        if (rgb.length == 4)
+            var L = (rgb[1] * 0.299 + rgb[2] * 0.587 + rgb[3] * 0.114) / 255;
+        if (L > 0.60)
+            return '#000';
+        else
+            return '#fff';
+    };
+
+    $(".colored-tag").each(function () {
+        var $this = $(this);
+        $this.css('color', getContrastColor($this));
+
+    });
 
 var a = 0;
     $(function () {

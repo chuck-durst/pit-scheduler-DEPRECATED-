@@ -99,6 +99,7 @@
             closeInfoBox();
             $('.pts-btn-next').removeAttr('disabled');
             $('.pts-btn-previous').removeAttr('disabled');
+            $('.pts-header-date-display').css('display', 'block');
             $('#header-datetimepicker').data("DateTimePicker").enable();
             switch (format) {
                 case 'days':
@@ -139,6 +140,7 @@
                     $('.pts-main-container').remove();
                     $('.pts-btn-next').attr('disabled', 'disabled');
                     $('.pts-btn-previous').attr('disabled', 'disabled');
+                    $('.pts-header-date-display').css('display', 'none');
                     $('#header-datetimepicker').data("DateTimePicker").disable();
                     break;
 
