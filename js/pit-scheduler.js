@@ -33,7 +33,7 @@
             from: 'From',
             to: 'to',
             notSpecified: 'Not specified',
-            disableLabelsMovement: 'Disable labels mouvemen'
+            disableLabelsMovement: 'Disable labels mouvement'
         }
     };
     
