@@ -321,6 +321,24 @@
             return task;
         };
 
+        /* Check which color match with the element background color */
+        var getContrastColor = function () {
+            $('.pts-check-color').each(function () {
+                var rgb = $(this).css('background-color').match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                if (rgb.length == 4) {
+                    var L = (rgb[1] * 0.299 + rgb[2] * 0.587 + rgb[3] * 0.114) / 255;
+                    if (L > 0.60) {
+                        $(this).children().css('color', '#000');
+                        $(this).css('color', '#000');
+                    }
+                    else {
+                        $(this).children().css('color', '#fff');
+                        $(this).css('color', '#fff');
+                    }
+                }
+            });
+        };
+
         /********* Generation *********/
 
         /* Generate the header content */
@@ -579,7 +597,7 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                              '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
@@ -593,7 +611,7 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                    var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                                  '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
@@ -602,12 +620,13 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                              '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
             setTaskLabelPosition();
+            getContrastColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -636,7 +655,7 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                              '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
@@ -649,7 +668,7 @@
                     var taskWidth = 120 * (moment(task.end_date).format('H')) - splitted + 120;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                    var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                                  '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
@@ -658,11 +677,12 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
                              '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
+            getContrastColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -676,7 +696,7 @@
                 }
             });
             var $content =  '<div class="panel-body">' +
-                            '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
                             '<br><div class="divider"></div></div>' +
@@ -690,6 +710,7 @@
                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
                 }
             });
+            getContrastColor();
         };
 
         /* Generate the users structure of the info box */
@@ -702,18 +723,19 @@
                  sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('llll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('llll'));
             });
             var $content =  '<div class="panel-body">' +
-                '<h4 class=" text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
+                '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                 '<div class="pts-info-box-user-list"></div></div>';
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
-                $('.pts-info-box-user-list').append('<p class="progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
+                $('.pts-info-box-user-list').append('<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
                     getTaskById(i).name + ' (' + _task.length + ')</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
                 });
 
             });
+            getContrastColor();
         };
 
         /********* Initialization *********/
