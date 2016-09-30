@@ -23,7 +23,8 @@
             thisWeek: 'Cette semaine',
             thisMonth: 'Ce mois-ci',
             thisYear: 'Cette année',
-            personalized: 'Personnalisé'
+            personalized: 'Personnalisé',
+            selectAll: 'Tout sélectionner'
 
         },
         en: {
@@ -43,7 +44,8 @@
             thisWeek: 'This week',
             thisMonth: 'This month',
             thisYear: 'This year',
-            personalized: 'Personalized'
+            personalized: 'Personalized',
+            selectAll: 'Select all'
         }
     };
     
@@ -767,6 +769,7 @@
                                     '</div>' +
                                     '<div></div></div>' +
                                     '<div class="pts-line-title-container">' +
+                                    '<label class="checkbox-inline" style="margin-left:6px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>' +
                                     '<div></div></div>' +
                                     '<div class="pts-scheduler-container">' +
                                     '<div class="pts-main-content">' +
@@ -774,7 +777,7 @@
             $scheduler.append($mainContainer);
             settings.tasks.forEach(function (_task) {
                 var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
-                                    '<label class="checkbox-inline"><input id="" type="checkbox" checked="checked">' + _task.name + '</label></div>';
+                                    '<label class="checkbox-inline"><input id="" class="pts-list-task-enabler-input" type="checkbox" checked="checked">' + _task.name + '</label></div>';
                 $('.pts-line-title-container').append($taskLabel);
             });
             getContrastColor();
@@ -873,7 +876,7 @@
             generateGroupMainContent();
         });
 
-        $('#pit-scheduler .pts-scheduler-container').scroll( function () { //TODO: NOT WORKING!! :'(
+        $('#pit-scheduler .pts-scheduler-container').scroll( function () {
             console.log("YZGZG");
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
@@ -900,6 +903,20 @@
 
         $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
             openInfoBox($(this).data('task'), $(this).data('user'), 'task');
+        });
+
+        $('#pit-scheduler').on('click', '#pts-list-task-select-all', function () {
+            $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-task-enabler-input', function () {
+            var checked = $(this).context.checked;
+            if ($('.pts-list-task-enabler-input').prop('checked') == false) {
+                $('#pts-list-task-select-all').prop('checked', false);
+            } else  {
+                $('#pts-list-task-select-all').prop('checked', true);
+            }
+
         });
 
         return $scheduler;

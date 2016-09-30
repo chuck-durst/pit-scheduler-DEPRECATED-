@@ -386,6 +386,11 @@ body {
 
 .pts-list-row-task {
     margin-bottom: 2px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
 }
 .pts-list-row-task > label {
     position: relative;
