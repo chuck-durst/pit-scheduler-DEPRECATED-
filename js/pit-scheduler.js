@@ -96,6 +96,10 @@
 
         /* update display view */
         var updateDisplay = function (format) {
+            closeInfoBox();
+            $('.pts-btn-next').removeAttr('disabled');
+            $('.pts-btn-previous').removeAttr('disabled');
+            $('#header-datetimepicker').data("DateTimePicker").enable();
             switch (format) {
                 case 'days':
                     $('.pts-header-right-container  .pts-btn-day-view').addClass('pts-active');
@@ -103,7 +107,12 @@
                     $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
-                    settings.currentDisplay = 'days'
+                    settings.currentDisplay = 'days';
+                    generateBaseView();
+                    generateTableLines();
+                    generateGroupsPanels();
+                    generateGroupMainContent();
+                    generateUsersList();
                     updateDatePicker();
                     break;
                 case 'months':
@@ -113,6 +122,11 @@
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
                     settings.currentDisplay = 'months';
+                    generateBaseView();
+                    generateTableLines();
+                    generateGroupsPanels();
+                    generateGroupMainContent();
+                    generateUsersList();
                     updateDatePicker();
                     break;
                 case 'list':
@@ -122,7 +136,10 @@
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
-                    updateDatePicker();
+                    $('.pts-main-container').remove();
+                    $('.pts-btn-next').attr('disabled', 'disabled');
+                    $('.pts-btn-previous').attr('disabled', 'disabled');
+                    $('#header-datetimepicker').data("DateTimePicker").disable();
                     break;
 
             }
@@ -332,6 +349,7 @@
 
         /* Generate base empty base structure */
         var generateBaseView = function () {
+            if ($('.pts-main-container').length) return;
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>' +
                                     '<div class="pts-corder-mask"><div class="dropdown">' +
@@ -386,6 +404,7 @@
 
         /* Generate the groups panels */
         var generateGroupsPanels = function () {
+            if ($('.pts-line-group-container').length) return;
             var keepUnlisted = true;
 
             settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
@@ -711,19 +730,15 @@
         /********* Events *********/
 
         $('.pts-btn-day-view').click( function () {
-            closeInfoBox();
             updateDisplay('days');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
         });
 
         $('.pts-btn-month-view').click( function () {
-            closeInfoBox();
             updateDisplay('months');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
+        });
+
+        $('.pts-btn-list-view').click( function () {
+            updateDisplay('list');
         });
 
         $('.pts-scheduler-container').scroll(function () {
