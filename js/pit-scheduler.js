@@ -157,7 +157,6 @@
                     $('#header-datetimepicker').data("DateTimePicker").disable();
                     generateListBaseView();
                     break;
-
             }
         };
 
@@ -296,6 +295,7 @@
             $infoBox.animate({
                 width: '35%'
             }, 300);
+            getContrastedColor();
         };
 
         /* Close the info-box panel */
@@ -314,6 +314,7 @@
             }, 300);
             $infoBox.attr('data-toggle', 'closed');
             $infoBox.empty();
+            getContrastedColor();
         };
 
         /* Mix tasks that have a superposition */
@@ -336,7 +337,7 @@
         };
 
         /* Check which color match with the element background color */
-        var getContrastColor = function () {
+        var getContrastedColor = function () {
             $('.pts-check-color').each(function () {
                 var rgb = $(this).css('background-color').match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
                 if (rgb.length == 4) {
@@ -640,7 +641,7 @@
             }
             //TODO: Add task label
             setTaskLabelPosition();
-            getContrastColor();
+            getContrastedColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -696,7 +697,7 @@
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
-            getContrastColor();
+            getContrastedColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -724,7 +725,7 @@
                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
                 }
             });
-            getContrastColor();
+            getContrastedColor();
         };
 
         /* Generate the users structure of the info box */
@@ -749,13 +750,14 @@
                 });
 
             });
-            getContrastColor();
+            getContrastedColor();
         };
 
 
         /* Generate list view main structure */
         var generateListBaseView = function () {
             if ($('.pts-main-container').length) return;
+            if (!settings.list) settings.list = {};
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>' +
                                     '<div class="pts-column-title-container">' +
@@ -769,7 +771,7 @@
                                     '</div>' +
                                     '<div></div></div>' +
                                     '<div class="pts-line-title-container">' +
-                                    '<label class="checkbox-inline" style="margin-left:6px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>' +
+                                    '<label class="checkbox-inline" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>' +
                                     '<div></div></div>' +
                                     '<div class="pts-scheduler-container">' +
                                     '<div class="pts-main-content">' +
@@ -777,10 +779,10 @@
             $scheduler.append($mainContainer);
             settings.tasks.forEach(function (_task) {
                 var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
-                                    '<label class="checkbox-inline"><input id="" class="pts-list-task-enabler-input" type="checkbox" checked="checked">' + _task.name + '</label></div>';
+                                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
                 $('.pts-line-title-container').append($taskLabel);
             });
-            getContrastColor();
+            getContrastedColor();
         };
 
         /********* Initialization *********/
@@ -813,7 +815,6 @@
         $('.pts-btn-list-view').click( function () {
             updateDisplay('list');
         });
-
 
         $('.pts-btn-next').click(function () {
             goForward();
@@ -876,12 +877,13 @@
             generateGroupMainContent();
         });
 
-        $('#pit-scheduler .pts-scheduler-container').scroll( function () {
+        $('#pit-scheduler').on('scroll', '.pts-scheduler-container', function () { //TODO: FUCKING FOCK DOESN'T FUCKING WORK
             console.log("YZGZG");
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
         });
+        
 
         $('#pit-scheduler').on('click', '.pts-line-marker', function () {
             if ($(this).attr('data-task') && $(this).attr('data-user')) {
@@ -910,13 +912,17 @@
         });
 
         $('#pit-scheduler').on('click', '.pts-list-task-enabler-input', function () {
-            var checked = $(this).context.checked;
-            if ($('.pts-list-task-enabler-input').prop('checked') == false) {
+            var checked = true;
+            $('.pts-list-task-enabler-input').each(function () {
+                if ($(this).prop('checked') == false) {
+                    checked = false;
+                }
+            });
+            if (checked == false) {
                 $('#pts-list-task-select-all').prop('checked', false);
             } else  {
                 $('#pts-list-task-select-all').prop('checked', true);
             }
-
         });
 
         return $scheduler;
