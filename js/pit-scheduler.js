@@ -18,7 +18,12 @@
             from: 'Du',
             to: 'au',
             notSpecified: 'Non spécifiée',
-            disableLabelsMovement: 'Désactiver le mouvement des labels'
+            disableLabelsMovement: 'Désactiver le mouvement des labels',
+            today: 'Aujourd\'hui',
+            thisWeek: 'Cette semaine',
+            thisMonth: 'Ce mois-ci',
+            thisYear: 'Cette année',
+            personalized: 'Personnalisé'
 
         },
         en: {
@@ -33,7 +38,12 @@
             from: 'From',
             to: 'to',
             notSpecified: 'Not specified',
-            disableLabelsMovement: 'Disable labels mouvement'
+            disableLabelsMovement: 'Disable labels mouvement',
+            today: 'Today',
+            thisWeek: 'This week',
+            thisMonth: 'This month',
+            thisYear: 'This year',
+            personalized: 'Personalized'
         }
     };
     
@@ -97,6 +107,7 @@
         /* update display view */
         var updateDisplay = function (format) {
             closeInfoBox();
+            $('.pts-main-container').remove();
             $('.pts-btn-next').removeAttr('disabled');
             $('.pts-btn-previous').removeAttr('disabled');
             $('.pts-header-date-display').css('display', 'block');
@@ -142,6 +153,7 @@
                     $('.pts-btn-previous').attr('disabled', 'disabled');
                     $('.pts-header-date-display').css('display', 'none');
                     $('#header-datetimepicker').data("DateTimePicker").disable();
+                    generateListBaseView();
                     break;
 
             }
@@ -738,16 +750,50 @@
             getContrastColor();
         };
 
+
+        /* Generate list view main structure */
+        var generateListBaseView = function () {
+            if ($('.pts-main-container').length) return;
+            var $mainContainer =    '<div class="pts-main-container row">' +
+                                    '<div id="pts-info-box-container" data-toggle="closed"></div>' +
+                                    '<div class="pts-column-title-container">' +
+                                    '<div>' +
+                                    '<button class="btn btn-sm pts-list-laps-btn selected">' + settings.i18n.today + '</button>' +
+                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisWeek + '</button>' +
+                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisMonth + '</button>' +
+                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisYear + '</button>' +
+                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.personalized + '</button>' +
+                                    '<div class="pts-list-personalized-inputs-container"></div>' +
+                                    '</div>' +
+                                    '<div></div></div>' +
+                                    '<div class="pts-line-title-container">' +
+                                    '<div></div></div>' +
+                                    '<div class="pts-scheduler-container">' +
+                                    '<div class="pts-main-content">' +
+                                    '</div></div></div>';
+            $scheduler.append($mainContainer);
+            settings.tasks.forEach(function (_task) {
+                var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
+                                    '<label class="checkbox-inline"><input id="" type="checkbox" checked="checked">' + _task.name + '</label></div>';
+                $('.pts-line-title-container').append($taskLabel);
+            });
+            getContrastColor();
+        };
+
         /********* Initialization *********/
         console.group();
         console.info("Initialization");
 
         generateHeader();
-        generateBaseView();
-        generateTableLines();
-        generateGroupsPanels();
-        generateGroupMainContent();
-        generateUsersList();
+        if (settings.currentDisplay === 'days' || settings.currentDisplay === 'months') {
+            generateBaseView();
+            generateTableLines();
+            generateGroupsPanels();
+            generateGroupMainContent();
+            generateUsersList();
+        } else {
+            updateDisplay('list');
+        }
 
         console.groupEnd();
 
@@ -765,10 +811,6 @@
             updateDisplay('list');
         });
 
-        $('.pts-scheduler-container').scroll(function () {
-            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
-            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
-        });
 
         $('.pts-btn-next').click(function () {
             goForward();
@@ -823,36 +865,40 @@
             generateUsersList();
         });
 
-        $('.pts-column-title-container').on('click', '.pts-column-element[data-date]', function () {
+        $('#pit-scheduler').on('click', '.pts-column-element[data-date]', function () {
             settings.date.selected = moment($(this).attr('data-date'));
+            console.log('click');
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
         });
 
-        $('.pts-scheduler-container').scroll(function () {
+        $('#pit-scheduler .pts-scheduler-container').scroll( function () { //TODO: NOT WORKING!! :'(
+            console.log("YZGZG");
+            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
+            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
         });
 
-        $('.pts-scheduler-container').on('click', '.pts-line-marker', function () {
+        $('#pit-scheduler').on('click', '.pts-line-marker', function () {
             if ($(this).attr('data-task') && $(this).attr('data-user')) {
                 openInfoBox($(this).attr('data-task'), $(this).attr('data-user'), 'task');
             }
         });
 
-        $('#pts-info-box-container').on('click', '.pts-info-box-title', function () {
+        $('#pit-scheduler').on('click', '.pts-info-box-title', function () {
             closeInfoBox();
         });
 
-        $('.pts-main-content').on('click', '.pts-main-group-column', function () {
+        $('#pit-scheduler').on('click', '.pts-main-group-column', function () {
             closeInfoBox('task');
         });
 
-        $('.pts-line-title-container').on('click', ' .pts-group-user[data-user]', function () {
+        $('#pit-scheduler').on('click', ' .pts-group-user[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
         });
 
-        $('#pts-info-box-container').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
+        $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
             openInfoBox($(this).data('task'), $(this).data('user'), 'task');
         });
 

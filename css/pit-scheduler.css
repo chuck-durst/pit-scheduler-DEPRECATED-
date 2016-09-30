@@ -303,7 +303,7 @@ body {
     width: 100%;
 }
 
-/************ Infos view ************/
+/************ Infos box view ************/
 
 #pts-info-box-container {
     background-color: #fff;
@@ -369,4 +369,26 @@ body {
     color: #fff;
     border-radius: 0 30px 30px 0;
     cursor: pointer;
+}
+
+/************ List view ************/
+
+.pts-list-laps-btn.selected {
+    background-color: #0097A7 !important;
+}
+.pts-list-laps-btn {
+    height: 35px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-color: #00BCD4;
+    color: #fff;
+}
+
+.pts-list-row-task {
+    margin-bottom: 2px;
+}
+.pts-list-row-task > label {
+    position: relative;
+    top: 8px;
+    left: 5px;
 }
