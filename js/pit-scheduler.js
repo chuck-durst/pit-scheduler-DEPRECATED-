@@ -111,7 +111,8 @@
             closeInfoBox();
             $('.pts-main-content').empty();
             $('.pts-column-title-container > div').empty();
-            $('.pts-line-title-container > div').empty();
+            $('.pts-line-title-container').empty();
+            $('.pts-line-title-container').append($('<div></div>'));
             $('.pts-corner-mask').empty();
             $('.pts-btn-next').removeAttr('disabled');
             $('.pts-btn-previous').removeAttr('disabled');
@@ -304,8 +305,7 @@
         var closeInfoBox = function (viewType) {
             var $infoBox = $("#pts-info-box-container"),
                 $markers = $('.pts-line-marker');
-
-            if ($infoBox.data('toggle') === 'closed') return;
+            if ($infoBox.attr('data-toggle') === 'closed') return;
             $.each($markers, function () {
                 $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
             });
@@ -619,7 +619,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -632,7 +632,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -641,7 +641,7 @@
             if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
@@ -677,7 +677,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -689,7 +689,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -698,7 +698,7 @@
             if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
@@ -761,27 +761,16 @@
 
         /* Generate list view main structure */
         var generateListBaseView = function () {
-            if ($('.pts-main-container').length) return;
+            console.log('in');
             if (!settings.list) settings.list = {};
-            var $mainContainer =    '<div class="pts-main-container row">' +
-                                    '<div id="pts-info-box-container" data-toggle="closed"></div>' +
-                                    '<div class="pts-column-title-container">' +
-                                    '<div>' +
-                                    '<button class="btn btn-sm pts-list-laps-btn selected">' + settings.i18n.today + '</button>' +
+            var $columnContainer =  '<button class="btn btn-sm pts-list-laps-btn selected">' + settings.i18n.today + '</button>' +
                                     '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisWeek + '</button>' +
                                     '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisMonth + '</button>' +
                                     '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisYear + '</button>' +
                                     '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.personalized + '</button>' +
-                                    '<div class="pts-list-personalized-inputs-container"></div>' +
-                                    '</div>' +
-                                    '<div></div></div>' +
-                                    '<div class="pts-line-title-container">' +
-                                    '<label class="checkbox-inline" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>' +
-                                    '<div></div></div>' +
-                                    '<div class="pts-scheduler-container">' +
-                                    '<div class="pts-main-content">' +
-                                    '</div></div></div>';
-            $scheduler.append($mainContainer);
+                                    '<div class="pts-list-personalized-inputs-container"></div>';
+            $('.pts-column-title-container > div').append($columnContainer);
+            $('.pts-line-title-container').append('<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>');
             settings.tasks.forEach(function (_task) {
                 var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
                                     '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
@@ -882,13 +871,11 @@
             generateGroupMainContent();
         });
 
-        $('.pts-scheduler-container').scroll(function () { //TODO: FUCKING FOCK DOESN'T FUCKING WORK
-            console.log("YZGZG");
+        $('.pts-scheduler-container').scroll(function () {
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
         });
-        
 
         $('#pit-scheduler').on('click', '.pts-line-marker', function () {
             if ($(this).attr('data-task') && $(this).attr('data-user')) {
