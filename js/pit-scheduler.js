@@ -948,6 +948,18 @@
             }
         });
 
+        $('#pit-scheduler').on('dp.change', '#pts-list-datetimepicker-start', function (e) {
+            $('#pts-list-datetimepicker-end').data('DateTimePicker').minDate(e.date);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
+            settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
+            settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
+            console.log(settings.list);
+            console.log($('#pts-list-datetimepicker-start'));
+            switchListRange('personalized');
+        });
+
         return $scheduler;
     };
 }(jQuery));
