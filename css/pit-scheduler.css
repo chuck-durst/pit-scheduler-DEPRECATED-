@@ -100,10 +100,8 @@ body {
 
 .pts-column-title-container > div {
     height: auto;
-    overflow-y: hidden;
     margin-bottom: -100px;
     padding-bottom: 100px;
-    overflow-x: auto;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -220,9 +218,10 @@ body {
 }
 
 .pts-main-content {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    height: auto;
     width: auto;
+    top: 0;
 }
 
 .pts-main-group-header {
@@ -383,10 +382,10 @@ body {
 
 /************ List view ************/
 
-.pts-list-laps-btn.selected {
+.pts-list-range-btn.selected {
     background-color: #0097A7 !important;
 }
-.pts-list-laps-btn {
+.pts-list-range-btn {
     height: 35px;
     margin-top: auto;
     margin-bottom: auto;
@@ -406,4 +405,24 @@ body {
     position: relative;
     top: 8px;
     left: 5px;
+}
+
+.pts-list-personalized-inputs-container {
+    position: relative;
+    top: 6px;
+}
+
+.pts-list-personalized-inputs-container .col-lg-5 {
+    display: inline-flex;
+}
+
+.pts-list-personalized-inputs-container .col-lg-5 > span {
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.pts-list-range-submit {
+    background-color: #00BCD4;
+    color: #fff;
+    position: relative;
+    bottom: 2px;
 }

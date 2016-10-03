@@ -118,6 +118,7 @@
             $('.pts-btn-previous').removeAttr('disabled');
             $('.pts-header-date-display').css('display', 'block');
             $('#header-datetimepicker').data("DateTimePicker").enable();
+            $('.pts-column-title-container').css('overflow', 'hidden');
             switch (format) {
                 case 'days':
                     $('.pts-header-right-container  .pts-btn-day-view').addClass('pts-active');
@@ -148,6 +149,7 @@
                     updateDatePicker();
                     break;
                 case 'list':
+                    $('.pts-column-title-container').css('overflow', 'visible');
                     $('.pts-header-right-container  .pts-btn-day-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-list-view').addClass('pts-active');
@@ -354,6 +356,11 @@
                     }
                 }
             });
+        };
+        
+        /* Switch the list view date range */
+        var switchListRange = function (range) {
+            
         };
 
         /********* Generation *********/
@@ -763,11 +770,12 @@
         var generateListBaseView = function () {
             console.log('in');
             if (!settings.list) settings.list = {};
-            var $columnContainer =  '<button class="btn btn-sm pts-list-laps-btn selected">' + settings.i18n.today + '</button>' +
-                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisWeek + '</button>' +
-                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisMonth + '</button>' +
-                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.thisYear + '</button>' +
-                                    '<button class="btn btn-sm pts-list-laps-btn">' + settings.i18n.personalized + '</button>' +
+            settings.list.display = 'today';
+            var $columnContainer =  '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>' +
                                     '<div class="pts-list-personalized-inputs-container"></div>';
             $('.pts-column-title-container > div').append($columnContainer);
             $('.pts-line-title-container').append('<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>');
@@ -784,15 +792,8 @@
         console.info("Initialization");
 
         generateHeader();
-        if (settings.currentDisplay === 'days' || settings.currentDisplay === 'months') {
-            generateBaseView();
-            generateTableLines();
-            generateGroupsPanels();
-            generateGroupMainContent();
-            generateUsersList();
-        } else {
-            updateDisplay('list');
-        }
+        generateBaseView();
+        updateDisplay(settings.currentDisplay);
 
         console.groupEnd();
 
@@ -811,6 +812,7 @@
         });
 
         $('.pts-btn-next').click(function () {
+            $('.pts-scheduler-container').scrollTop(0);
             goForward();
             generateTableLines();
             generateGroupMainContent();
@@ -818,6 +820,7 @@
         });
 
         $('.pts-btn-previous').click(function () {
+            $('.pts-scheduler-container').scrollTop(0);
             goBackward();
             generateTableLines();
             generateGroupMainContent();
@@ -914,6 +917,34 @@
                 $('#pts-list-task-select-all').prop('checked', false);
             } else  {
                 $('#pts-list-task-select-all').prop('checked', true);
+            }
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-btn[data-value]', function () {
+            var range = $(this).data('value');
+            settings.list.display = range;
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').removeClass('selected');
+            $(this).addClass('selected');
+            if (range !== 'personalized') {
+                switchListRange(range);
+            } else {
+                var $rangeSelector =    '<div class="col-lg-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">' +
+                                        '<input type="text" class="form-control"/>' +
+                                        '<span class="input-group-addon">' +
+                                        '<span class="glyphicon glyphicon-calendar"></span>' +
+                                        '</span></div></div>' +
+                                        '<div class="col-lg-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">' +
+                                        '<input type="text" class="form-control"/>' +
+                                        '<span class="input-group-addon">' +
+                                        '<span class="glyphicon glyphicon-calendar"></span>' +
+                                        '</span></div></div>' +
+                                        '<div class="col-lg-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button></div>';
+                $('.pts-list-personalized-inputs-container').append($rangeSelector);
+                $('#pts-list-datetimepicker-start').datetimepicker();
+                $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
+                $('#pts-list-datetimepicker-end').datetimepicker();
+                $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
             }
         });
 
