@@ -25,8 +25,11 @@
             thisYear: 'Cette année',
             personalized: 'Personnalisé',
             selectAll: 'Tout sélectionner',
-            always: 'toujours'
-
+            always: 'toujours',
+            total: 'Total',
+            usersWhose: 'utilisateur(s) dont',
+            cycleWhose: 'cycle(s) dont',
+            inSelectedPeriod: 'dans la période sélectionnée'
         },
         en: {
             days: 'Days',
@@ -47,7 +50,11 @@
             thisYear: 'This year',
             personalized: 'Personalized',
             selectAll: 'Select all',
-            always: 'always'
+            always: 'always',
+            total: 'Total',
+            usersWhose: 'user(s) with',
+            cycleWhose: 'cycle(s) with',
+            inSelectedPeriod: 'in the selected period'
         }
     };
     
@@ -163,6 +170,7 @@
                     $('.pts-header-date-display').css('display', 'none');
                     $('#header-datetimepicker').data("DateTimePicker").disable();
                     generateListBaseView();
+                    switchListRange('today');
                     break;
             }
         };
@@ -170,6 +178,7 @@
         var getUsersTasksInTasks = function () {
             settings.tasks.forEach(function (task) {
                 task.users = {};
+                if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
                 settings.users.forEach(function (user, userIndex) {
                     user.index = userIndex;
                     user.tasks.forEach(function (userTask, taskIndex) {
@@ -358,7 +367,7 @@
         var getContrastedColor = function () {
             $('.pts-check-color').each(function () {
                 var rgb = $(this).css('background-color').match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-                if (rgb.length == 4) {
+                if (rgb && rgb.length == 4) {
                     var L = (rgb[1] * 0.299 + rgb[2] * 0.587 + rgb[3] * 0.114) / 255;
                     if (L > 0.60) {
                         $(this).children().css('color', '#000');
@@ -374,7 +383,30 @@
         
         /* Switch the list view date range */
         var switchListRange = function (range) {
-
+            $('.pts-list-tasks-container').empty();
+            switch (range) {
+                case 'today':
+                    settings.list.start_date = moment().startOf('day');
+                    settings.list.end_date = moment().endOf('day');
+                    break;
+                case 'week':
+                    settings.list.start_date = moment().startOf('week');
+                    settings.list.end_date = moment().endOf('week');
+                    break;
+                case 'month':
+                    settings.list.start_date = moment().startOf('month');
+                    settings.list.end_date = moment().endOf('month');
+                    break;
+                case 'year':
+                    settings.list.start_date = moment().startOf('year');
+                    settings.list.end_date = moment().endOf('year');
+                    break;
+            }
+            settings.tasks.forEach(function (task) {
+                if ($('.pts-list-task-enabler-input[data-task=' + task.id + ']').is(':checked')) {
+                    generateListTaskContent(task);
+                }
+            });
         };
 
         /********* Generation *********/
@@ -797,6 +829,7 @@
                 var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
                                     '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
                 $('.pts-line-title-container').append($taskLabel);
+                $('.pts-main-content').empty().append('<div class="pts-list-tasks-container row"></div>');
             });
             getContrastedColor();
         };
@@ -821,6 +854,55 @@
             $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
             $('#pts-list-datetimepicker-end').datetimepicker();
             $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
+        };
+
+        var generateListTaskContent = function (task) {
+            var totalCycle = 0,
+                thisCycle = 0,
+                totalUsers = 0,
+                thisUsers = 0;
+
+            var $container =    '<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">' +
+                                '<div class="panel panel-primary panel-bordered" style="border-color:' + task.color + '">' +
+                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + '">' +
+                                '<h6 class="panel-title">' + task.name + '</h6>' +
+                                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>' +
+                                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>' +
+                                '<div class="panel-body"><div class="table-responsive">' +
+                                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>' +
+                                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>';
+            $('.pts-list-tasks-container').append($container);
+
+            $.each(task.users, function (i, user) {
+                totalCycle += user.length;
+                totalUsers++;
+                var $elem = $(document.createElement('tr'));
+                $elem.append('<td>' + settings.users[i].name + '</td><td class="pts-dt-list"></td>');
+                var isInCycle = false;
+                user.forEach(function (iTask) {
+                    if ((moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.end_date)
+                        || (moment(settings.users[i].tasks[iTask].start_date) >= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.end_date))
+                        || (moment(settings.users[i].tasks[iTask].end_date) <= moment(settings.list.end_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.start_date)))) {
+                        $elem.children('.pts-dt-list').append('- <b>' + settings.i18n.from + '</b> ' + moment(settings.users[i].tasks[iTask].start_date).locale(settings.locale).format('lll') +
+                            '<b> ' + settings.i18n.to + '</b> ' + moment(settings.users[i].tasks[iTask].end_date).locale(settings.locale).format('lll') + '<br>');
+                        if (isInCycle == false) thisUsers++;
+                        isInCycle = true;
+                        thisCycle++;
+                    }
+                });
+                if (isInCycle) {
+                    $('.pts-list-date-list[data-task=' + task.id + ']').append($elem);
+                }
+            });
+            if (thisUsers === 0 || thisCycle === 0) {
+                $('.pts-list-task-container[data-task=' + task.id + ']').remove();
+            }
+
+            var $footer =   '<p><b>' + totalUsers + '</b> ' + settings.i18n.usersWhose + ' <b>' + thisUsers + '</b> ' + settings.i18n.inSelectedPeriod + '</p>' +
+                            '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>';
+            $('.pts-list-task-container[data-task=' + task.id + '] .pts-list-task-footer').append($footer);
+
+            getContrastedColor();
         };
 
         /********* Initialization *********/

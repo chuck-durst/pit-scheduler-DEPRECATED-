@@ -220,7 +220,7 @@ body {
 .pts-main-content {
     position: absolute;
     height: auto;
-    width: auto;
+    width: 97%;
     top: 0;
 }
 
@@ -432,4 +432,10 @@ body {
 .pts-list-range-dismiss {
     position: relative;
     bottom: 2px;
+}
+
+.pts-list-tasks-container {
+    position: relative;
+    left: 15px;
+    top: 15px;
 }
