@@ -171,6 +171,7 @@
             settings.tasks.forEach(function (task) {
                 task.users = {};
                 settings.users.forEach(function (user, userIndex) {
+                    user.index = userIndex;
                     user.tasks.forEach(function (userTask, taskIndex) {
                         if (userTask.id === task.id) {
                             if (!task.users[userIndex]) {
@@ -181,7 +182,6 @@
                     });
                 });
             });
-            console.log(settings.tasks);
         };
 
         /* Update the content of the datepicker */
