@@ -24,7 +24,8 @@
             thisMonth: 'Ce mois-ci',
             thisYear: 'Cette année',
             personalized: 'Personnalisé',
-            selectAll: 'Tout sélectionner'
+            selectAll: 'Tout sélectionner',
+            always: 'toujours'
 
         },
         en: {
@@ -45,7 +46,8 @@
             thisMonth: 'This month',
             thisYear: 'This year',
             personalized: 'Personalized',
-            selectAll: 'Select all'
+            selectAll: 'Select all',
+            always: 'always'
         }
     };
     
@@ -360,7 +362,7 @@
         
         /* Switch the list view date range */
         var switchListRange = function (range) {
-            
+
         };
 
         /********* Generation *********/
@@ -776,7 +778,7 @@
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>' +
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>' +
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>' +
-                                    '<div class="pts-list-personalized-inputs-container"></div>';
+                                    '<div class="pts-list-personalized-inputs-container row"></div>';
             $('.pts-column-title-container > div').append($columnContainer);
             $('.pts-line-title-container').append('<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>');
             settings.tasks.forEach(function (_task) {
@@ -785,6 +787,28 @@
                 $('.pts-line-title-container').append($taskLabel);
             });
             getContrastedColor();
+        };
+
+        /* Generate the date range picker for the list view */
+        var generateRangePicker = function () {
+            $('.pts-list-range-btn').css('display', 'none');
+            var $rangeSelector =    '<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">' +
+                '<input type="text" class="form-control"/>' +
+                '<span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span>' +
+                '</span></div></div>' +
+                '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">' +
+                '<input type="text" class="form-control"/>' +
+                '<span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span>' +
+                '</span></div></div>' +
+                '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>' +
+                '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>';
+            $('.pts-list-personalized-inputs-container').append($rangeSelector);
+            $('#pts-list-datetimepicker-start').datetimepicker();
+            $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
+            $('#pts-list-datetimepicker-end').datetimepicker();
+            $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
         };
 
         /********* Initialization *********/
@@ -929,22 +953,7 @@
             if (range !== 'personalized') {
                 switchListRange(range);
             } else {
-                var $rangeSelector =    '<div class="col-lg-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">' +
-                                        '<input type="text" class="form-control"/>' +
-                                        '<span class="input-group-addon">' +
-                                        '<span class="glyphicon glyphicon-calendar"></span>' +
-                                        '</span></div></div>' +
-                                        '<div class="col-lg-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">' +
-                                        '<input type="text" class="form-control"/>' +
-                                        '<span class="input-group-addon">' +
-                                        '<span class="glyphicon glyphicon-calendar"></span>' +
-                                        '</span></div></div>' +
-                                        '<div class="col-lg-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button></div>';
-                $('.pts-list-personalized-inputs-container').append($rangeSelector);
-                $('#pts-list-datetimepicker-start').datetimepicker();
-                $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
-                $('#pts-list-datetimepicker-end').datetimepicker();
-                $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
+                generateRangePicker();
             }
         });
 
@@ -955,9 +964,16 @@
         $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
             settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
             settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
-            console.log(settings.list);
-            console.log($('#pts-list-datetimepicker-start'));
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            if (!settings.list.start_date || ! settings.list.end_date) return $('.pts-list-range-btn').removeClass('selected');
             switchListRange('personalized');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-dismiss', function () {
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            $('.pts-list-range-btn').removeClass('selected');
         });
 
         return $scheduler;

@@ -412,17 +412,24 @@ body {
     top: 6px;
 }
 
-.pts-list-personalized-inputs-container .col-lg-5 {
+.pts-list-personalized-inputs-container .col-sm-5,
+.pts-list-personalized-inputs-container .col-sm-2 {
     display: inline-flex;
 }
 
-.pts-list-personalized-inputs-container .col-lg-5 > span {
+.pts-list-personalized-inputs-container .col-sm-5 > span {
     margin-right: 5px;
     margin-top: 5px;
 }
+
 .pts-list-range-submit {
     background-color: #00BCD4;
     color: #fff;
+    position: relative;
+    bottom: 2px;
+}
+
+.pts-list-range-dismiss {
     position: relative;
     bottom: 2px;
 }
