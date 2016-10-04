@@ -232,12 +232,8 @@
 
         /* Return true if the user is assigned to the task */
         var userHasTask = function (user, taskId) {
-            var response = false;
-            user.tasks.forEach(function (e) {
-                if (e.id === taskId)
-                    response = true;
-            });
-            return response;
+            if (getTaskById(taskId).users[user.index] != undefined) return true;
+            return false;
         };
 
         /* Get the height of a user line */
@@ -342,7 +338,6 @@
 
         /* Mix tasks that have a superposition */
         var hideTaskSuperposition = function (originIndex, task, user) {
-            if (user.name != "Michel Petrucciani") return task; //TODO: THIS IS A TEST LINE, REMOVE IT!!
             task.disabled = false;
             user.tasks.forEach(function (userTask, index) {
                 if (userTask.id === task.id && index !== originIndex) {
@@ -475,14 +470,14 @@
 
             settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
             settings.defaultGroupName = settings.groups[0];
-                settings.users.forEach(function (e, i) {
-                    e.index = i;
-                    if (e.group === undefined || e.group === '') {
-                        e.group = settings.defaultGroupName;
+                settings.users.forEach(function (user, i) {
+                    user.index = i;
+                    if (user.group === undefined || user.group === '') {
+                        user.group = settings.defaultGroupName;
                         keepUnlisted = false;
                     }
-                    else if (settings.groups.indexOf(e.group) == -1) {
-                        settings.groups.push(e.group);
+                    else if (settings.groups.indexOf(user.group) == -1) {
+                        settings.groups.push(user.group);
                     }
                 });
             settings.groups.unlisted = 0; //stores the id of the unlisted group
