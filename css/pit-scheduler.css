@@ -439,3 +439,12 @@ body {
     left: 15px;
     top: 15px;
 }
+
+.pts-list-user-name {
+    cursor: pointer;
+}
+
+.pts-list-user-name:hover {
+    background-color: #00BCD4;
+    color: #fff;
+}

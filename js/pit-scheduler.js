@@ -810,7 +810,7 @@
                 if (!sortedTasks[e.id]) {
                     sortedTasks[e.id] = [];
                 }
-                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('llll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('llll'));
+                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  '<div class="panel-body">' +
                 '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
@@ -873,6 +873,7 @@
             $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
         };
 
+        /* Generate a task box in the list view */
         var generateListTaskContent = function (task) {
             var totalCycle = 0,
                 thisCycle = 0,
@@ -894,7 +895,7 @@
                 totalCycle += user.length;
                 totalUsers++;
                 var $elem = $(document.createElement('tr'));
-                $elem.append('<td>' + settings.users[i].name + '</td><td class="pts-dt-list"></td>');
+                $elem.append('<td class="pts-list-user-name" data-user="' + i + '">' + settings.users[i].name + '</td><td class="pts-dt-list"></td>');
                 var isInCycle = false;
                 user.forEach(function (iTask) {
                     if ((moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.end_date)
@@ -1088,6 +1089,10 @@
             $('.pts-list-personalized-inputs-container').empty();
             $('.pts-list-range-btn').css('display', 'block');
             $('.pts-list-range-btn').removeClass('selected');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-user-name[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'user');
         });
 
         return $scheduler;
