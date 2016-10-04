@@ -167,6 +167,23 @@
             }
         };
 
+        var getUsersTasksInTasks = function () {
+            settings.tasks.forEach(function (task) {
+                task.users = {};
+                settings.users.forEach(function (user, userIndex) {
+                    user.tasks.forEach(function (userTask, taskIndex) {
+                        if (userTask.id === task.id) {
+                            if (!task.users[userIndex]) {
+                                task.users[userIndex] = [];
+                            }
+                            task.users[userIndex].push(taskIndex);
+                        }
+                    });
+                });
+            });
+            console.log(settings.tasks);
+        };
+
         /* Update the content of the datepicker */
         var updateDatePicker = function () {
             $('#header-datetimepicker').datetimepicker();
@@ -213,7 +230,7 @@
             return task;
         };
 
-        /* Return true if the user is asigned to the task */
+        /* Return true if the user is assigned to the task */
         var userHasTask = function (user, taskId) {
             var response = false;
             user.tasks.forEach(function (e) {
@@ -815,6 +832,7 @@
         console.group();
         console.info("Initialization");
 
+        getUsersTasksInTasks();
         generateHeader();
         generateBaseView();
         updateDisplay(settings.currentDisplay);
