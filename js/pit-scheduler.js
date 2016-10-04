@@ -388,18 +388,35 @@
                 case 'today':
                     settings.list.start_date = moment().startOf('day');
                     settings.list.end_date = moment().endOf('day');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
                     break;
                 case 'week':
                     settings.list.start_date = moment().startOf('week');
                     settings.list.end_date = moment().endOf('week');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
                     break;
                 case 'month':
                     settings.list.start_date = moment().startOf('month');
                     settings.list.end_date = moment().endOf('month');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
                     break;
                 case 'year':
                     settings.list.start_date = moment().startOf('year');
                     settings.list.end_date = moment().endOf('year');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'personalized':
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                                    ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
                     break;
             }
             settings.tasks.forEach(function (task) {
@@ -863,8 +880,8 @@
                 thisUsers = 0;
 
             var $container =    '<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">' +
-                                '<div class="panel panel-primary panel-bordered" style="border-color:' + task.color + '">' +
-                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + '">' +
+                                '<div class="panel panel-primary" style="border-color:' + task.color + '">' +
+                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + ';border-color:' + task.color + '">' +
                                 '<h6 class="panel-title">' + task.name + '</h6>' +
                                 '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>' +
                                 '<div class="panel-body">' + (task.description ? task.description : '') + '</div>' +
@@ -1023,6 +1040,7 @@
 
         $('#pit-scheduler').on('click', '#pts-list-task-select-all', function () {
             $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
+            switchListRange(settings.list.display);
         });
 
         $('#pit-scheduler').on('click', '.pts-list-task-enabler-input', function () {
@@ -1037,6 +1055,7 @@
             } else  {
                 $('#pts-list-task-select-all').prop('checked', true);
             }
+            switchListRange(settings.list.display);
         });
 
         $('#pit-scheduler').on('click', '.pts-list-range-btn[data-value]', function () {
