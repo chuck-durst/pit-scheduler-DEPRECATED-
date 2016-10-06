@@ -29,7 +29,8 @@
             total: 'Total',
             usersWhose: 'utilisateur(s) dont',
             cycleWhose: 'cycle(s) dont',
-            inSelectedPeriod: 'dans la période sélectionnée'
+            inSelectedPeriod: 'dans la période sélectionnée',
+            all: 'Tout'
         },
         en: {
             days: 'Days',
@@ -54,7 +55,8 @@
             total: 'Total',
             usersWhose: 'user(s) with',
             cycleWhose: 'cycle(s) with',
-            inSelectedPeriod: 'in the selected period'
+            inSelectedPeriod: 'in the selected period',
+            all: 'All'
         }
     };
     
@@ -385,6 +387,13 @@
         var switchListRange = function (range) {
             $('.pts-list-tasks-container').empty();
             switch (range) {
+                case 'all':
+                    console.log('he');
+                    settings.list.start_date = moment();
+                    settings.list.end_date = moment();
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.all + ' :</b></h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
                 case 'today':
                     settings.list.start_date = moment().startOf('day');
                     settings.list.end_date = moment().endOf('day');
@@ -831,10 +840,10 @@
 
         /* Generate list view main structure */
         var generateListBaseView = function () {
-            console.log('in');
             if (!settings.list) settings.list = {};
             settings.list.display = 'today';
-            var $columnContainer =  '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>' +
+            var $columnContainer =  '<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>' +
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>' +
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>' +
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>' +
@@ -898,9 +907,10 @@
                 $elem.append('<td class="pts-list-user-name" data-user="' + i + '">' + settings.users[i].name + '</td><td class="pts-dt-list"></td>');
                 var isInCycle = false;
                 user.forEach(function (iTask) {
-                    if ((moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.end_date)
+                    if ((moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.end_date))
                         || (moment(settings.users[i].tasks[iTask].start_date) >= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.end_date))
-                        || (moment(settings.users[i].tasks[iTask].end_date) <= moment(settings.list.end_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.start_date)))) {
+                        || (moment(settings.users[i].tasks[iTask].end_date) <= moment(settings.list.end_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.start_date))
+                        || settings.list.display === 'all') {
                         $elem.children('.pts-dt-list').append('- <b>' + settings.i18n.from + '</b> ' + moment(settings.users[i].tasks[iTask].start_date).locale(settings.locale).format('lll') +
                             '<b> ' + settings.i18n.to + '</b> ' + moment(settings.users[i].tasks[iTask].end_date).locale(settings.locale).format('lll') + '<br>');
                         if (isInCycle == false) thisUsers++;
