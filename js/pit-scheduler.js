@@ -30,7 +30,8 @@
             usersWhose: 'utilisateur(s) dont',
             cycleWhose: 'cycle(s) dont',
             inSelectedPeriod: 'dans la période sélectionnée',
-            all: 'Tout'
+            all: 'Tout',
+            search: 'Recherche'
         },
         en: {
             days: 'Days',
@@ -56,7 +57,8 @@
             usersWhose: 'user(s) with',
             cycleWhose: 'cycle(s) with',
             inSelectedPeriod: 'in the selected period',
-            all: 'All'
+            all: 'All',
+            search: 'Search'
         }
     };
     
@@ -80,7 +82,6 @@
             currentDisplay: ''
         }, options);
 
-        /* Check if the default display is defined */
         if (settings.defaultDisplay === undefined) {
             settings.currentDisplay = 'days';
         } else {
@@ -91,7 +92,6 @@
                 settings.currentDisplay = settings.defaultDisplay;
         }
 
-        /* Check if the default locale is defined */
         if (settings.locale === undefined || i18n.allowed.indexOf(settings.locale) == -1) {
             settings.locale = 'en';
         }
@@ -177,6 +177,7 @@
             }
         };
 
+        /* Init function that saves users index into associated tasks */
         var getUsersTasksInTasks = function () {
             settings.tasks.forEach(function (task) {
                 task.users = {};
@@ -849,13 +850,16 @@
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>' +
                                     '<div class="pts-list-personalized-inputs-container row"></div>';
             $('.pts-column-title-container > div').append($columnContainer);
-            $('.pts-line-title-container').append('<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>');
+            var $headerInputs = '<input class="pts-list-search-task" placeholder="' + settings.i18n.search + '">' +
+                '<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>';
+            $('.pts-line-title-container').append($headerInputs);
             settings.tasks.forEach(function (_task) {
                 var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
                                     '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
                 $('.pts-line-title-container').append($taskLabel);
-                $('.pts-main-content').empty().append('<div class="pts-list-tasks-container row"></div>');
             });
+
+            $('.pts-main-content').empty().append('<div class="pts-list-tasks-container row"></div>');
             getContrastedColor();
         };
 
@@ -1054,7 +1058,7 @@
             switchListRange(settings.list.display);
         });
 
-        $('#pit-scheduler').on('click', '.pts-list-task-enabler-input', function () {
+        $('#pit-scheduler').on('click', '.pts-list-task-enabler-input',  function () {
             var checked = true;
             $('.pts-list-task-enabler-input').each(function () {
                 if ($(this).prop('checked') == false) {
@@ -1103,6 +1107,17 @@
 
         $('#pit-scheduler').on('click', '.pts-list-user-name[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
+        });
+
+        $('#pit-scheduler').on('keyup', '.pts-list-search-task', function () {
+            var searchString = $(this).val().toLowerCase();
+            $('.pts-list-row-task').each(function () {
+                if ($(this).children('label').text().toLowerCase().indexOf(searchString) >= 0) {
+                    $(this).css('display', 'block');
+                } else {
+                    $(this).css('display', 'none');
+                }
+            });
         });
 
         return $scheduler;
