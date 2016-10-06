@@ -449,11 +449,6 @@ body {
     color: #fff;
 }
 
-.pts-line-title-container > * {
-    position: relative;
-    bottom: 20px;
-}
-
 .pts-list-search-task {
     width: 95%;
     margin: 5px 0 10px 3px;
