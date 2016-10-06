@@ -388,7 +388,6 @@
             $('.pts-list-tasks-container').empty();
             switch (range) {
                 case 'all':
-                    console.log('he');
                     settings.list.start_date = moment();
                     settings.list.end_date = moment();
                     var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.all + ' :</b></h4>';
