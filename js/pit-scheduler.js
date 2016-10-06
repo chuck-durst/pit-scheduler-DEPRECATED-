@@ -982,7 +982,7 @@
             generateUsersList();
         });
 
-        $('.close-group-panel').click(function () {
+        $('#pit-scheduler').on('click', '.close-group-panel', function () {
             var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
             var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
             if ($(this).attr('data-toggle') === 'opened') {
@@ -998,14 +998,15 @@
             }
         });
 
-        $('#hide-user-btn').change(function (e) {
+        $('#pit-scheduler').on('change', '#hide-user-btn', function () {
             settings.hideEmptyLines = $(this).is(':checked');
             generateTableLines();
             generateGroupMainContent();
             generateUsersList();
         });
 
-        $('#disable-labels-mov').change(function (e) {
+        $('#pit-scheduler').on('change', '#disable-labels-mov', function () {
+            console.log($(this).is(':checked'));
             settings.disableLabelsMovement = $(this).is(':checked');
             generateTableLines();
             generateGroupMainContent();
