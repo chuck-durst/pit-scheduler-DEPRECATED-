@@ -18,8 +18,19 @@
             from: 'Du',
             to: 'au',
             notSpecified: 'Non spécifiée',
-            disableLabelsMovement: 'Désactiver le mouvement des labels'
-
+            disableLabelsMovement: 'Désactiver le mouvement des labels',
+            today: 'Aujourd\'hui',
+            thisWeek: 'Cette semaine',
+            thisMonth: 'Ce mois-ci',
+            thisYear: 'Cette année',
+            personalized: 'Personnalisé',
+            selectAll: 'Tout sélectionner',
+            always: 'toujours',
+            total: 'Total',
+            usersWhose: 'utilisateur(s) dont',
+            cycleWhose: 'cycle(s) dont',
+            inSelectedPeriod: 'dans la période sélectionnée',
+            all: 'Tout'
         },
         en: {
             days: 'Days',
@@ -33,7 +44,19 @@
             from: 'From',
             to: 'to',
             notSpecified: 'Not specified',
-            disableLabelsMovement: 'Disable labels mouvement'
+            disableLabelsMovement: 'Disable labels mouvement',
+            today: 'Today',
+            thisWeek: 'This week',
+            thisMonth: 'This month',
+            thisYear: 'This year',
+            personalized: 'Personalized',
+            selectAll: 'Select all',
+            always: 'always',
+            total: 'Total',
+            usersWhose: 'user(s) with',
+            cycleWhose: 'cycle(s) with',
+            inSelectedPeriod: 'in the selected period',
+            all: 'All'
         }
     };
     
@@ -96,6 +119,17 @@
 
         /* update display view */
         var updateDisplay = function (format) {
+            closeInfoBox();
+            $('.pts-main-content').empty();
+            $('.pts-column-title-container > div').empty();
+            $('.pts-line-title-container').empty();
+            $('.pts-line-title-container').append($('<div></div>'));
+            $('.pts-corner-mask').empty();
+            $('.pts-btn-next').removeAttr('disabled');
+            $('.pts-btn-previous').removeAttr('disabled');
+            $('.pts-header-date-display').css('display', 'block');
+            $('#header-datetimepicker').data("DateTimePicker").enable();
+            $('.pts-column-title-container').css('overflow', 'hidden');
             switch (format) {
                 case 'days':
                     $('.pts-header-right-container  .pts-btn-day-view').addClass('pts-active');
@@ -103,7 +137,12 @@
                     $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
-                    settings.currentDisplay = 'days'
+                    settings.currentDisplay = 'days';
+                    generateBaseView();
+                    generateTableLines();
+                    generateGroupsPanels();
+                    generateGroupMainContent();
+                    generateUsersList();
                     updateDatePicker();
                     break;
                 case 'months':
@@ -113,19 +152,47 @@
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
                     settings.currentDisplay = 'months';
+                    generateBaseView();
+                    generateTableLines();
+                    generateGroupsPanels();
+                    generateGroupMainContent();
+                    generateUsersList();
                     updateDatePicker();
                     break;
                 case 'list':
+                    $('.pts-column-title-container').css('overflow', 'visible');
                     $('.pts-header-right-container  .pts-btn-day-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
                     $('.pts-header-right-container  .pts-btn-list-view').addClass('pts-active');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
-                    updateDatePicker();
+                        $('.pts-btn-next').attr('disabled', 'disabled');
+                    $('.pts-btn-previous').attr('disabled', 'disabled');
+                    $('.pts-header-date-display').css('display', 'none');
+                    $('#header-datetimepicker').data("DateTimePicker").disable();
+                    generateListBaseView();
+                    switchListRange('today');
                     break;
-
             }
+        };
+
+        var getUsersTasksInTasks = function () {
+            settings.tasks.forEach(function (task) {
+                task.users = {};
+                if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
+                settings.users.forEach(function (user, userIndex) {
+                    user.index = userIndex;
+                    user.tasks.forEach(function (userTask, taskIndex) {
+                        if (userTask.id === task.id) {
+                            if (!task.users[userIndex]) {
+                                task.users[userIndex] = [];
+                            }
+                            task.users[userIndex].push(taskIndex);
+                        }
+                    });
+                });
+            });
         };
 
         /* Update the content of the datepicker */
@@ -174,14 +241,10 @@
             return task;
         };
 
-        /* Return true if the user is asigned to the task */
+        /* Return true if the user is assigned to the task */
         var userHasTask = function (user, taskId) {
-            var response = false;
-            user.tasks.forEach(function (e) {
-                if (e.id === taskId)
-                    response = true;
-            });
-            return response;
+            if (getTaskById(taskId).users[user.index] != undefined) return true;
+            return false;
         };
 
         /* Get the height of a user line */
@@ -263,14 +326,14 @@
             $infoBox.animate({
                 width: '35%'
             }, 300);
+            getContrastedColor();
         };
 
         /* Close the info-box panel */
         var closeInfoBox = function (viewType) {
             var $infoBox = $("#pts-info-box-container"),
                 $markers = $('.pts-line-marker');
-
-            if ($infoBox.data('toggle') === 'closed') return;
+            if ($infoBox.attr('data-toggle') === 'closed') return;
             $.each($markers, function () {
                 $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
             });
@@ -281,11 +344,11 @@
             }, 300);
             $infoBox.attr('data-toggle', 'closed');
             $infoBox.empty();
+            getContrastedColor();
         };
 
         /* Mix tasks that have a superposition */
         var hideTaskSuperposition = function (originIndex, task, user) {
-            if (user.name != "Michel Petrucciani") return task; //TODO: THIS IS A TEST LINE, REMOVE IT!!
             task.disabled = false;
             user.tasks.forEach(function (userTask, index) {
                 if (userTask.id === task.id && index !== originIndex) {
@@ -300,6 +363,75 @@
                 }
             });
             return task;
+        };
+
+        /* Check which color match with the element background color */
+        var getContrastedColor = function () {
+            $('.pts-check-color').each(function () {
+                var rgb = $(this).css('background-color').match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                if (rgb && rgb.length == 4) {
+                    var L = (rgb[1] * 0.299 + rgb[2] * 0.587 + rgb[3] * 0.114) / 255;
+                    if (L > 0.60) {
+                        $(this).children().css('color', '#000');
+                        $(this).css('color', '#000');
+                    }
+                    else {
+                        $(this).children().css('color', '#fff');
+                        $(this).css('color', '#fff');
+                    }
+                }
+            });
+        };
+        
+        /* Switch the list view date range */
+        var switchListRange = function (range) {
+            $('.pts-list-tasks-container').empty();
+            switch (range) {
+                case 'all':
+                    settings.list.start_date = moment();
+                    settings.list.end_date = moment();
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.all + ' :</b></h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'today':
+                    settings.list.start_date = moment().startOf('day');
+                    settings.list.end_date = moment().endOf('day');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'week':
+                    settings.list.start_date = moment().startOf('week');
+                    settings.list.end_date = moment().endOf('week');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'month':
+                    settings.list.start_date = moment().startOf('month');
+                    settings.list.end_date = moment().endOf('month');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'year':
+                    settings.list.start_date = moment().startOf('year');
+                    settings.list.end_date = moment().endOf('year');
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+                case 'personalized':
+                    var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
+                                    ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                    $('.pts-list-tasks-container').append($content);
+                    break;
+            }
+            settings.tasks.forEach(function (task) {
+                if ($('.pts-list-task-enabler-input[data-task=' + task.id + ']').is(':checked')) {
+                    generateListTaskContent(task);
+                }
+            });
         };
 
         /********* Generation *********/
@@ -332,15 +464,10 @@
 
         /* Generate base empty base structure */
         var generateBaseView = function () {
+            if ($('.pts-main-container').length) return;
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>' +
-                                    '<div class="pts-corder-mask"><div class="dropdown">' +
-                                    '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                    settings.i18n.settings + ' <span class="caret"></span></button>' +
-                                    '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
-                                    '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
-                                    '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
-                                    '</div></div>' +
+                                    '<div class="pts-corner-mask"></div>' +
                                     '<div class="pts-column-title-container">' +
                                     '<div></div></div>' +
                                     '<div class="pts-line-title-container"><div>' +
@@ -357,6 +484,7 @@
 
             $('.pts-column-title-container > div').empty();
             $('.pts-main-content').empty();
+            $('.pts-corner-mask').empty();
             if (settings.currentDisplay == 'days') {
                 var lineInterval = 0;
                 for (var i=0; i < 25; i++) {
@@ -382,22 +510,31 @@
                     dayDate.add(1, 'day');
                 }
             }
+            var $settingsMenu = '<div class="dropdown">' +
+                                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                settings.i18n.settings + ' <span class="caret"></span></button>' +
+                                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
+                                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
+                                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
+                                '</div>';
+            $('.pts-corner-mask').append($settingsMenu);
         };
 
         /* Generate the groups panels */
         var generateGroupsPanels = function () {
+            if ($('.pts-line-group-container').length) return;
             var keepUnlisted = true;
 
             settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
             settings.defaultGroupName = settings.groups[0];
-                settings.users.forEach(function (e, i) {
-                    e.index = i;
-                    if (e.group === undefined || e.group === '') {
-                        e.group = settings.defaultGroupName;
+                settings.users.forEach(function (user, i) {
+                    user.index = i;
+                    if (user.group === undefined || user.group === '') {
+                        user.group = settings.defaultGroupName;
                         keepUnlisted = false;
                     }
-                    else if (settings.groups.indexOf(e.group) == -1) {
-                        settings.groups.push(e.group);
+                    else if (settings.groups.indexOf(user.group) == -1) {
+                        settings.groups.push(user.group);
                     }
                 });
             settings.groups.unlisted = 0; //stores the id of the unlisted group
@@ -558,9 +695,9 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -572,8 +709,8 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -581,12 +718,13 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             //TODO: Add task label
             setTaskLabelPosition();
+            getContrastedColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -615,9 +753,9 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -628,8 +766,8 @@
                     var taskWidth = 120 * (moment(task.end_date).format('H')) - splitted + 120;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -637,11 +775,12 @@
             // If the task start and end dates are not in the current month but the task is
             if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
                 topDistance = parseInt(topDistance);
-                var $task = '<div class="progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
+            getContrastedColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
@@ -655,7 +794,7 @@
                 }
             });
             var $content =  '<div class="panel-body">' +
-                            '<h4 class=" text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>' +
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
                             '<br><div class="divider"></div></div>' +
@@ -669,6 +808,7 @@
                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
                 }
             });
+            getContrastedColor();
         };
 
         /* Generate the users structure of the info box */
@@ -678,60 +818,147 @@
                 if (!sortedTasks[e.id]) {
                     sortedTasks[e.id] = [];
                 }
-                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('llll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('llll'));
+                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  '<div class="panel-body">' +
-                '<h4 class=" text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
+                '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
                 '<div class="pts-info-box-user-list"></div></div>';
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
-                $('.pts-info-box-user-list').append('<p class="progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
+                $('.pts-info-box-user-list').append('<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
                     getTaskById(i).name + ' (' + _task.length + ')</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
                 });
 
             });
+            getContrastedColor();
+        };
+
+
+        /* Generate list view main structure */
+        var generateListBaseView = function () {
+            if (!settings.list) settings.list = {};
+            settings.list.display = 'today';
+            var $columnContainer =  '<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>' +
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>' +
+                                    '<div class="pts-list-personalized-inputs-container row"></div>';
+            $('.pts-column-title-container > div').append($columnContainer);
+            $('.pts-line-title-container').append('<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>');
+            settings.tasks.forEach(function (_task) {
+                var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
+                                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
+                $('.pts-line-title-container').append($taskLabel);
+                $('.pts-main-content').empty().append('<div class="pts-list-tasks-container row"></div>');
+            });
+            getContrastedColor();
+        };
+
+        /* Generate the date range picker for the list view */
+        var generateRangePicker = function () {
+            $('.pts-list-range-btn').css('display', 'none');
+            var $rangeSelector =    '<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">' +
+                '<input type="text" class="form-control"/>' +
+                '<span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span>' +
+                '</span></div></div>' +
+                '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">' +
+                '<input type="text" class="form-control"/>' +
+                '<span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span>' +
+                '</span></div></div>' +
+                '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>' +
+                '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>';
+            $('.pts-list-personalized-inputs-container').append($rangeSelector);
+            $('#pts-list-datetimepicker-start').datetimepicker();
+            $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
+            $('#pts-list-datetimepicker-end').datetimepicker();
+            $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
+        };
+
+        /* Generate a task box in the list view */
+        var generateListTaskContent = function (task) {
+            var totalCycle = 0,
+                thisCycle = 0,
+                totalUsers = 0,
+                thisUsers = 0;
+
+            var $container =    '<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">' +
+                                '<div class="panel panel-primary" style="border-color:' + task.color + '">' +
+                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + ';border-color:' + task.color + '">' +
+                                '<h6 class="panel-title">' + task.name + '</h6>' +
+                                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>' +
+                                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>' +
+                                '<div class="panel-body"><div class="table-responsive">' +
+                                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>' +
+                                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>';
+            $('.pts-list-tasks-container').append($container);
+
+            $.each(task.users, function (i, user) {
+                totalCycle += user.length;
+                totalUsers++;
+                var $elem = $(document.createElement('tr'));
+                $elem.append('<td class="pts-list-user-name" data-user="' + i + '">' + settings.users[i].name + '</td><td class="pts-dt-list"></td>');
+                var isInCycle = false;
+                user.forEach(function (iTask) {
+                    if ((moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.end_date))
+                        || (moment(settings.users[i].tasks[iTask].start_date) >= moment(settings.list.start_date) && moment(settings.users[i].tasks[iTask].start_date) <= moment(settings.list.end_date))
+                        || (moment(settings.users[i].tasks[iTask].end_date) <= moment(settings.list.end_date) && moment(settings.users[i].tasks[iTask].end_date) >= moment(settings.list.start_date))
+                        || settings.list.display === 'all') {
+                        $elem.children('.pts-dt-list').append('- <b>' + settings.i18n.from + '</b> ' + moment(settings.users[i].tasks[iTask].start_date).locale(settings.locale).format('lll') +
+                            '<b> ' + settings.i18n.to + '</b> ' + moment(settings.users[i].tasks[iTask].end_date).locale(settings.locale).format('lll') + '<br>');
+                        if (isInCycle == false) thisUsers++;
+                        isInCycle = true;
+                        thisCycle++;
+                    }
+                });
+                if (isInCycle) {
+                    $('.pts-list-date-list[data-task=' + task.id + ']').append($elem);
+                }
+            });
+            if (thisUsers === 0 || thisCycle === 0) {
+                $('.pts-list-task-container[data-task=' + task.id + ']').remove();
+            }
+
+            var $footer =   '<p><b>' + totalUsers + '</b> ' + settings.i18n.usersWhose + ' <b>' + thisUsers + '</b> ' + settings.i18n.inSelectedPeriod + '</p>' +
+                            '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>';
+            $('.pts-list-task-container[data-task=' + task.id + '] .pts-list-task-footer').append($footer);
+
+            getContrastedColor();
         };
 
         /********* Initialization *********/
         console.group();
         console.info("Initialization");
 
+        getUsersTasksInTasks();
         generateHeader();
         generateBaseView();
-        generateTableLines();
-        generateGroupsPanels();
-        generateGroupMainContent();
-        generateUsersList();
+        updateDisplay(settings.currentDisplay);
 
         console.groupEnd();
 
         /********* Events *********/
 
         $('.pts-btn-day-view').click( function () {
-            closeInfoBox();
             updateDisplay('days');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
         });
 
         $('.pts-btn-month-view').click( function () {
-            closeInfoBox();
             updateDisplay('months');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
         });
 
-        $('.pts-scheduler-container').scroll(function () {
-            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
-            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
+        $('.pts-btn-list-view').click( function () {
+            updateDisplay('list');
         });
 
         $('.pts-btn-next').click(function () {
+            $('.pts-scheduler-container').scrollTop(0);
             goForward();
             generateTableLines();
             generateGroupMainContent();
@@ -739,6 +966,7 @@
         });
 
         $('.pts-btn-previous').click(function () {
+            $('.pts-scheduler-container').scrollTop(0);
             goBackward();
             generateTableLines();
             generateGroupMainContent();
@@ -784,37 +1012,96 @@
             generateUsersList();
         });
 
-        $('.pts-column-title-container').on('click', '.pts-column-element[data-date]', function () {
+        $('#pit-scheduler').on('click', '.pts-column-element[data-date]', function () {
             settings.date.selected = moment($(this).attr('data-date'));
+            console.log('click');
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
         });
 
         $('.pts-scheduler-container').scroll(function () {
+            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
+            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
         });
 
-        $('.pts-scheduler-container').on('click', '.pts-line-marker', function () {
+        $('#pit-scheduler').on('click', '.pts-line-marker', function () {
             if ($(this).attr('data-task') && $(this).attr('data-user')) {
                 openInfoBox($(this).attr('data-task'), $(this).attr('data-user'), 'task');
             }
         });
 
-        $('#pts-info-box-container').on('click', '.pts-info-box-title', function () {
+        $('#pit-scheduler').on('click', '.pts-info-box-title', function () {
             closeInfoBox();
         });
 
-        $('.pts-main-content').on('click', '.pts-main-group-column', function () {
+        $('#pit-scheduler').on('click', '.pts-main-group-column', function () {
             closeInfoBox('task');
         });
 
-        $('.pts-line-title-container').on('click', ' .pts-group-user[data-user]', function () {
+        $('#pit-scheduler').on('click', ' .pts-group-user[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
         });
 
-        $('#pts-info-box-container').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
+        $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
             openInfoBox($(this).data('task'), $(this).data('user'), 'task');
+        });
+
+        $('#pit-scheduler').on('click', '#pts-list-task-select-all', function () {
+            $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
+            switchListRange(settings.list.display);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-task-enabler-input', function () {
+            var checked = true;
+            $('.pts-list-task-enabler-input').each(function () {
+                if ($(this).prop('checked') == false) {
+                    checked = false;
+                }
+            });
+            if (checked == false) {
+                $('#pts-list-task-select-all').prop('checked', false);
+            } else  {
+                $('#pts-list-task-select-all').prop('checked', true);
+            }
+            switchListRange(settings.list.display);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-btn[data-value]', function () {
+            var range = $(this).data('value');
+            settings.list.display = range;
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').removeClass('selected');
+            $(this).addClass('selected');
+            if (range !== 'personalized') {
+                switchListRange(range);
+            } else {
+                generateRangePicker();
+            }
+        });
+
+        $('#pit-scheduler').on('dp.change', '#pts-list-datetimepicker-start', function (e) {
+            $('#pts-list-datetimepicker-end').data('DateTimePicker').minDate(e.date);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
+            settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
+            settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            if (!settings.list.start_date || ! settings.list.end_date) return $('.pts-list-range-btn').removeClass('selected');
+            switchListRange('personalized');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-range-dismiss', function () {
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            $('.pts-list-range-btn').removeClass('selected');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-list-user-name[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'user');
         });
 
         return $scheduler;
