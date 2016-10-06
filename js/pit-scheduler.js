@@ -466,6 +466,7 @@
         /* Generate base empty base structure */
         var generateBaseView = function () {
             if ($('.pts-main-container').length) return;
+            //TODO: Convert the following into an array (each line = 1 elem) and then join them together
             var $mainContainer =    '<div class="pts-main-container row">' +
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>' +
                                     '<div class="pts-corner-mask"></div>' +
