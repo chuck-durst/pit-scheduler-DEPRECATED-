@@ -68,8 +68,6 @@
 
 
         /********* Settings initialization *********/
-        console.group();
-        console.info('Settings initialization');
 
         var settings = $.extend({
             date: {
@@ -105,15 +103,6 @@
         if (settings.defaultDate !== undefined && moment(settings.defaultDate).isValid()) {
             settings.date.selected = moment(settings.defaultDate);
         }
-
-        console.log("Locale: " + settings.locale);
-        console.log("Current display: " + settings.currentDisplay);
-        console.log("Moment.locale(): " + moment.locale());
-        console.log("Selected date: " + settings.date.selected);
-
-
-
-        console.groupEnd();
 
         /********* Main functions *********/
 
@@ -554,8 +543,6 @@
 
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
-            console.log("group: " + group + " index: " + index);
-            console.log("Creat group: " + group);
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
                                         '<div class="pts-group-header">',
                                         '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>',
@@ -604,10 +591,7 @@
                     }
                 });
                 if (!group) {
-                    console.log('User ' + user.name + ' has not group.');
-
                     if (!settings.groups.unlisted) {
-                        console.log('Unlisted group do not exist, creating one');
                         generateGroupTab({name: settings.i18n.unlisted}, settings.groups.added.length);
                         settings.groups.unlisted = settings.groups.added.length;
                         settings.groups.added.push({
@@ -626,8 +610,6 @@
         var generateUserLine = function (user, group) {
             if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
             if (userLineIsHidden(user) == false) return;
-            console.log('Generate line for user: ' + user.name + ' in group: ' + group);
-
             var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
             $('#' + group + ' > .pts-group-content').append($userNameUI);
@@ -929,15 +911,11 @@
         };
 
         /********* Initialization *********/
-        console.group();
-        console.info("Initialization");
 
         getUsersTasksInTasks();
         generateHeader();
         generateBaseView();
         updateDisplay(settings.currentDisplay);
-
-        console.groupEnd();
 
         /********* Events *********/
 
@@ -1008,7 +986,6 @@
         });
 
         $('#pit-scheduler').on('change', '#disable-labels-mov', function () {
-            console.log($(this).is(':checked'));
             settings.disableLabelsMovement = $(this).is(':checked');
             generateTableLines();
             generateGroupMainContent();
@@ -1017,7 +994,6 @@
 
         $('#pit-scheduler').on('click', '.pts-column-element[data-date]', function () {
             settings.date.selected = moment($(this).attr('data-date'));
-            console.log('click');
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
