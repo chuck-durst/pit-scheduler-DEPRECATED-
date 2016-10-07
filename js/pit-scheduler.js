@@ -987,6 +987,12 @@
             generateUsersList();
         });
 
+        $('.pts-scheduler-container').scroll(function () {
+            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
+            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
+            setTaskLabelPosition();
+        });
+
         $('#pit-scheduler').on('click', '.close-group-panel', function () {
             var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
             var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
@@ -1024,12 +1030,6 @@
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
-        });
-
-        $('.pts-scheduler-container').scroll(function () {
-            $('.pts-line-title-container div').scrollTop($(this).scrollTop());
-            $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
-            setTaskLabelPosition();
         });
 
         $('#pit-scheduler').on('click', '.pts-line-marker', function () {
