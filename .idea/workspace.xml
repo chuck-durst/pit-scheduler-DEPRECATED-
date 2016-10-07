@@ -8,11 +8,15 @@
     <bookmark url="file://$PROJECT_DIR$/js/pit-scheduler.js" line="115" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="5440a9b0-31d6-4ebd-b717-f886e13faaf2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/pit-scheduler.css" afterPath="$PROJECT_DIR$/css/pit-scheduler.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
+=======
+    <list default="true" id="5440a9b0-31d6-4ebd-b717-f886e13faaf2" name="Default" comment="" />
+>>>>>>> Stashed changes
     <ignored path="pit-scheduler.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,6 +42,7 @@
             <state relative-caret-position="-599">
               <caret line="852" column="111" selection-start-line="852" selection-start-column="111" selection-end-line="852" selection-end-column="111" />
               <folding>
+<<<<<<< Updated upstream
                 <element signature="e#3918#7368#0" expanded="false" />
                 <element signature="e#7491#8235#0" expanded="false" />
                 <element signature="e#8332#9126#0" expanded="false" />
@@ -115,6 +120,32 @@
                 <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
                 <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
                 <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+                <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+                <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
               </folding>
             </state>
           </provider>
@@ -123,8 +154,13 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
             <state relative-caret-position="72">
               <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
+=======
+            <state relative-caret-position="3043">
+              <caret line="179" column="21" selection-start-line="179" selection-start-column="21" selection-end-line="179" selection-end-column="21" />
+>>>>>>> Stashed changes
               <folding />
             </state>
           </provider>
@@ -133,8 +169,13 @@
       <file leaf-file-name="pit-scheduler.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/pit-scheduler.css">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
             <state relative-caret-position="483">
               <caret line="449" column="1" selection-start-line="449" selection-start-column="1" selection-end-line="449" selection-end-column="1" />
+=======
+            <state relative-caret-position="7718">
+              <caret line="454" column="1" selection-start-line="454" selection-start-column="1" selection-end-line="454" selection-end-column="1" />
+>>>>>>> Stashed changes
               <folding />
             </state>
           </provider>
@@ -227,8 +268,11 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< Updated upstream
       <pane id="Scope" />
       <pane id="Scratches" />
+=======
+>>>>>>> Stashed changes
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -277,6 +321,11 @@
           </PATH>
         </subPane>
       </pane>
+<<<<<<< Updated upstream
+=======
+      <pane id="Scope" />
+      <pane id="Scratches" />
+>>>>>>> Stashed changes
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -368,6 +417,7 @@
       <workItem from="1475224789301" duration="15298000" />
       <workItem from="1475499111751" duration="9697000" />
       <workItem from="1475568616933" duration="22811000" />
+<<<<<<< Updated upstream
       <workItem from="1475760656141" duration="6176000" />
     </task>
     <task id="LOCAL-00016" summary="adding collapsing group">
@@ -390,6 +440,11 @@
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
       <updated>1474387096396</updated>
+=======
+      <workItem from="1475760656141" duration="7454000" />
+      <workItem from="1475829658358" duration="2462000" />
+      <workItem from="1475832219089" duration="2000" />
+>>>>>>> Stashed changes
     </task>
     <task id="LOCAL-00019" summary="middle task added + inline similare task + justify user line height">
       <created>1474537965790</created>
@@ -717,29 +772,38 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< Updated upstream
     <option name="totallyTimeSpent" value="208660000" />
+=======
+    <option name="totallyTimeSpent" value="212327000" />
+>>>>>>> Stashed changes
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11433087" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11433087" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+<<<<<<< Updated upstream
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17725752" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17706013" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+>>>>>>> Stashed changes
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22408026" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -814,6 +878,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -891,6 +956,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -916,6 +1007,7 @@
         <state relative-caret-position="2006">
           <caret line="237" column="36" selection-start-line="237" selection-start-column="36" selection-end-line="237" selection-end-column="36" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -993,6 +1085,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1025,6 +1143,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1102,6 +1221,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1141,6 +1286,7 @@
         <state relative-caret-position="3162">
           <caret line="368" column="24" selection-start-line="368" selection-start-column="24" selection-end-line="368" selection-end-column="24" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1218,6 +1364,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1257,6 +1429,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1334,6 +1507,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1366,6 +1565,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1443,6 +1643,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1498,6 +1724,7 @@
         <state relative-caret-position="323">
           <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1575,6 +1802,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1600,6 +1853,7 @@
         <state relative-caret-position="323">
           <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1677,6 +1931,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1702,6 +1982,7 @@
         <state relative-caret-position="323">
           <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1779,6 +2060,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1804,6 +2111,7 @@
         <state relative-caret-position="323">
           <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#3918#7368#0" expanded="false" />
             <element signature="e#7491#8235#0" expanded="false" />
             <element signature="e#8332#9126#0" expanded="false" />
@@ -1881,6 +2189,32 @@
             <marker date="1475766590318" expanded="true" signature="48348:48365" ph="..." />
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
+=======
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -1907,7 +2241,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="683">
           <caret line="373" column="0" selection-start-line="373" selection-start-column="0" selection-end-line="373" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1925,7 +2258,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="45" selection-start-line="5" selection-start-column="45" selection-end-line="5" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1969,6 +2301,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/pit-scheduler.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
         <state relative-caret-position="-599">
           <caret line="852" column="111" selection-start-line="852" selection-start-column="111" selection-end-line="852" selection-end-column="111" />
           <folding>
@@ -2050,22 +2383,63 @@
             <marker date="1475766590318" expanded="true" signature="50879:50892" ph="..." />
             <marker date="1475766590318" expanded="true" signature="51020:51069" ph="..." />
           </folding>
+=======
+        <state relative-caret-position="7718">
+          <caret line="454" column="1" selection-start-line="454" selection-start-column="1" selection-end-line="454" selection-end-column="1" />
+          <folding />
+>>>>>>> Stashed changes
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/css/pit-scheduler.css">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
         <state relative-caret-position="483">
           <caret line="449" column="1" selection-start-line="449" selection-start-column="1" selection-end-line="449" selection-end-column="1" />
+=======
+        <state relative-caret-position="3043">
+          <caret line="179" column="21" selection-start-line="179" selection-start-column="21" selection-end-line="179" selection-end-column="21" />
+>>>>>>> Stashed changes
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
         <state relative-caret-position="72">
           <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
           <folding />
+=======
+        <state relative-caret-position="167">
+          <caret line="924" column="168" selection-start-line="924" selection-start-column="168" selection-end-line="924" selection-end-column="168" />
+          <folding>
+            <marker date="1475832206684" expanded="true" signature="16838:16858" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17216:17236" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="17792:17812" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18371:18391" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="18947:18967" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="19389:19409" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="23721:23748" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="24709:24736" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="28938:28978" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="31751:31791" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="35576:35682" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="36677:36770" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="37596:37667" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="39975:40080" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="41085:41177" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="42011:42082" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="43079:43096" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="44963:44987" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45023:45033" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="45449:45466" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47374:47390" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="47750:47767" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50418:50431" ph="..." />
+            <marker date="1475832206684" expanded="true" signature="50558:50607" ph="..." />
+          </folding>
+>>>>>>> Stashed changes
         </state>
       </provider>
     </entry>
