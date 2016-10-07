@@ -198,14 +198,14 @@
 
         /* Update the content of the datepicker */
         var updateDatePicker = function () {
-            $('#header-datetimepicker').datetimepicker();
-            $('#header-datetimepicker').data('DateTimePicker').locale(settings.locale);
-            $('#header-datetimepicker').data('DateTimePicker').defaultDate(settings.date.selected);
-            $('#header-datetimepicker').data('DateTimePicker').date(settings.date.selected);
-            $('#header-datetimepicker').data('DateTimePicker').viewDate(settings.date.selected);
-            $('#header-datetimepicker').data('DateTimePicker').enabledHours(false);
-            $('#header-datetimepicker').data('DateTimePicker').format((settings.currentDisplay === 'months' ? 'MM/YYYY' : 'L'));
-            $('#header-datetimepicker').data('DateTimePicker').viewMode((settings.currentDisplay === 'months' ? 'months' : 'days'));
+            $('#header-datetimepicker').datetimepicker()
+                .data('DateTimePicker').locale(settings.locale)
+                .defaultDate(settings.date.selected)
+                .date(settings.date.selected)
+                .viewDate(settings.date.selected)
+                .enabledHours(false)
+                .format((settings.currentDisplay === 'months' ? 'MM/YYYY' : 'L'))
+                .viewMode((settings.currentDisplay === 'months' ? 'months' : 'days'));
 
         };
 
@@ -244,8 +244,7 @@
 
         /* Return true if the user is assigned to the task */
         var userHasTask = function (user, taskId) {
-            if (getTaskById(taskId).users[user.index] != undefined) return true;
-            return false;
+            return (getTaskById(taskId).users[user.index] != undefined);
         };
 
         /* Get the height of a user line */
@@ -261,8 +260,7 @@
 
         /* Return true if user task must be showed */
         var userLineIsHidden = function (user) {
-            var response = 0,
-                tasks = [];
+            var response = 0;
             user.tasks.forEach(function (task) {
                 if (moment(settings.date.selected).get('year') >= moment(task.start_date).get('year')
                     && moment(settings.date.selected).get('year') <= moment(task.end_date).get('year')) {
@@ -275,7 +273,7 @@
                     }
                 }
             });
-            return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false ? true: false);
+            return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false);
         };
 
         /* Move task label on horizontal scroll */
@@ -299,7 +297,7 @@
         /* Open the info-box panel */
         var openInfoBox = function (taskId, userIndex, viewType) {
             //TODO: make the animation be more stable
-            var $infoBox = $("#pts-info-box-container");
+            var $infoBox = $('#pts-info-box-container');
             $infoBox.empty();
 
             if (viewType === 'task') {
@@ -331,8 +329,8 @@
         };
 
         /* Close the info-box panel */
-        var closeInfoBox = function (viewType) {
-            var $infoBox = $("#pts-info-box-container"),
+        var closeInfoBox = function () {
+            var $infoBox = $('#pts-info-box-container'),
                 $markers = $('.pts-line-marker');
             if ($infoBox.attr('data-toggle') === 'closed') return;
             $.each($markers, function () {
@@ -439,25 +437,25 @@
 
         /* Generate the header content */
         var generateHeader = function () {
-            var $header =   '<div class="pts-header row">' +
-                            '<div class="pts-header-left-container pull-left">' +
-                            '<div class="form-group">' +
-                            '<div class="input-group date" id="header-datetimepicker">' +
-                            '<input type="text" class="form-control"/>' +
-                            '<span class="input-group-addon">' +
-                            '<span class="glyphicon glyphicon-calendar"></span>' +
-                            '</span></div></div>' +
-                            '<div class="pts-nav-buttons">' +
-                            '<button class="btn pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>' +
-                            '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
-                            '</div>' +
-                            '<span class="pts-header-date-display">' +
-                            (settings.currentDisplay === "months" ? moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY') : moment(settings.date.selected).locale(settings.locale).format('LL')) +
-                            '</span></div>' +
-                            '<div class="pts-header-right-container pull-right">' +
-                            '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>' +
-                            '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>' +
-                            '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>';
+            var $header =   ['<div class="pts-header row">',
+                            '<div class="pts-header-left-container pull-left">',
+                            '<div class="form-group">',
+                            '<div class="input-group date" id="header-datetimepicker">',
+                            '<input type="text" class="form-control"/>',
+                            '<span class="input-group-addon">',
+                            '<span class="glyphicon glyphicon-calendar"></span>',
+                            '</span></div></div>',
+                            '<div class="pts-nav-buttons">',
+                            '<button class="btn pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>',
+                            '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>',
+                            '</div>',
+                            '<span class="pts-header-date-display">',
+                            (settings.currentDisplay === "months" ? moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY') : moment(settings.date.selected).locale(settings.locale).format('LL')),
+                            '</span></div>',
+                            '<div class="pts-header-right-container pull-right">',
+                            '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>',
+                            '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>',
+                            '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>'].join('\n');
 
             $scheduler.append($header);
             updateDatePicker();
@@ -466,17 +464,16 @@
         /* Generate base empty base structure */
         var generateBaseView = function () {
             if ($('.pts-main-container').length) return;
-            //TODO: Convert the following into an array (each line = 1 elem) and then join them together
-            var $mainContainer =    '<div class="pts-main-container row">' +
-                                    '<div id="pts-info-box-container" data-toggle="closed"></div>' +
-                                    '<div class="pts-corner-mask"></div>' +
-                                    '<div class="pts-column-title-container">' +
-                                    '<div></div></div>' +
-                                    '<div class="pts-line-title-container"><div>' +
-                                    '</div></div>' +
-                                    '<div class="pts-scheduler-container">' +
-                                    '<div class="pts-main-content">' +
-                                    '</div></div></div>';
+            var $mainContainer =    ['<div class="pts-main-container row">',
+                                    '<div id="pts-info-box-container" data-toggle="closed"></div>',
+                                    '<div class="pts-corner-mask"></div>',
+                                    '<div class="pts-column-title-container">',
+                                    '<div></div></div>',
+                                    '<div class="pts-line-title-container"><div>',
+                                    '</div></div>',
+                                    '<div class="pts-scheduler-container">',
+                                    '<div class="pts-main-content">',
+                                    '</div></div></div>'].join('\n');
 
             $scheduler.append($mainContainer);
         };
@@ -497,8 +494,8 @@
                     lineInterval += 120;
                 }
             } else if (settings.currentDisplay == 'months') {
-                var dayDate = moment(settings.date.selected).add(-1 * (moment(settings.date.selected).format('D') - 1), 'day');
-                var lineInterval = 0,
+                var dayDate = moment(settings.date.selected).add(-1 * (moment(settings.date.selected).format('D') - 1), 'day'),
+                    lineInterval = 0,
                     daysInMonth = parseInt(moment(settings.date.selected).daysInMonth()) + 1;
                 for (var i=1; i <= daysInMonth; i++) {
                     $('.pts-column-title-container > div').append(
@@ -512,13 +509,13 @@
                     dayDate.add(1, 'day');
                 }
             }
-            var $settingsMenu = '<div class="dropdown">' +
-                                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                settings.i18n.settings + ' <span class="caret"></span></button>' +
-                                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">' +
-                                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>' +
-                                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>' +
-                                '</div>';
+            var $settingsMenu = ['<div class="dropdown">',
+                                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                                settings.i18n.settings + ' <span class="caret"></span></button>',
+                                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">',
+                                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>',
+                                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>',
+                                '</div>'].join('\n');
             $('.pts-corner-mask').append($settingsMenu);
         };
 
@@ -559,33 +556,29 @@
         var generateGroupTab = function (group, index) {
             console.log("group: " + group + " index: " + index);
             console.log("Creat group: " + group);
-            var $groupHeaderContent =   '<div id="user-group-' + index + '" class="pts-line-group-container">' +
-                                        '<div class="pts-group-header">' +
-                                        '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>' +
-                                        '<span>' + group + '</span></div>' +
-                                        '<div class="pts-group-content"></div></div>';
-            var $groupMainContent =     '<div class="pts-main-group-container">' +
-                                        '<div class="pts-main-group-header"></div></div>';
+            var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
+                                        '<div class="pts-group-header">',
+                                        '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>',
+                                        '<span>' + group + '</span></div>',
+                                        '<div class="pts-group-content"></div></div>'].join('\n');
             $('.pts-line-title-container > div').append($groupHeaderContent);
         };
 
         /* Generate the main group content and header */
         var generateGroupMainContent = function () {
             settings.groups.added.forEach(function (group, groupIndex) {
-                var $groupMainContent = '<div id="group-container-' + groupIndex + '" class="pts-main-group-container">' +
-                                        '<div class="pts-main-group-header"></div></div>';
+                var $groupMainContent = ['<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
+                                        '<div class="pts-main-group-header"></div></div>'].join('\n');
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
                     if (user.group === group.name && userLineIsHidden(user) == true) {
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + getUserLineHeight(user) + 'px"></div>');
                     }
                 });
-                //Check if the group panel must be closed
                 if ($('.close-group-panel[data-group='+groupIndex+']').attr('data-toggle') === 'closed') {
                     $('#group-container-' + groupIndex).children('.pts-main-group-user').css('display', 'none');
                 }
             });
-            //Generate group header line
             if (settings.currentDisplay == 'days') {
                 $('.pts-main-group-header').css('width', '2880px');
                 $('.pts-main-group-user').css('width', '2880px');
@@ -795,13 +788,13 @@
                     userCounterAll++;
                 }
             });
-            var $content =  '<div class="panel-body">' +
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
-                            '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>' +
-                            '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>' +
-                            '<br><div class="divider"></div></div>' +
-                            '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
-                            '<ul class="pts-info-box-user-list"></ul></div>';
+            var $content =  ['<div class="panel-body">',
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
+                            '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>',
+                            '<br><div class="divider"></div></div>',
+                            '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
+                            '<ul class="pts-info-box-user-list"></ul></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             user.tasks.forEach(function (_task) {
@@ -822,9 +815,9 @@
                 }
                  sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
-            var $content =  '<div class="panel-body">' +
-                '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>' +
-                '<div class="pts-info-box-user-list"></div></div>';
+            var $content =  ['<div class="panel-body">',
+                '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
@@ -843,20 +836,20 @@
         var generateListBaseView = function () {
             if (!settings.list) settings.list = {};
             settings.list.display = 'today';
-            var $columnContainer =  '<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>' +
-                                    '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>' +
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>' +
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>' +
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>' +
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>' +
-                                    '<div class="pts-list-personalized-inputs-container row"></div>';
+            var $columnContainer =  ['<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>',
+                                    '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>',
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>',
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>',
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>',
+                                    '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>',
+                                    '<div class="pts-list-personalized-inputs-container row"></div>'].join('\n');
             $('.pts-column-title-container > div').append($columnContainer);
-            var $headerInputs = '<input class="pts-list-search-task" placeholder="' + settings.i18n.search + '">' +
-                '<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>';
+            var $headerInputs = ['<input class="pts-list-search-task" placeholder="' + settings.i18n.search + '">',
+                '<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>'].join('\n');
             $('.pts-line-title-container').append($headerInputs);
             settings.tasks.forEach(function (_task) {
-                var $taskLabel =    '<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">' +
-                                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>';
+                var $taskLabel =    ['<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">',
+                                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>'].join('\n');
                 $('.pts-line-title-container').append($taskLabel);
             });
 
@@ -867,23 +860,21 @@
         /* Generate the date range picker for the list view */
         var generateRangePicker = function () {
             $('.pts-list-range-btn').css('display', 'none');
-            var $rangeSelector =    '<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">' +
-                '<input type="text" class="form-control"/>' +
-                '<span class="input-group-addon">' +
-                '<span class="glyphicon glyphicon-calendar"></span>' +
-                '</span></div></div>' +
-                '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">' +
-                '<input type="text" class="form-control"/>' +
-                '<span class="input-group-addon">' +
-                '<span class="glyphicon glyphicon-calendar"></span>' +
-                '</span></div></div>' +
-                '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>' +
-                '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>';
+            var $rangeSelector =    ['<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">',
+                                    '<input type="text" class="form-control"/>',
+                                    '<span class="input-group-addon">',
+                                    '<span class="glyphicon glyphicon-calendar"></span>',
+                                    '</span></div></div>',
+                                    '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">',
+                                    '<input type="text" class="form-control"/>',
+                                    '<span class="input-group-addon">',
+                                    '<span class="glyphicon glyphicon-calendar"></span>',
+                                    '</span></div></div>',
+                                    '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>',
+                                    '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
             $('.pts-list-personalized-inputs-container').append($rangeSelector);
-            $('#pts-list-datetimepicker-start').datetimepicker();
-            $('#pts-list-datetimepicker-start').data('DateTimePicker').locale(settings.locale);
-            $('#pts-list-datetimepicker-end').datetimepicker();
-            $('#pts-list-datetimepicker-end').data('DateTimePicker').locale(settings.locale);
+            $('#pts-list-datetimepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
+            $('#pts-list-datetimepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
         };
 
         /* Generate a task box in the list view */
@@ -893,15 +884,15 @@
                 totalUsers = 0,
                 thisUsers = 0;
 
-            var $container =    '<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">' +
-                                '<div class="panel panel-primary" style="border-color:' + task.color + '">' +
-                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + ';border-color:' + task.color + '">' +
-                                '<h6 class="panel-title">' + task.name + '</h6>' +
-                                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>' +
-                                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>' +
-                                '<div class="panel-body"><div class="table-responsive">' +
-                                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>' +
-                                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>';
+            var $container =    ['<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">',
+                                '<div class="panel panel-primary" style="border-color:' + task.color + '">',
+                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + ';border-color:' + task.color + '">',
+                                '<h6 class="panel-title">' + task.name + '</h6>',
+                                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>',
+                                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>',
+                                '<div class="panel-body"><div class="table-responsive">',
+                                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>',
+                                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>'].join('\n');
             $('.pts-list-tasks-container').append($container);
 
             $.each(task.users, function (i, user) {
@@ -930,8 +921,8 @@
                 $('.pts-list-task-container[data-task=' + task.id + ']').remove();
             }
 
-            var $footer =   '<p><b>' + totalUsers + '</b> ' + settings.i18n.usersWhose + ' <b>' + thisUsers + '</b> ' + settings.i18n.inSelectedPeriod + '</p>' +
-                            '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>';
+            var $footer =   ['<p><b>' + totalUsers + '</b> ' + settings.i18n.usersWhose + ' <b>' + thisUsers + '</b> ' + settings.i18n.inSelectedPeriod + '</p>',
+                            '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>'].join('\n');
             $('.pts-list-task-container[data-task=' + task.id + '] .pts-list-task-footer').append($footer);
 
             getContrastedColor();
