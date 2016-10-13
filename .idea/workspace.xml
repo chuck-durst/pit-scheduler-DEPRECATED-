@@ -7,7 +7,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5440a9b0-31d6-4ebd-b717-f886e13faaf2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/__assets__/pit-scheduler.js" afterPath="$PROJECT_DIR$/__assets__/pit-scheduler.js" />
     </list>
     <ignored path="pit-scheduler.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -428,14 +427,7 @@
       <workItem from="1475835278123" duration="597000" />
       <workItem from="1476087843197" duration="7822000" />
       <workItem from="1476173291010" duration="3399000" />
-      <workItem from="1476363517185" duration="9153000" />
-    </task>
-    <task id="LOCAL-00022" summary="adding day name to column header">
-      <created>1474556366909</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1474556366909</updated>
+      <workItem from="1476363517185" duration="9177000" />
     </task>
     <task id="LOCAL-00023" summary="shortcut on click on a day name">
       <created>1474559287670</created>
@@ -773,11 +765,18 @@
       <option name="project" value="LOCAL" />
       <updated>1476373395272</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="brain new button">
+      <created>1476374138564</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1476374138564</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="233296000" />
+    <option name="totallyTimeSpent" value="233320000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="0" width="1936" height="1056" extended-state="0" />
@@ -835,7 +834,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="default date and default group name added to settings" />
     <MESSAGE value="fixes" />
     <MESSAGE value="users info tab added" />
     <MESSAGE value="some fix on info tab" />
@@ -860,7 +858,8 @@
     <MESSAGE value="new files architecture" />
     <MESSAGE value="task creation added" />
     <MESSAGE value="add removable tasks + FIX BIG MISTAKE on Line height calculation" />
-    <option name="LAST_COMMIT_MESSAGE" value="add removable tasks + FIX BIG MISTAKE on Line height calculation" />
+    <MESSAGE value="brain new button" />
+    <option name="LAST_COMMIT_MESSAGE" value="brain new button" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
