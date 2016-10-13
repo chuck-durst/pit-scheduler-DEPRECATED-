@@ -57,9 +57,8 @@
             defaultGroupName: 'Default group',
             defaultDate: '2016-09-26 16:30',
             defaultColor: '#00bdd6',
-            onTaskCreation: function (settings) {
-                // Called when a new task is created
-            },
+            onTaskCreation: '', // Function called on task creation
+            onTaskRemoval: '', // Function called on task removal
             tasks:  [
                 {
                     id: 'djJ3d7sjk928S0', //Required
@@ -86,7 +85,6 @@
             ],
             users: [
                    {
-                    id: '',
                     name: 'Ai WeiWei', //Required
                     group: 'Group A',
                     tasks: [
@@ -118,7 +116,6 @@
                     ]
                 },
                 {
-                    id: '',
                     name: 'Michel Petrucciani', //Required
                     group: 'Group A',
                     tasks: [
@@ -140,7 +137,6 @@
                     ]
                 },
                 {
-                    id: '',
                     name: 'Jimi Hendrix', //Required
                     group: 'Group B',
                     tasks: [
