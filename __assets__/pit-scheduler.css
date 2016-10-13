@@ -179,6 +179,14 @@ body {
     z-index: 1;
 }
 
+.pts-btn-add-elem {
+    background-color: #00BCD4;
+    color: #fff;
+    position: relative;
+    top: 3px;
+    left: 2px;
+}
+
 .closed-btn {
     transform: rotate(45deg);
 }
@@ -299,7 +307,6 @@ body {
 }
 
 .pts-line-marker-label {
-    z-index: 300;
     position: relative;
     top: 5px;
     left: 10px;

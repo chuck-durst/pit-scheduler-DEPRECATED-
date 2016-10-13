@@ -57,7 +57,9 @@
             defaultGroupName: 'Default group',
             defaultDate: '2016-09-26 16:30',
             defaultColor: '#00bdd6',
-            useAjax: false,
+            onTaskCreation: function (settings) {
+                // Called when a new task is created
+            },
             tasks:  [
                 {
                     id: 'djJ3d7sjk928S0', //Required

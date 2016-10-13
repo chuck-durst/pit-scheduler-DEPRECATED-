@@ -31,7 +31,18 @@
             cycleWhose: 'cycle(s) dont',
             inSelectedPeriod: 'dans la période sélectionnée',
             all: 'Tout',
-            search: 'Recherche'
+            search: 'Recherche',
+            addNewTask: 'Créer une tâche',
+            addNewUser: 'Créer un utilisateur',
+            name: 'Nom',
+            required: 'Obligatoire',
+            color: 'Couleur',
+            cancel: 'Annuler',
+            create: 'Créer',
+            createAndAssign: 'Créer et assigner',
+            nameAlreadyTaken: 'Ce nom est déjà utilisé',
+            idAlreadyTaken: 'Cet ID est déjà utilisé'
+
         },
         en: {
             days: 'Days',
@@ -58,7 +69,16 @@
             cycleWhose: 'cycle(s) with',
             inSelectedPeriod: 'in the selected period',
             all: 'All',
-            search: 'Search'
+            search: 'Search',
+            addNewTask: 'Create a new task',
+            addNewUser: 'Create a new user',
+            name: 'Name',
+            required: 'Required',
+            color: 'Color',
+            cancel: 'Cancel',
+            create: 'Create',
+            createAndAssign: 'Create and assign',
+            idAlreadyTaken: 'This ID is already taken'
         }
     };
     
@@ -75,9 +95,6 @@
             date: {
                 current: moment(),
                 selected: moment()
-            },
-            uiElements: {
-
             },
             currentDisplay: ''
         }, options);
@@ -180,20 +197,26 @@
         /* Init function that saves users index into associated tasks */
         var getUsersTasksInTasks = function () {
             settings.tasks.forEach(function (task) {
-                task.users = {};
-                if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
-                settings.users.forEach(function (user, userIndex) {
-                    user.index = userIndex;
-                    user.tasks.forEach(function (userTask, taskIndex) {
-                        if (userTask.id === task.id) {
-                            if (!task.users[userIndex]) {
-                                task.users[userIndex] = [];
-                            }
-                            task.users[userIndex].push(taskIndex);
+                task = generateTaskInTask(task);
+            });
+        };
+
+        /* Add an index list of the assigned users to this task */
+        var generateTaskInTask = function (task) {
+            task.users = {};
+            if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
+            settings.users.forEach(function (user, userIndex) {
+                user.index = userIndex;
+                user.tasks.forEach(function (userTask, taskIndex) {
+                    if (userTask.id === task.id) {
+                        if (!task.users[userIndex]) {
+                            task.users[userIndex] = [];
                         }
-                    });
+                        task.users[userIndex].push(taskIndex);
+                    }
                 });
             });
+            return task;
         };
 
         /* Update the content of the datepicker */
@@ -300,26 +323,30 @@
             var $infoBox = $('#pts-info-box-container');
             $infoBox.empty();
 
-            if (viewType === 'task') {
-                var task = getTaskById(taskId),
-                    $markers = $('.pts-line-marker');
+            switch (viewType) {
+                case 'task':
+                    var task = getTaskById(taskId),
+                        $markers = $('.pts-line-marker');
+                    generateInfoBoxContentTask(task, settings.users[userIndex]);
+                    $.each($markers, function () {
+                        $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
+                        if ($(this).attr('data-task') !== taskId) {
+                            $(this).css('background-color', '#8e8e8e');
+                        }
+                    });
+                    $('.pts-main-group-column').css('background-color', '#eee');
+                    $infoBox.attr('data-toggle', 'opened');
 
-                generateInfoBoxContentTask(task, settings.users[userIndex]);
-                $.each($markers, function () {
-                    $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
-                    if ($(this).attr('data-task') !== taskId) {
-                        $(this).css('background-color', '#8e8e8e');
-                    }
-                });
-                $('.pts-main-group-column').css('background-color', '#eee');
-                $infoBox.attr('data-toggle', 'opened');
-            }
-
-            else if (viewType === 'user') {
-                var user = settings.users[userIndex];
-
-                generateInfoBoxContentUser(user);
-                $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'user':
+                    var user = settings.users[userIndex];
+                    generateInfoBoxContentUser(user);
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'createTask':
+                    generateInfoBoxContentCreateTask();
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
             }
 
             $infoBox.animate({
@@ -433,6 +460,28 @@
             });
         };
 
+        /* Create a task */
+        var createNewTask = function (name, id, description, color, assign) {
+            var newTask = {
+                id: (id.length > 0 ? id : generateRandomId()),
+                name: name,
+                description: (description.length > 0 ? description : ''),
+                color: (color.length > 0 ? color : settings.defaultColor)
+            };
+            newTask = generateTaskInTask(newTask);
+            settings.tasks.push(newTask);
+            if (assign == true) return generateInfoBoxContentTaskAssign(newTask.id);
+        };
+
+        /* Generate a random Id */
+        var generateRandomId = function () {
+            var S4 = function() {
+                return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+            };
+            return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        };
+
+
         /********* Generation *********/
 
         /* Generate the header content */
@@ -509,13 +558,18 @@
                     dayDate.add(1, 'day');
                 }
             }
-            var $settingsMenu = ['<div class="dropdown">',
+            var $settingsMenu = ['<div style="display:inline-flex"><div class="dropdown" style="top:2px"><button id="addDropdown" class="btn btn-sm pts-btn-add-elem dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                                '<i class="glyphicon glyphicon-plus"></i></button>',
+                                '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
+                                '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
+                                '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li>',
+                                '</ul></div><div class="dropdown">',
                                 '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
                                 settings.i18n.settings + ' <span class="caret"></span></button>',
                                 '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">',
                                 '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>',
                                 '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>',
-                                '</div>'].join('\n');
+                                '</div></div>'].join('\n');
             $('.pts-corner-mask').append($settingsMenu);
         };
 
@@ -662,6 +716,10 @@
                        }
                    }
                }
+                delete task.disabled;
+                delete task.index;
+                delete task.start_date;
+                delete task.end_date;
             });
         };
 
@@ -789,7 +847,7 @@
                 }
             });
             var $content =  ['<div class="panel-body">',
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>',
                             '<br><div class="divider"></div></div>',
@@ -816,7 +874,7 @@
                  sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
@@ -826,11 +884,33 @@
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
                 });
-
             });
             getContrastedColor();
         };
 
+        /* Generate the creation task structure of the info box */
+        var generateInfoBoxContentCreateTask = function () {
+            var $content = ['<div class="panel-body">',
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + settings.i18n.addNewTask + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<fieldset>',
+                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
+                            '<div id="pts-add-task-err-name" style="color:red"></div></div>',
+                            '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
+                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
+                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
+                            '<div class="btn-group">',
+                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
+                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
+                            '</fieldset>',
+                            '</div>'].join('\n');
+            $('#pts-info-box-container').append($content);
+        };
+
+        /* Generate the task assignation structure of the info box */
+        var generateInfoBoxContentTaskAssign = function (taskId) {
+            console.log("coucou");
+        };
 
         /* Generate list view main structure */
         var generateListBaseView = function () {
@@ -1029,7 +1109,7 @@
             }
         });
 
-        $('#pit-scheduler').on('click', '.pts-info-box-title', function () {
+        $('#pit-scheduler').on('click', '.pts-close-info-box', function () {
             closeInfoBox();
         });
 
@@ -1110,6 +1190,36 @@
                     $(this).css('display', 'none');
                 }
             });
+        });
+
+        $('#pit-scheduler').on('click', '.pts-add-new-task', function () {
+            openInfoBox(null, null, "createTask");
+        });
+
+        $('#pit-scheduler').on('click', '.pts-create-task-btn', function () {
+            var name = $('#pts-add-task-input-name').val(),
+                id = $('#pts-add-task-input-id').val(),
+                description = $('#pts-add-task-input-description').val(),
+                color = $('#pts-add-task-input-color').val();
+            $('#pts-add-task-err-name').html('');
+            $('#pts-add-task-err-id').html('');
+            $.each(settings.tasks, function (i, e) {
+                if (e.name == name) {
+                    $('#pts-add-task-err-name').html(settings.i18n.nameAlreadyTaken);
+                    name = '';
+                }
+                if (e.id == id) {
+                    $('#pts-add-task-err-id').html(settings.i18n.idAlreadyTaken);
+                    name = '';
+                }
+            });
+            if (name.length < 1) return;
+            createNewTask(name, id, description, color, $(this).data('assign'));
+            closeInfoBox();
+            if (settings.onTaskCreation) {
+                console.log('mabite')
+                settings.onTaskCreation(settings);
+            }
         });
 
         return $scheduler;
