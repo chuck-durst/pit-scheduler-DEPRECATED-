@@ -44,7 +44,8 @@
             idAlreadyTaken: 'Cet ID est déjà utilisé',
             remove: 'Supprimer',
             assign: 'Assigner',
-            edit: 'Modifier'
+            edit: 'Modifier',
+            reallyAsk: 'Vraiment?'
 
         },
         en: {
@@ -84,7 +85,8 @@
             idAlreadyTaken: 'This ID is already taken',
             remove: 'Remove',
             assign: 'Assign',
-            edit: 'Edit'
+            edit: 'Edit',
+            reallyAsk: 'Really?'
         }
     };
     
@@ -890,7 +892,7 @@
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
                             '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>',
                             '<div class="btn-group">',
-                            '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '">' + settings.i18n.remove + '</button>',
+                            '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
                             '<button type="button" class="btn pts-assign-task-btn" style="background-color:#00BCD4;color:#fff" data-task="' + task.id + '">' + settings.i18n.assign + '</button>',
                             '<button type="button" class="btn pts-edit-task-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div><br>',
                             '<br><div class="divider"></div></div>',
@@ -1259,6 +1261,11 @@
         });
 
         $('#pit-scheduler').on('click', '.pts-delete-task-btn[data-task]', function () {
+            if ($(this).attr('data-confirm') && $(this).attr('data-confirm') == 'false') {
+                $(this).text(settings.i18n.reallyAsk);
+                $(this).attr('data-confirm', true);
+                return;
+            }
             removeTask($(this).data('task'));
         });
 
