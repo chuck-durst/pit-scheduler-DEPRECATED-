@@ -45,7 +45,8 @@
             remove: 'Supprimer',
             assign: 'Assigner',
             edit: 'Modifier',
-            confirm: 'Confirmer'
+            confirm: 'Confirmer',
+            assignTaskTitle: 'Assigner des utilisateurs'
 
         },
         en: {
@@ -86,7 +87,8 @@
             remove: 'Remove',
             assign: 'Assign',
             edit: 'Edit',
-            confirm: 'Confirm'
+            confirm: 'Confirm',
+            assignTaskTitle: 'Assign users'
         }
     };
     
@@ -143,52 +145,25 @@
         /********* Main functions *********/
 
         /* update display view */
-        var updateDisplay = function (format) {
-            closeInfoBox();
-            $('.pts-main-content').empty();
-            $('.pts-column-title-container > div').empty();
-            $('.pts-line-title-container').empty();
-            $('.pts-line-title-container').append($('<div></div>'));
-            $('.pts-corner-mask').empty();
-            $('.pts-btn-next').removeAttr('disabled');
-            $('.pts-btn-previous').removeAttr('disabled');
-            $('.pts-header-date-display').css('display', 'block');
-            $('#header-datetimepicker').data("DateTimePicker").enable();
-            $('.pts-column-title-container').css('overflow', 'hidden');
-            switch (format) {
+        var updateDisplay = function (viewMode) {
+            updateDisplayReset();
+            switch (viewMode) {
                 case 'days':
-                    $('.pts-header-right-container  .pts-btn-day-view').addClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
+                    setButtonViewFocus('day');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'days';
-                    generateBaseView();
-                    generateTableLines();
-                    generateGroupsPanels();
-                    generateGroupMainContent();
-                    generateUsersList();
-                    updateDatePicker();
+                    generateMainContent();
                     break;
                 case 'months':
-                    $('.pts-header-right-container  .pts-btn-day-view').removeClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-month-view').addClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-list-view').removeClass('pts-active');
+                    setButtonViewFocus('month');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
                     settings.currentDisplay = 'months';
-                    generateBaseView();
-                    generateTableLines();
-                    generateGroupsPanels();
-                    generateGroupMainContent();
-                    generateUsersList();
-                    updateDatePicker();
+                    generateMainContent();
                     break;
                 case 'list':
-                    $('.pts-column-title-container').css('overflow', 'visible');
-                    $('.pts-header-right-container  .pts-btn-day-view').removeClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-month-view').removeClass('pts-active');
-                    $('.pts-header-right-container  .pts-btn-list-view').addClass('pts-active');
+                    setButtonViewFocus('list');
                     $('.pts-header-date-display').empty();
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
@@ -200,6 +175,27 @@
                     switchListRange('today');
                     break;
             }
+        };
+
+        /* Reset elements content that have been modified */
+        var updateDisplayReset = function () {
+            closeInfoBox();
+            $('.pts-main-content').empty();
+            $('.pts-column-title-container > div').empty();
+            $('.pts-line-title-container').empty();
+            $('.pts-line-title-container').append($('<div></div>'));
+            $('.pts-corner-mask').empty();
+            $('.pts-btn-next').removeAttr('disabled');
+            $('.pts-btn-previous').removeAttr('disabled');
+            $('.pts-header-date-display').css('display', 'block');
+            $('#header-datetimepicker').data("DateTimePicker").enable();
+            $('.pts-column-title-container').css('overflow', 'hidden');
+        };
+
+        /* set the focus on the right view mode button */
+        var setButtonViewFocus = function (viewMode) {
+            $('.pts-header-right-container  button').removeClass('pts-active');
+            $('.pts-header-right-container  .pts-btn-' + viewMode + '-view').addClass('pts-active');
         };
 
         /* Init function that saves users index into associated tasks */
@@ -365,7 +361,7 @@
                     $infoBox.attr('data-toggle', 'opened');
                     break;
                 case 'assignTask':
-                    generateInfoBoxContentAssignTask();
+                    generateInfoBoxContentAssignTask(taskId);
                     $infoBox.attr('data-toggle', 'opened');
                     break;
             }
@@ -570,6 +566,16 @@
                                     '</div></div></div>'].join('\n');
 
             $scheduler.append($mainContainer);
+        };
+
+        /* Launch all the main generations */
+        var generateMainContent = function () {
+            generateBaseView();
+            generateTableLines();
+            generateGroupsPanels();
+            generateGroupMainContent();
+            generateUsersList();
+            updateDatePicker();
         };
 
         /* Generate the table columns lines */
@@ -884,31 +890,26 @@
 
         /* Generate the tasks structure of the info box */
         var generateInfoBoxContentTask = function (task, user) {
-            var userCounterAll = 0;
-
-            settings.users.forEach(function (e) {
-                if (userHasTask(e, task.id) === true) {
-                    userCounterAll++;
-                }
-            });
             var $content =  ['<div class="panel-body">',
                             '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
-                            '<p><b>' + settings.i18n.assignedUsers + ' : </b>' +userCounterAll + '</p>',
                             '<div class="btn-group">',
                             '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
                             '<button type="button" class="btn pts-assign-task-btn" style="background-color:#00BCD4;color:#fff" data-task="' + task.id + '">' + settings.i18n.assign + '</button>',
                             '<button type="button" class="btn pts-edit-task-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div><br>',
-                            '<br><div class="divider"></div></div>',
-                            '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
-                            '<ul class="pts-info-box-user-list"></ul></div>'].join('\n');
-
+                            '<br><div class="divider"></div></div>'].join('\n');
             $('#pts-info-box-container').append($content);
-            user.tasks.forEach(function (_task) {
-                if (_task.id === task.id) {
-                    $('.pts-info-box-user-list').append('<li><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
-                        ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</li>');
-                }
+
+            $.each(task.users, function (i) {
+                var user = settings.users[i];
+                var $head = '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>';
+                $('#pts-info-box-container').append($head);
+                user.tasks.forEach(function (_task) {
+                    if (_task.id === task.id) {
+                        $('.pts-info-box-user-list[data-head=' + i + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
+                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>');
+                    }
+                });
             });
             getContrastedColor();
         };
@@ -923,7 +924,8 @@
                  sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small><i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
@@ -940,7 +942,8 @@
         /* Generate the creation task structure of the info box */
         var generateInfoBoxContentCreateTask = function () {
             var $content = ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + settings.i18n.addNewTask + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
+                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<fieldset>',
                             '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
                             '<div id="pts-add-task-err-name" style="color:red"></div></div>',
@@ -959,21 +962,43 @@
         /* Generate the assignation task structure of the info box */
         var generateInfoBoxContentAssignTask = function (taskId) {
             var task = getTaskById(taskId);
-            var $content = ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + settings.i18n.addNewTask + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<fieldset>',
-                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
-                            '<div id="pts-add-task-err-name" style="color:red"></div></div>',
-                            '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
-                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
-                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
-                            '<div class="btn-group">',
-                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
-                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
-                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
-                            '</fieldset>',
-                            '</div>'].join('\n');
+
+            var $content =  ['<div class="panel-body">',
+                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4>' + settings.i18n.assignTaskTitle + '</h4>',
+                '<div class="form-group"><label for="sel42">Sélectionnez les utilisateurs à assigner: </label>',
+                '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
+                '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div>',
+                '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-task-assign-datepicker-end">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div>',
+                '<br><div class="divider"></div></div>'].join('\n');
             $('#pts-info-box-container').append($content);
+            $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
+            $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
+
+            settings.users.forEach(function (user, i) {
+                $('.pts-task-assign-users-list').append('<option class="pts-task-assign-user-option" value="' + i + '" data-user="' + user.name + '">' + user.name + '</option>');
+            });
+
+            $.each(task.users, function (i) {
+                var user = settings.users[i];
+                var $head = '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>';
+                $('#pts-info-box-container').append($head);
+                user.tasks.forEach(function (_task) {
+                    if (_task.id === task.id) {
+                        $('.pts-info-box-user-list[data-head=' + i + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
+                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>');
+                    }
+                });
+            });
+            getContrastedColor();
         };
 
         /* Generate list view main structure */
@@ -1004,12 +1029,12 @@
         /* Generate the date range picker for the list view */
         var generateRangePicker = function () {
             $('.pts-list-range-btn').css('display', 'none');
-            var $rangeSelector =    ['<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date" id="pts-list-datetimepicker-start">',
+            var $rangeSelector =    ['<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date pts-datetimepicker-start" id="pts-list-datetimepicker-start">',
                                     '<input type="text" class="form-control"/>',
                                     '<span class="input-group-addon">',
                                     '<span class="glyphicon glyphicon-calendar"></span>',
                                     '</span></div></div>',
-                                    '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date" id="pts-list-datetimepicker-end">',
+                                    '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date pts-datetimepicker-end" id="pts-list-datetimepicker-end">',
                                     '<input type="text" class="form-control"/>',
                                     '<span class="input-group-addon">',
                                     '<span class="glyphicon glyphicon-calendar"></span>',
@@ -1017,8 +1042,6 @@
                                     '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>',
                                     '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
             $('.pts-list-personalized-inputs-container').append($rangeSelector);
-            $('#pts-list-datetimepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
-            $('#pts-list-datetimepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
         };
 
         /* Generate a task box in the list view */
@@ -1219,8 +1242,8 @@
             }
         });
 
-        $('#pit-scheduler').on('dp.change', '#pts-list-datetimepicker-start', function (e) {
-            $('#pts-list-datetimepicker-end').data('DateTimePicker').minDate(e.date);
+        $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start', function (e) {
+            $('.pts-datetimepicker-end').data('DateTimePicker').minDate(e.date);
         });
 
         $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
