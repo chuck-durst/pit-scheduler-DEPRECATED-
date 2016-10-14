@@ -23,6 +23,44 @@ body {
     -o-user-select:none;
 }
 
+/************ Animation ************/
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+        background-color: #50d371;
+    }
+
+    to {
+        opacity: 1;
+        background-color: transparent;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        background-color: #50d371;
+    }
+
+    to {
+        opacity: 1;
+        background-color: transparent;
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+
 /************ Header ************/
 .pts-header {
     position: relative;

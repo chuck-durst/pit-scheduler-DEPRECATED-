@@ -123,6 +123,8 @@
                 settings.currentDisplay = settings.defaultDisplay;
         }
 
+        settings.defaultColor = (settings.defaultColor? settings.defaultColor : '#00BCD4');
+
         if (settings.locale === undefined || i18n.allowed.indexOf(settings.locale) == -1) {
             settings.locale = 'en';
         }
@@ -534,8 +536,9 @@
                 start_date: start_date,
                 end_date: end_date
             };
-            $('#pts-assign-task-err').empty()
+            $('#pts-assign-task-err').empty();
             if (!users || !task || !start_date || ! end_date) return;
+
             users.forEach(function (userIndex) {
                 var user = settings.users[userIndex],
                     taskExist = false;
@@ -552,15 +555,18 @@
                    start_date: moment(start_date).format('YYYY-MM-DD HH:mm'),
                    end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
                });
-                console.log(user);
                 generateTaskInTask(task);
-                if ($('.pts-info-box-user').length == 0) {
+                if ($('.pts-info-box-user[data-user=' + user.index + ']').length == 0) {
                     var $head = '<div class="pts-info-box-user" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
                     $('#pts-info-box-container').append($head);
                 }
-                $('.pts-info-box-user-list[data-head=' + user.index + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll') +
+                $('.pts-info-box-user-list[data-head=' + user.index + ']').append('<tr class="animated fadeIn"><td><b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll') +
                     ' <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('llll') + '</td></tr>');
+                $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
             });
+            if (settings.onTaskAssignation && typeof settings.onTaskAssignation === 'function') {
+                settings.onTaskAssignation(settings);
+            }
         };
 
 
@@ -1018,14 +1024,13 @@
                             '<input type="text" class="form-control"/>',
                             '<span class="input-group-addon">',
                             '<span class="glyphicon glyphicon-calendar"></span>',
-                            '</span></div><div id="pts-assign-task-err" style="color:red"></div><br>',
-                            '<div class="pull-right"><button class="btn pts-close-info-box btn-danger">' + settings.i18n.cancel + '</button>',
+                            '</span></div><div id="pts-assign-task-err" style="color:red"></div><br><div class="pull-right">',
                             '<button id="pts-task-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-task="' + taskId + '">' + settings.i18n.assign + '</button></div>',
                             '<br></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
-            $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'});
-            $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'});
+            $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
+            $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
 
             settings.users.forEach(function (user, i) {
                 $('.pts-task-assign-users-list').append('<option class="pts-task-assign-user-option" value="' + i + '" data-user="' + user.name + '">' + user.name + '</option>');
@@ -1086,6 +1091,8 @@
                                     '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>',
                                     '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
             $('.pts-list-personalized-inputs-container').append($rangeSelector);
+            $('#pts-list-datetimepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
+            $('#pts-list-datetimepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
         };
 
         /* Generate a task box in the list view */
