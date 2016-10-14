@@ -46,7 +46,9 @@
             assign: 'Assigner',
             edit: 'Modifier',
             confirm: 'Confirmer',
-            assignTaskTitle: 'Assigner des utilisateurs'
+            assignTaskTitle: 'Assigner des utilisateurs',
+            allInputRequired: 'Tous les champs sont obligatoires',
+            userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période'
 
         },
         en: {
@@ -88,7 +90,9 @@
             assign: 'Assign',
             edit: 'Edit',
             confirm: 'Confirm',
-            assignTaskTitle: 'Assign users'
+            assignTaskTitle: 'Assign users',
+            allInputRequired: 'All fields are required',
+            userIsAlreadyAssigned: 'is already assigned to this task for this period'
         }
     };
     
@@ -367,7 +371,7 @@
             }
 
             $infoBox.animate({
-                width: '35%'
+                width: '420px'
             }, 300);
             getContrastedColor();
         };
@@ -387,20 +391,22 @@
             }, 300);
             $infoBox.attr('data-toggle', 'closed');
             $infoBox.empty();
+            updateDisplay(settings.currentDisplay);
             getContrastedColor();
         };
 
         /* Mix tasks that have a superposition */
         var hideTaskSuperposition = function (originIndex, task, user) {
-            task.disabled = false;
             user.tasks.forEach(function (userTask, index) {
                 if (userTask.id === task.id && index !== originIndex) {
-                    if ((moment(userTask.start_date).format('H') <= 12 && moment(task.end_date).format('H') <= 12) ||
-                        (moment(userTask.start_date).format('H') > 12 && moment(task.end_date).format('H') > 12)) {
+                    if (moment(userTask.start_date).format('YYYYMMDD') ==  moment(task.end_date).format('YYYYMMDD')  &&
+                        ((moment(userTask.start_date).format('H') <= 12 && moment(task.end_date).format('H') <= 12) ||
+                        (moment(userTask.start_date).format('H') > 12 && moment(task.end_date).format('H') > 12))) {
                         task.end_date = userTask.end_date;
                     }
-                    if ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12) ||
-                        (moment(task.start_date).format('H') > 12 && moment(userTask.end_date).format('H') > 12)) {
+                    if (moment(task.start_date).format('YYMMDD') == moment(userTask.end_date).format('YYMMDD')&&
+                        ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12) ||
+                        (moment(task.start_date).format('H') > 12 && moment(userTask.end_date).format('H') > 12))) {
                         task.disabled = true;
                     }
                 }
@@ -520,6 +526,41 @@
             if (settings.onTaskRemoval && typeof settings.onTaskRemoval === 'function') {
                 settings.onTaskRemoval(settings);
             }
+        };
+
+        /* Assign users to a task */
+        var assignUsersToTask = function (users, task, start_date, end_date) {
+            var taskDates = {
+                start_date: start_date,
+                end_date: end_date
+            };
+            $('#pts-assign-task-err').empty()
+            if (!users || !task || !start_date || ! end_date) return;
+            users.forEach(function (userIndex) {
+                var user = settings.users[userIndex],
+                    taskExist = false;
+                user.tasks.forEach(function (_task, i) {
+                    if (_task.id === task.id && (isDateInDate(_task, taskDates) || isDateInDate(taskDates, _task))) {
+                        taskExist = true;
+                    }
+                });
+                if (taskExist) {
+                    return $('#pts-assign-task-err').append('<b>' + user.name + '</b> ' + settings.i18n.userIsAlreadyAssigned + '<br>');
+                }
+               user.tasks.push({
+                   id: task.id,
+                   start_date: moment(start_date).format('YYYY-MM-DD HH:mm'),
+                   end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
+               });
+                console.log(user);
+                generateTaskInTask(task);
+                if ($('.pts-info-box-user').length == 0) {
+                    var $head = '<div class="pts-info-box-user" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
+                    $('#pts-info-box-container').append($head);
+                }
+                $('.pts-info-box-user-list[data-head=' + user.index + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll') +
+                    ' <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('llll') + '</td></tr>');
+            });
         };
 
 
@@ -750,7 +791,7 @@
                 if (task === undefined) return console.warn('Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date > task.end_date) return console.warn('Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                if (settings.currentDisplay === 'months') {
-                   task = hideTaskSuperposition(i, task, user);
+                  task = hideTaskSuperposition(i, task, user);
                    if (task.end_date && task.disabled != true) {
                        if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
                            && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
@@ -963,25 +1004,28 @@
         var generateInfoBoxContentAssignTask = function (taskId) {
             var task = getTaskById(taskId);
 
-            var $content =  ['<div class="panel-body">',
-                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4>' + settings.i18n.assignTaskTitle + '</h4>',
-                '<div class="form-group"><label for="sel42">Sélectionnez les utilisateurs à assigner: </label>',
-                '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
-                '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
-                '<input type="text" class="form-control"/>',
-                '<span class="input-group-addon">',
-                '<span class="glyphicon glyphicon-calendar"></span>',
-                '</span></div>',
-                '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-task-assign-datepicker-end">',
-                '<input type="text" class="form-control"/>',
-                '<span class="input-group-addon">',
-                '<span class="glyphicon glyphicon-calendar"></span>',
-                '</span></div>',
-                '<br><div class="divider"></div></div>'].join('\n');
+            var $content = ['<div class="panel-body">',
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4>' + settings.i18n.assignTaskTitle + '</h4>',
+                            '<div class="form-group"><label for="sel42">Sélectionnez les utilisateurs à assigner: </label>',
+                            '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
+                            '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
+                            '<input type="text" class="form-control"/>',
+                            '<span class="input-group-addon">',
+                            '<span class="glyphicon glyphicon-calendar"></span>',
+                            '</span></div>',
+                            '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-task-assign-datepicker-end">',
+                            '<input type="text" class="form-control"/>',
+                            '<span class="input-group-addon">',
+                            '<span class="glyphicon glyphicon-calendar"></span>',
+                            '</span></div><div id="pts-assign-task-err" style="color:red"></div><br>',
+                            '<div class="pull-right"><button class="btn pts-close-info-box btn-danger">' + settings.i18n.cancel + '</button>',
+                            '<button id="pts-task-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-task="' + taskId + '">' + settings.i18n.assign + '</button></div>',
+                            '<br></div>'].join('\n');
+
             $('#pts-info-box-container').append($content);
-            $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
-            $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
+            $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'});
+            $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'});
 
             settings.users.forEach(function (user, i) {
                 $('.pts-task-assign-users-list').append('<option class="pts-task-assign-user-option" value="' + i + '" data-user="' + user.name + '">' + user.name + '</option>');
@@ -989,11 +1033,11 @@
 
             $.each(task.users, function (i) {
                 var user = settings.users[i];
-                var $head = '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>';
+                var $head = '<div class="pts-info-box-user" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
                 $('#pts-info-box-container').append($head);
                 user.tasks.forEach(function (_task) {
                     if (_task.id === task.id) {
-                        $('.pts-info-box-user-list[data-head=' + i + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
+                        $('.pts-info-box-user-list[data-head=' + user.index + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
                             ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>');
                     }
                 });
@@ -1243,7 +1287,7 @@
         });
 
         $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start', function (e) {
-            $('.pts-datetimepicker-end').data('DateTimePicker').minDate(e.date);
+            $('.pts-datetimepicker-end').data('DateTimePicker').minDate(e.date).date(e.date).viewDate(e.date);
         });
 
         $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
@@ -1313,6 +1357,18 @@
 
         $('#pit-scheduler').on('click', '.pts-assign-task-btn', function () {
             openInfoBox($(this).data('task'), null, 'assignTask');
+        });
+
+        $('#pit-scheduler').on('click', '#pts-task-assign-btn[data-task]', function () {
+            var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
+                end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
+                users = $('.pts-task-assign-users-list').val(),
+                task = getTaskById($(this).data('task'));
+            if (users && start_date && end_date) {
+                assignUsersToTask(users, task, start_date, end_date);
+            } else {
+                $('#pts-assign-task-err').text(settings.i18n.allInputRequired);
+            }
         });
 
         return $scheduler;

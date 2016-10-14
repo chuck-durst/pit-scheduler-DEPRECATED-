@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5440a9b0-31d6-4ebd-b717-f886e13faaf2" name="Default" comment="">
+    <list default="true" id="5440a9b0-31d6-4ebd-b717-f886e13faaf2" name="Default" comment="assign task done!">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/__assets__/pit-scheduler.css" afterPath="$PROJECT_DIR$/__assets__/pit-scheduler.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/__assets__/pit-scheduler.js" afterPath="$PROJECT_DIR$/__assets__/pit-scheduler.js" />
@@ -346,13 +346,6 @@
       <workItem from="1476363517185" duration="9315000" />
       <workItem from="1476432517880" duration="1055000" />
     </task>
-    <task id="LOCAL-00025" summary="wip">
-      <created>1474638845658</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1474638845658</updated>
-    </task>
     <task id="LOCAL-00026" summary="task label now moving on scroll, houray!">
       <created>1474641809167</created>
       <option name="number" value="00026" />
@@ -689,11 +682,18 @@
       <option name="project" value="LOCAL" />
       <updated>1476439567482</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="assign task done!">
+      <created>1476458505352</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1476458505352</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="251942000" />
+    <option name="totallyTimeSpent" value="251966000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="0" width="1936" height="1056" extended-state="0" />
@@ -743,7 +743,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="fix some lines not hidden when switching to days view" />
     <MESSAGE value="fix datepicker not updating the whole view" />
     <MESSAGE value="site preparation" />
     <MESSAGE value="it now check which color match the best with the background" />
@@ -768,7 +767,8 @@
     <MESSAGE value="wip&#10;" />
     <MESSAGE value="Readme" />
     <MESSAGE value="wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="wip" />
+    <MESSAGE value="assign task done!" />
+    <option name="LAST_COMMIT_MESSAGE" value="assign task done!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

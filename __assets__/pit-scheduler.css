@@ -22,6 +22,7 @@ body {
     user-select:none;
     -o-user-select:none;
 }
+
 /************ Header ************/
 .pts-header {
     position: relative;
@@ -323,7 +324,7 @@ body {
 
 #pts-info-box-container {
     background-color: #fff;
-    width: 0%;
+    width: 0px;
     right: 0px;
     position: absolute;
     height: auto;
@@ -337,6 +338,9 @@ body {
     overflow-x: hidden;
 }
 
+#pts-info-box-container > .panel-body {
+    width: 410px;
+}
 .pts-info-box-close-btn {
     position: relative;
     top: 3px;
@@ -363,7 +367,7 @@ body {
 
 .pts-info-box-title i {
     position: relative;
-    right: 10%;
+    right: 11%;
     font-size: 16px;
     top: 2px;
 }
