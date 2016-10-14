@@ -45,7 +45,7 @@
             remove: 'Supprimer',
             assign: 'Assigner',
             edit: 'Modifier',
-            reallyAsk: 'Vraiment?'
+            confirm: 'Confirmer'
 
         },
         en: {
@@ -86,7 +86,7 @@
             remove: 'Remove',
             assign: 'Assign',
             edit: 'Edit',
-            reallyAsk: 'Really?'
+            confirm: 'Confirm'
         }
     };
     
@@ -364,6 +364,10 @@
                     generateInfoBoxContentCreateTask();
                     $infoBox.attr('data-toggle', 'opened');
                     break;
+                case 'assignTask':
+                    generateInfoBoxContentAssignTask();
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
             }
 
             $infoBox.animate({
@@ -490,7 +494,7 @@
             if (settings.onTaskCreation && typeof settings.onTaskCreation === 'function') {
                 settings.onTaskCreation(settings);
             }
-            if (assign == true) return generateInfoBoxContentTaskAssign(newTask.id);
+            if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
         };
 
         /* Generate a random Id */
@@ -952,9 +956,24 @@
             $('#pts-info-box-container').append($content);
         };
 
-        /* Generate the task assignation structure of the info box */
-        var generateInfoBoxContentTaskAssign = function (taskId) {
-            console.log("coucou");
+        /* Generate the assignation task structure of the info box */
+        var generateInfoBoxContentAssignTask = function (taskId) {
+            var task = getTaskById(taskId);
+            var $content = ['<div class="panel-body">',
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box" style="background-color:#00BCD4">' + settings.i18n.addNewTask + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<fieldset>',
+                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
+                            '<div id="pts-add-task-err-name" style="color:red"></div></div>',
+                            '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
+                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
+                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
+                            '<div class="btn-group">',
+                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
+                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
+                            '</fieldset>',
+                            '</div>'].join('\n');
+            $('#pts-info-box-container').append($content);
         };
 
         /* Generate list view main structure */
@@ -1262,11 +1281,15 @@
 
         $('#pit-scheduler').on('click', '.pts-delete-task-btn[data-task]', function () {
             if ($(this).attr('data-confirm') && $(this).attr('data-confirm') == 'false') {
-                $(this).text(settings.i18n.reallyAsk);
+                $(this).text(settings.i18n.confirm);
                 $(this).attr('data-confirm', true);
                 return;
             }
             removeTask($(this).data('task'));
+        });
+
+        $('#pit-scheduler').on('click', '.pts-assign-task-btn', function () {
+            openInfoBox($(this).data('task'), null, 'assignTask');
         });
 
         return $scheduler;
