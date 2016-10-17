@@ -49,7 +49,17 @@
             assignTaskTitle: 'Assigner des utilisateurs',
             allInputRequired: 'Tous les champs sont obligatoires',
             userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
-            selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner'
+            selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
+            notif: {
+                taskCreated: 'La tâche a été créée avec succès',
+                taskRemoved: 'La tâche a correctement été supprimée',
+                usersAssigned: 'utilisateurs ont été assignés à la tâche',
+                userAssigned: 'utilisateur a été assigné à la tâche',
+                userUnassigned: 'a correctement été désassigné',
+                noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
+                noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
+                taskNotExist: 'est assigné à une tâche qui n\'existe pas'
+            }
 
         },
         en: {
@@ -94,7 +104,17 @@
             assignTaskTitle: 'Assign users',
             allInputRequired: 'All fields are required',
             userIsAlreadyAssigned: 'is already assigned to this task for this period',
-            selectUsersToAssign: 'Select the users to assign'
+            selectUsersToAssign: 'Select the users to assign',
+            notif: {
+                taskCreated: 'The task has been successfully created',
+                taskRemoved: 'The task has been successfully removed',
+                usersAssigned: 'users has been assigned to the task',
+                userAssigned: 'user has been assigned to the task',
+                userUnassigned: 'has correctly been unassigned',
+                noUser: '<b>Warning : </b>No user has been set',
+                noTask: '<b>Warning : </b>No task has been set',
+                taskNotExist: 'is assigned to an inexistent task'
+            }
         }
     };
     
@@ -126,6 +146,7 @@
         }
 
         settings.defaultColor = (settings.defaultColor? settings.defaultColor : '#00BCD4');
+        settings.notificationDuration = (settings.notificationDuration ? settings.notificationDuration : 4000);
 
         if (settings.locale === undefined || i18n.allowed.indexOf(settings.locale) == -1) {
             settings.locale = 'en';
@@ -209,6 +230,7 @@
 
         /* Init function that saves users index into associated tasks */
         var getUsersTasksInTasks = function () {
+            if (!settings.tasks) return generateNotification('danger', settings.i18n.notif.noTask);
             settings.tasks.forEach(function (task) {
                 task = generateTaskInTask(task);
             });
@@ -217,6 +239,7 @@
         /* Add an index list of the assigned users to this task */
         var generateTaskInTask = function (task) {
             task.users = {};
+            if (! settings.users) return generateNotification('danger', settings.i18n.notif.noUser );
             if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
             settings.users.forEach(function (user, userIndex) {
                 user.index = userIndex;
@@ -279,6 +302,8 @@
 
         /* Return a task from his Id */
         var getTaskById = function (taskId) {
+            if (!settings.tasks) return;
+
             var task;
             settings.tasks.forEach(function (e) {
                 if (e.id === taskId) {
@@ -504,6 +529,7 @@
                 settings.onChange(settings);
             }
             if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
+            generateNotification('success', settings.i18n.notif.taskCreated + ' : <b>' + newTask.name + '</b>');
         };
 
         /* Generate a random Id */
@@ -537,14 +563,16 @@
             if (settings.onChange && typeof settings.onChange === 'function') {
                 settings.onChange(settings);
             }
+            generateNotification('success', settings.i18n.notif.taskRemoved);
         };
 
         /* Assign users to a task */
         var assignUsersToTask = function (users, task, start_date, end_date) {
             var taskDates = {
-                start_date: start_date,
-                end_date: end_date
-            };
+                    start_date: start_date,
+                    end_date: end_date
+                };
+
             $('#pts-assign-task-err').empty();
             if (!users || !task || !start_date || ! end_date) return;
 
@@ -583,6 +611,7 @@
             if (settings.onChange && typeof settings.onChange === 'function') {
                 settings.onChange(settings);
             }
+            generateNotification('success', '<b>' + users.length + '</b> ' + ( users.length > 1 ? settings.i18n.notif.usersAssigned: settings.i18n.notif.userAssigned) + ' <b>' + task.name + '</b>');
         };
 
         /* Delete a task line from an user */
@@ -598,6 +627,7 @@
             if (settings.onChange && typeof settings.onChange === 'function') {
                 settings.onChange(settings);
             }
+            generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userUnassigned);
         };
 
 
@@ -605,7 +635,8 @@
 
         /* Generate the header content */
         var generateHeader = function () {
-            var $header =   ['<div class="pts-header row">',
+            var $header =   ['<div id="pts-notification-container"></div>',
+                            '<div class="pts-header row">',
                             '<div class="pts-header-left-container pull-left">',
                             '<div class="form-group">',
                             '<div class="input-group date" id="header-datetimepicker">',
@@ -706,7 +737,7 @@
         var generateGroupsPanels = function () {
             if ($('.pts-line-group-container').length) return;
             var keepUnlisted = true;
-
+            if (!settings.users) return;
             settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
             settings.defaultGroupName = settings.groups[0];
                 settings.users.forEach(function (user, i) {
@@ -749,6 +780,7 @@
 
         /* Generate the main group content and header */
         var generateGroupMainContent = function () {
+            if (!settings.groups) return;
             settings.groups.added.forEach(function (group, groupIndex) {
                 var $groupMainContent = ['<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
                                         '<div class="pts-main-group-header"></div></div>'].join('\n');
@@ -776,7 +808,7 @@
 
         /* Generate the left users list */
         var generateUsersList = function () {
-            if (!settings.users || settings.users.length <= 0) return console.warn('Warning: No user have been set.');
+            if (!settings.users || settings.users.length <= 0) return generateNotification('danger', settings.i18n.notif.noUser );
 
             $('.pts-group-content').empty();
             settings.users.forEach(function (user) {
@@ -822,6 +854,7 @@
             user.userIndex = userIndex;
             var topDistance = 5;
             user.tasks.forEach(function (e, i) {
+                if (getTaskById(e.id) === undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
                 var task = $.extend(getTaskById(e.id), e);
                 task.disabled = false;
                 task.index = i;
@@ -1185,6 +1218,19 @@
             $('.pts-list-task-container[data-task=' + task.id + '] .pts-list-task-footer').append($footer);
 
             getContrastedColor();
+        };
+
+        /* Generate a notification */
+        var generateNotification = function (origin, message) {
+            if (settings.disableNotifications) return;
+            var uniqueId = generateRandomId();
+            var $notification = ['<div class="alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
+                                message +  '</div>'].join('\n');
+            $('#pts-notification-container').append($notification);
+            setTimeout(function(){
+                $('.alert[data-id=' + uniqueId + ']').remove();
+            },settings.notificationDuration);
         };
 
         /********* Initialization *********/

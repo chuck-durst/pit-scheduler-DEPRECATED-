@@ -508,3 +508,18 @@ body {
     width: 95%;
     margin: 5px 0 10px 3px;
 }
+
+/*********** Notifications **********/
+#pts-notification-container {
+    position: absolute;
+    right: 5px;
+    width: 400px;
+    max-height: 95%;
+    top: 5px;
+    z-index: 3000;
+    overflow: hidden;
+}
+
+div.alert {
+    margin-bottom: 5px;
+}
