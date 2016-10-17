@@ -523,8 +523,9 @@
             });
             $.each(settings.users, function (userIndex, user) {
                 $.each(user.tasks, function (taskIndex, task) {
-                    if (task.id === taskId) {
-                        settings.users[userIndex].tasks[taskIndex] = 'deleted';
+                    console.log(task);
+                    if (task && task.id === taskId) {
+                       delete settings.users[userIndex].tasks[taskIndex];
                     }
                 });
             });
