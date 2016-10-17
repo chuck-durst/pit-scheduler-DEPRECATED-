@@ -366,7 +366,6 @@
 
         /* Open the info-box panel */
         var openInfoBox = function (taskId, userIndex, viewType) {
-            //TODO: make the animation be more stable
             var $infoBox = $('#pts-info-box-container');
             $infoBox.empty();
 
@@ -912,7 +911,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                             '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                            '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -937,7 +936,6 @@
                              '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
-            //TODO: Add task label
             setTaskLabelPosition();
             getContrastedColor();
             return (existingTaskLine.length > 0 ? 0 : 40);
@@ -1287,6 +1285,10 @@
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
+        });
+
+        $('#pit-scheduler').on('mouseenter', '.pts-line-title-container > div', function() {
+            $(".pts-line-title-container > div").css("overflow","hidden");
         });
 
         $('#pit-scheduler').on('click', '.close-group-panel', function () {
