@@ -7,10 +7,6 @@
     src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
-body {
-    color: #212121;
-}
-
 .btn {
     margin: 2px;
 }
@@ -158,6 +154,7 @@ body {
 .pts-column-element {
     position: relative;
     width: 120px;
+    min-width: 120px;
     border-right: 1px solid #BDBDBD;
     text-align: center;
 }
@@ -170,16 +167,14 @@ body {
     background-color: #B2EBF2;
     height: 400px;
     width: 150px;
-    overflow: hidden;
+    overflow-x: scroll;
     text-overflow: ellipsis;
 }
 
 .pts-line-title-container > div {
-    overflow-y: auto;
+    overflow: hidden;
     max-height: 100%;
-    margin-right: -100px;
-    padding-right: 100px;
-    padding-bottom: 17px;
+
 }
 
 .pts-line-group-container {
@@ -393,14 +388,9 @@ body {
     background-color: #dbdbdb;
 }
 
-.pts-info-box-user {
+div.pts-info-box-user-list {
     position: relative;
-    left: 14px;
-}
-
-.pts-info-box-user-list {
-    position: relative;
-    right: 30px;
+    right: 30px
 }
 
 .pts-info-box-title i {

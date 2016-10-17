@@ -603,7 +603,7 @@
                 if ($('.pts-info-box-user[data-user=' + user.index + ']').length == 0) {
                     var $head = '<hr><div class="pts-info-box-user animated fadeIn" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
                                 '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
-                    $('#pts-info-box-container').append($head);
+                    $('#pts-info-box-container > .panel-body').append($head);
                 }
                 var $userTasks =    ['<tr class="animated fadeIn"><td>',
                                     '<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + (user.tasks.length - 1) + '"></i>',
@@ -1035,7 +1035,7 @@
             $.each(task.users, function (i) {
                 var user = settings.users[i];
                 var $head = '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>';
-                $('#pts-info-box-container').append($head);
+                $('#pts-info-box-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task) {
                     if (_task.id === task.id) {
                         $('.pts-info-box-user-list[data-head=' + i + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
@@ -1151,7 +1151,7 @@
                 var $head = ['<hr><div class="pts-info-box-user" data-user="' + user.index + '">',
                             '<h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
                             '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>'].join('\n');
-                $('#pts-info-box-container').append($head);
+                $('#pts-info-box-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
                         var $userTasks =    ['<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + _task.id + '" data-task-index="' + taskIndex + '"></i>',
@@ -1332,10 +1332,6 @@
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
-        });
-
-        $('#pit-scheduler').on('mouseenter', '.pts-line-title-container > div', function() {
-            $(".pts-line-title-container > div").css("overflow","hidden");
         });
 
         $('#pit-scheduler').on('click', '.close-group-panel', function () {
