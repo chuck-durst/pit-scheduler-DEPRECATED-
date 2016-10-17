@@ -50,6 +50,7 @@
             allInputRequired: 'Tous les champs sont obligatoires',
             userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
             selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
+            editTask: 'Modifier la tâche',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
                 taskRemoved: 'La tâche a correctement été supprimée',
@@ -58,7 +59,8 @@
                 userUnassigned: 'a correctement été désassigné',
                 noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
                 noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
-                taskNotExist: 'est assigné à une tâche qui n\'existe pas'
+                taskNotExist: 'est assigné à une tâche qui n\'existe pas',
+                taskInformationsUpdated: 'La tâche a été modifiée'
             }
 
         },
@@ -105,6 +107,7 @@
             allInputRequired: 'All fields are required',
             userIsAlreadyAssigned: 'is already assigned to this task for this period',
             selectUsersToAssign: 'Select the users to assign',
+            editTask: 'Edit a task',
             notif: {
                 taskCreated: 'The task has been successfully created',
                 taskRemoved: 'The task has been successfully removed',
@@ -113,7 +116,8 @@
                 userUnassigned: 'has correctly been unassigned',
                 noUser: '<b>Warning : </b>No user has been set',
                 noTask: '<b>Warning : </b>No task has been set',
-                taskNotExist: 'is assigned to an inexistent task'
+                taskNotExist: 'is assigned to an inexistent task',
+                taskInformationsUpdated: 'The task has been edited'
             }
         }
     };
@@ -397,6 +401,10 @@
                     generateInfoBoxContentAssignTask(taskId);
                     $infoBox.attr('data-toggle', 'opened');
                     break;
+                case 'editTask':
+                    generateInfoBoxContentEditTask(taskId);
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
             }
 
             $infoBox.animate({
@@ -627,6 +635,21 @@
                 settings.onChange(settings);
             }
             generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userUnassigned);
+        };
+
+        /* Edit the informations of an existing task */
+        var editTask = function (task, newData) {
+            task.name = (newData.name ? newData.name : task.name);
+            task.color = (newData.color ? newData.color : task.color);
+            task.description = (newData.description ? newData.description : task.description);
+            updateDisplay(settings.currentDisplay);
+            if (settings.onTaskEdition && typeof settings.onTaskEdition === 'function') {
+                settings.onTaskEdition(settings);
+            }
+            if (settings.onChange && typeof settings.onChange === 'function') {
+                settings.onChange(settings);
+            }
+            generateNotification('success', settings.i18n.notif.taskInformationsUpdated);
         };
 
 
@@ -1069,6 +1092,30 @@
             $('#pts-info-box-container').append($content);
         };
 
+        /* Generate the edition task structure of the info box */
+        var generateInfoBoxContentEditTask = function (taskId) {
+            var task = getTaskById(taskId);
+            if (!task) return;
+
+            var $content = ['<div class="panel-body">',
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.editTask,
+                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<fieldset>',
+                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :',
+                            '</label><input id="pts-edit-task-input-name" type="text" class="form-control" maxlength="50" value="' + task.name + '">',
+                            '<div id="pts-edit-task-err-name" style="color:red"></div></div>',
+                            '<div class="form-group"><label>Id :</label><input id="pts-edit-task-input-id" type="text" class="form-control" maxlength="80" value="' + task.id + '" disabled="disabled"></div>',
+                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-edit-task-input-color" type="color" class="form-control" value="' + task.color + '"></div>',
+                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label>',
+                            '<textarea id="pts-edit-task-input-description" type="text" class="form-control"  maxlength="255">' + (task.description != undefined ? task.description : '') + '</textarea></div>',
+                            '<div class="btn-group">',
+                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                            '<button type="button" class="btn pts-edit-task-confirm-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div>',
+                            '</fieldset>',
+                            '</div>'].join('\n');
+            $('#pts-info-box-container').append($content);
+        };
+
         /* Generate the assignation task structure of the info box */
         var generateInfoBoxContentAssignTask = function (taskId) {
             var task = getTaskById(taskId);
@@ -1493,6 +1540,20 @@
                 $(this).parent('td').remove();
             }
 
+        });
+
+        $('#pit-scheduler').on('click', '.pts-edit-task-btn[data-task]', function () {
+            openInfoBox($(this).data('task'), null, 'editTask');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-edit-task-confirm-btn[data-task]', function () {
+            var task = getTaskById($(this).data('task')),
+                newData = {};
+
+            newData.name = $('#pts-edit-task-input-name').val();
+            newData.color = $('#pts-edit-task-input-color').val();
+            newData.description = $('#pts-edit-task-input-description').val();
+            editTask(task, newData);
         });
 
         return $scheduler;
