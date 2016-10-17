@@ -48,7 +48,8 @@
             confirm: 'Confirmer',
             assignTaskTitle: 'Assigner des utilisateurs',
             allInputRequired: 'Tous les champs sont obligatoires',
-            userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période'
+            userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
+            selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner'
 
         },
         en: {
@@ -92,7 +93,8 @@
             confirm: 'Confirm',
             assignTaskTitle: 'Assign users',
             allInputRequired: 'All fields are required',
-            userIsAlreadyAssigned: 'is already assigned to this task for this period'
+            userIsAlreadyAssigned: 'is already assigned to this task for this period',
+            selectUsersToAssign: 'Select the users to assign'
         }
     };
     
@@ -1042,7 +1044,7 @@
             var $content = ['<div class="panel-body">',
                             '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<h4>' + settings.i18n.assignTaskTitle + '</h4>',
-                            '<div class="form-group"><label for="sel42">Sélectionnez les utilisateurs à assigner: </label>',
+                            '<div class="form-group"><label for="sel42">' + settings.i18n.selectUsersToAssign + ' : </label>',
                             '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
                             '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
                             '<input type="text" class="form-control"/>',
@@ -1094,7 +1096,14 @@
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>',
                                     '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>',
                                     '<div class="pts-list-personalized-inputs-container row"></div>'].join('\n');
+
+            var $dropdownMenu =     ['<div class="dropdown" style="top:2px"><button id="addDropdown" class="btn btn-sm pts-btn-add-elem dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                                    '<i class="glyphicon glyphicon-plus"></i></button>',
+                                    '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
+                                    '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
+                                    '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li></ul></div>'].join('\n');
             $('.pts-column-title-container > div').append($columnContainer);
+            $('.pts-corner-mask').append($dropdownMenu);
             var $headerInputs = ['<input class="pts-list-search-task" placeholder="' + settings.i18n.search + '">',
                 '<label class="checkbox-inline text-no-select" style="margin-left:5px;"><input id="pts-list-task-select-all" type="checkbox" checked="checked">' + settings.i18n.selectAll + '</label>'].join('\n');
             $('.pts-line-title-container').append($headerInputs);
