@@ -386,7 +386,6 @@
                     });
                     $('.pts-main-group-column').css('background-color', '#eee');
                     $infoBox.attr('data-toggle', 'opened');
-
                     break;
                 case 'user':
                     var user = settings.users[userIndex];
@@ -403,6 +402,10 @@
                     break;
                 case 'editTask':
                     generateInfoBoxContentEditTask(taskId);
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'createUser':
+                    generateInfoBoxContentCreateUser();
                     $infoBox.attr('data-toggle', 'opened');
                     break;
             }
@@ -1164,6 +1167,11 @@
             getContrastedColor();
         };
 
+        /* Generate the user creation structure of the info box */
+        var generateInfoBoxContentCreateUser = function () {
+            //TODO YOU KNOW WHAT TO DO
+        };
+
         /* Generate list view main structure */
         var generateListBaseView = function () {
             if (!settings.list) settings.list = {};
@@ -1550,6 +1558,10 @@
             newData.color = $('#pts-edit-task-input-color').val();
             newData.description = $('#pts-edit-task-input-description').val();
             editTask(task, newData);
+        });
+
+        $('#pit-scheduler').on('click', '.pts-add-new-user', function () {
+            openInfoBox(null, null, 'createUser');
         });
 
         return $scheduler;
