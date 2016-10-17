@@ -585,6 +585,7 @@
         /* Delete a task line from an user */
         var deleteTaskFromUser = function (user, task, taskIndex) {
             if (!user.tasks[taskIndex]) return;
+            console.log('HELLO');
 
             delete user.tasks[taskIndex];
             generateTaskInTask(task);
@@ -991,23 +992,24 @@
         /* Generate the users structure of the info box */
         var generateInfoBoxContentUser = function (user) {
             var sortedTasks = {};
-            user.tasks.forEach(function (e) {
+            user.tasks.forEach(function (e, i) {
                 if (!sortedTasks[e.id]) {
                     sortedTasks[e.id] = [];
                 }
-                 sortedTasks[e.id].push('<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
+                 sortedTasks[e.id].push('<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
+                                        '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
-                $('.pts-info-box-user-list').append('<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + '" data-task="' + i + '" data-user="' + user.index + '"><b>' +
-                    getTaskById(i).name + ' (' + _task.length + ')</b></p><ul class="pts-user-sorted-task" data-task="' + i + '"></ul>');
+                $('.pts-info-box-user-list').append('<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + getTaskById(i).color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>' +
+                    getTaskById(i).name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table>');
                 _task.forEach(function (_line) {
-                    $('.pts-user-sorted-task[data-task=' + i + ']').append('<li>' + _line + '</li>');
+                    $('.pts-user-sorted-task[data-task=' + i + ']').append('<tr><td>' + _line + '</td></tr>');
                 });
             });
             getContrastedColor();
@@ -1135,7 +1137,8 @@
 
             var $container =    ['<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">',
                                 '<div class="panel panel-primary" style="border-color:' + task.color + '">',
-                                '<div class="panel-heading progress-bar-striped pts-check-color" style="background-color:' + task.color + ';border-color:' + task.color + '">',
+                                '<div class="panel-heading progress-bar-striped pts-check-color pts-list-task-header" style="background-color:' + task.color + ';border-color:' + task.color + '"',
+                                'data-task="' + task.id + '">',
                                 '<h6 class="panel-title">' + task.name + '</h6>',
                                 '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>',
                                 '<div class="panel-body">' + (task.description ? task.description : '') + '</div>',
@@ -1269,10 +1272,8 @@
             generateGroupMainContent();
         });
 
-        $('#pit-scheduler').on('click', '.pts-line-marker', function () {
-            if ($(this).attr('data-task') && $(this).attr('data-user')) {
-                openInfoBox($(this).attr('data-task'), $(this).attr('data-user'), 'task');
-            }
+        $('#pit-scheduler').on('click', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
+            openInfoBox($(this).attr('data-task'), null, 'task');
         });
 
         $('#pit-scheduler').on('click', '.pts-close-info-box', function () {
@@ -1414,7 +1415,7 @@
             }
         });
 
-        $('#pit-scheduler').on('click', '.pts-main-group-user', function (e) {
+        $('#pit-scheduler').on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
             if (e.target !== this)
                 return;
             if ($('.pts-close-info-box').data('update') == true) {

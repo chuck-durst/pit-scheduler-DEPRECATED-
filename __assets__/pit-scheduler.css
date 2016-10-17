@@ -495,7 +495,7 @@ body {
     top: 15px;
 }
 
-.pts-list-user-name {
+.pts-list-user-name, .pts-list-task-header {
     cursor: pointer;
 }
 
