@@ -58,7 +58,7 @@
             or: 'ou',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
-                userCreated: 'L\'utilisateur a été créée avec succès',
+                userCreated: 'L\'utilisateur a été créé avec succès',
                 taskRemoved: 'La tâche a correctement été supprimée',
                 usersAssigned: 'utilisateurs ont été assignés à la tâche',
                 userAssigned: 'utilisateur a été assigné à la tâche',
@@ -348,10 +348,13 @@
                 end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
             };
             user.tasks.forEach(function (task) {
-                if (tasks.indexOf(task.id) < 0 && isDateInDate(originDates, task) == true) {
+                if (settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && isDateInDate(originDates, task) == true) {
+                    tasks.push(task.id);
+                } else if (!settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && userLineIsHidden(user) == true) {
                     tasks.push(task.id);
                 }
             });
+            console.log(user.name + tasks.length);
             return tasks.length * 40;
         };
 
@@ -366,7 +369,7 @@
             user.tasks.forEach(function (task) {
                 if (isDateInDate(originDates, task)) response++;
             });
-            return ((settings.hideEmptyLines === true && response > 0) || settings.hideEmptyLines === false);
+            return ((response > 0) || settings.hideEmptyLines === false);
         };
 
         /* Move task label on horizontal scroll */
@@ -385,6 +388,18 @@
                 }
 
             });
+        };
+
+        /* Return an array of the index of the users that are in the specified group */
+        var getUsersInGroup = function (groupName) {
+            var inGroup  =[];
+
+            settings.users.forEach(function (user) {
+                if (user.group == groupName) {
+                    inGroup.push(user.index);
+                }
+            });
+            return inGroup;
         };
 
         /* Open the info-box panel */
@@ -829,7 +844,7 @@
             settings.groups.unlisted = 0; //stores the id of the unlisted group
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
-                if (i !== 'added' && i !== settings.defaultGroupName) {
+                if (i !== 'added' && i !== settings.defaultGroupName && getUsersInGroup(e).length > 0) {
                     generateGroupTab(e, i);
                     settings.groups.added.push({
                         name: e,
@@ -860,7 +875,7 @@
                                         '<div class="pts-main-group-header"></div></div>'].join('\n');
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
-                    if (user.group === group.name && userLineIsHidden(user) == true) {
+                    if (user.group === group.name && userLineIsHidden(user) == true && getUserLineHeight(user) > 0) {
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + getUserLineHeight(user) + 'px"></div>');
                     }
                 });
@@ -914,7 +929,7 @@
         /* Add one user line */
         var generateUserLine = function (user, group) {
             if (!user.tasks) return console.warn('Warning: user ' + user.name + ' is assigned to any task');
-            if (userLineIsHidden(user) == false) return;
+            if (userLineIsHidden(user) == false || getUserLineHeight(user) <= 0) return;
             console.log('Generate line for user: ' + user.name + ' in group: ' + group);
 
             var $userNameUI = '<div class="pts-group-user" style="height:' + getUserLineHeight(user) + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
