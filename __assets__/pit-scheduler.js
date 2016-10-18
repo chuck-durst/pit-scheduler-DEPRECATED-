@@ -292,12 +292,22 @@
             settings.groups.unlisted = 0; //stores the id of the unlisted group
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
-                if (i !== 'added' && i !== settings.defaultGroupName && getUsersInGroup(e).length > 0) {
-                    generateGroupTab(e, i);
-                    settings.groups.added.push({
-                        name: e,
-                        id: 'user-group-' + i
+                var usersInGroup =  getUsersInGroup(e);
+                if (i !== 'added' && i !== settings.defaultGroupName && usersInGroup.length > 0) {
+                    var mustBeShowed = false;
+                    usersInGroup.every(function (userIndex) {
+                        if (settings.users[userIndex] && settings.users[userIndex].isShowed == true) {
+                            mustBeShowed = true;
+                            return false;
+                        }
                     });
+                    if (mustBeShowed) {
+                        generateGroupTab(e, i);
+                        settings.groups.added.push({
+                            name: e,
+                            id: 'user-group-' + i
+                        });
+                    }
                 }
             });
         };
