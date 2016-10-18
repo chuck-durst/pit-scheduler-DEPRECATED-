@@ -253,6 +253,7 @@
         /* Add an index list of the assigned users to this task */
         var generateTaskInTask = function (task) {
             console.log('CALL FUNCTION: generateTaskInTask: task: ' + task.name);
+
             task.users = {};
             if (! settings.users) return generateNotification('danger', settings.i18n.notif.noUser );
             if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
@@ -270,6 +271,37 @@
                 }
             });
             return task;
+        };
+
+        /* Generate the groups panels */
+        var initGroupsAndUsers = function () {
+            console.warn('CALL FUNCTION: initGroupsAndUsers');
+            if ($('.pts-line-group-container').length || !settings.users) return;
+
+            settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
+            settings.groups = [settings.defaultGroupName];
+            settings.users.forEach(function (user, i) {
+                user.isShowed = userLineIsShowed(user);
+                user.lineHeight = getUserLineHeight(user);
+                user.index = i;
+                if (user.group === undefined || user.group === '') {
+                    user.group = settings.defaultGroupName;
+                }
+                else if (settings.groups.indexOf(user.group) == -1) {
+                    settings.groups.push(user.group);
+                }
+            });
+            settings.groups.unlisted = 0; //stores the id of the unlisted group
+            settings.groups.added = [];
+            settings.groups.forEach(function (e, i) {
+                if (i !== 'added' && i !== settings.defaultGroupName && getUsersInGroup(e).length > 0) {
+                    generateGroupTab(e, i);
+                    settings.groups.added.push({
+                        name: e,
+                        id: 'user-group-' + i
+                    });
+                }
+            });
         };
 
         /* Update the content of the datepicker */
@@ -357,7 +389,7 @@
             console.log('CALL FUNCTION: getUserLineHeight: user: ' + user.name);
 
             var tasks = [];
-            var lineIsHidden = userLineIsShowed(user);
+            var lineIsHidden = user.isShowed;
             var originDates = {
                 start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
                 end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
@@ -757,7 +789,7 @@
                 settings.onChange(settings);
             }
             generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
-            generateGroupsPanels();
+            initGroupsAndUsers();
             if (assign == true) return openInfoBox(null, settings.users.length - 1, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
@@ -819,7 +851,7 @@
 
             generateBaseView();
             generateTableLines();
-            generateGroupsPanels();
+            initGroupsAndUsers();
             generateGroupMainContent();
             generateUsersList();
             updateDatePicker();
@@ -872,35 +904,6 @@
             $('.pts-corner-mask').append($settingsMenu);
         };
 
-        /* Generate the groups panels */
-        var generateGroupsPanels = function () {
-            console.warn('CALL FUNCTION: generateGroupsPanels');
-            if ($('.pts-line-group-container').length || !settings.users) return;
-
-            settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
-            settings.groups = [settings.defaultGroupName];
-            settings.users.forEach(function (user, i) {
-                user.index = i;
-                if (user.group === undefined || user.group === '') {
-                    user.group = settings.defaultGroupName;
-                }
-                else if (settings.groups.indexOf(user.group) == -1) {
-                    settings.groups.push(user.group);
-                }
-            });
-            settings.groups.unlisted = 0; //stores the id of the unlisted group
-            settings.groups.added = [];
-            settings.groups.forEach(function (e, i) {
-                if (i !== 'added' && i !== settings.defaultGroupName && getUsersInGroup(e).length > 0) {
-                    generateGroupTab(e, i);
-                    settings.groups.added.push({
-                        name: e,
-                        id: 'user-group-' + i
-                    });
-                }
-            });
-        };
-
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
             console.log('CALL FUNCTION: generateGroupTab: group: ' + group);
@@ -919,18 +922,15 @@
 
             if (!settings.groups) return;
             settings.groups.added.forEach(function (group, groupIndex) {
-                console.log('GROUP');
                 var $groupMainContent = [
                     '<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
                     '<div class="pts-main-group-header"></div></div>'].join('\n');
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
-                    console.group();
-                    var userLineHeight = getUserLineHeight(user);
-                    if (user.group === group.name && userLineIsShowed(user) == true && userLineHeight > 0) {
+                    var userLineHeight = user.lineHeight;
+                    if (user.group === group.name && user.isShowed == true && userLineHeight > 0) {
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + userLineHeight + 'px"></div>');
                     }
-                    console.groupEnd();
                 });
                 if ($('.close-group-panel[data-group='+groupIndex+']').attr('data-toggle') === 'closed') {
                     $('#group-container-' + groupIndex).children('.pts-main-group-user').css('display', 'none');
@@ -980,11 +980,10 @@
         var generateUserLine = function (user, group) {
             console.log('CALL FUNCTION: generateUserLine: user: ' + user.name);
 
-            var userLineHeight = getUserLineHeight(user);
             if (!user.tasks) return console.warn('Warning: user ' + user.name + ' is assigned to any task');
-            if (userLineIsShowed(user) == false || userLineHeight <= 0) return;
+            if (!user.isShowed || user.lineHeight <= 0) return;
 
-            var $userNameUI = '<div class="pts-group-user" style="height:' + userLineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
+            var $userNameUI = '<div class="pts-group-user" style="height:' + user.lineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
             $('#' + group + ' > .pts-group-content').append($userNameUI);
 
