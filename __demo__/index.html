@@ -11,12 +11,6 @@
 
     <title>pit-scheduler</title>
 
-    <script src="js/jquery-2.2.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/moment-with-locales.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.js"></script>
-    <script src="../__assets__/pit-scheduler.js"></script>
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>-->
     <link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link  rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
     <link  rel="stylesheet" type="text/css" href="../__assets__/pit-scheduler.css">
@@ -48,6 +42,12 @@
         </div>
     </div>
 </div>
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/moment-with-locales.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="../__assets__/pit-scheduler.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>-->
 <script>
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
@@ -61,6 +61,7 @@
             notificationDuration: 4000,
             onChange: '', // Function called on every changes
             onTaskCreation: '', // Function called on task creation
+            onUserCreation: '', // Function called on user creation
             onTaskRemoval: '', // Function called on task removal
             onTaskAssignation: '', // Function called on task assignation,
             onUserTaskDeletion: '', // Function called when a task is removed from a user

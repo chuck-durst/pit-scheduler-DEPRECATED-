@@ -48,11 +48,17 @@
             confirm: 'Confirmer',
             assignTaskTitle: 'Assigner des utilisateurs',
             allInputRequired: 'Tous les champs sont obligatoires',
+            requiredField: 'Ce champ est obligatoire',
             userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
             selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
             editTask: 'Modifier la tâche',
+            group: 'Groupe',
+            selectGroup: 'Sélectionnez un groupe existant',
+            createNewGroup: 'Créez un nouveau groupe',
+            or: 'ou',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
+                userCreated: 'L\'utilisateur a été créée avec succès',
                 taskRemoved: 'La tâche a correctement été supprimée',
                 usersAssigned: 'utilisateurs ont été assignés à la tâche',
                 userAssigned: 'utilisateur a été assigné à la tâche',
@@ -60,7 +66,8 @@
                 noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
                 noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
                 taskNotExist: 'est assigné à une tâche qui n\'existe pas',
-                taskInformationsUpdated: 'La tâche a été modifiée'
+                taskInformationsUpdated: 'La tâche a été modifiée',
+                userHasNoTask: 'n\'est assigned à aucune tâche'
             }
 
         },
@@ -105,11 +112,17 @@
             confirm: 'Confirm',
             assignTaskTitle: 'Assign users',
             allInputRequired: 'All fields are required',
+            requiredField: 'That field is required',
             userIsAlreadyAssigned: 'is already assigned to this task for this period',
             selectUsersToAssign: 'Select the users to assign',
             editTask: 'Edit a task',
+            group: 'Group',
+            selectGroup: 'Select an existing group',
+            createNewGroup: 'Create a new group',
+            or: 'or',
             notif: {
                 taskCreated: 'The task has been successfully created',
+                userCreated: 'The user has been successfully created',
                 taskRemoved: 'The task has been successfully removed',
                 usersAssigned: 'users has been assigned to the task',
                 userAssigned: 'user has been assigned to the task',
@@ -117,7 +130,8 @@
                 noUser: '<b>Warning : </b>No user has been set',
                 noTask: '<b>Warning : </b>No task has been set',
                 taskNotExist: 'is assigned to an inexistent task',
-                taskInformationsUpdated: 'The task has been edited'
+                taskInformationsUpdated: 'The task has been edited',
+                userHasNoTask: 'is not assigned to any task'
             }
         }
     };
@@ -158,7 +172,8 @@
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
         
-        if (!settings.hideEmptyLines || (settings.hideEmptyLines !== true && settings.hideEmptyLines !== false)) {
+        if (settings.hideEmptyLines === undefined || (settings.hideEmptyLines != true && settings.hideEmptyLines != false)) {
+            console.log('WHAT DE FUCK');
             settings.hideEmptyLines = true;
         }
 
@@ -180,6 +195,7 @@
         /* update display view */
         var updateDisplay = function (viewMode) {
             updateDisplayReset();
+            console.log(settings);
             switch (viewMode) {
                 case 'days':
                     setButtonViewFocus('day');
@@ -247,14 +263,16 @@
             if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
             settings.users.forEach(function (user, userIndex) {
                 user.index = userIndex;
-                user.tasks.forEach(function (userTask, taskIndex) {
-                    if (userTask.id === task.id) {
-                        if (!task.users[userIndex]) {
-                            task.users[userIndex] = [];
+                if (user.tasks) {
+                    user.tasks.forEach(function (userTask, taskIndex) {
+                        if (userTask.id === task.id) {
+                            if (!task.users[userIndex]) {
+                                task.users[userIndex] = [];
+                            }
+                            task.users[userIndex].push(taskIndex);
                         }
-                        task.users[userIndex].push(taskIndex);
-                    }
-                });
+                    });
+                }
             });
             return task;
         };
@@ -344,6 +362,7 @@
                 start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
                 end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
             };
+            if (!user.tasks) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.userHasNoTask);
             user.tasks.forEach(function (task) {
                 if (isDateInDate(originDates, task)) response++;
             });
@@ -408,6 +427,8 @@
                     generateInfoBoxContentCreateUser();
                     $infoBox.attr('data-toggle', 'opened');
                     break;
+                default:
+                    return;
             }
 
             $infoBox.animate({
@@ -538,8 +559,8 @@
             if (settings.onChange && typeof settings.onChange === 'function') {
                 settings.onChange(settings);
             }
-            if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
             generateNotification('success', settings.i18n.notif.taskCreated + ' : <b>' + newTask.name + '</b>');
+            if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
         };
 
         /* Generate a random Id */
@@ -655,6 +676,38 @@
             generateNotification('success', settings.i18n.notif.taskInformationsUpdated);
         };
 
+        /*create a new user */
+        var createNewUser = function (name, group, assign) {
+            console.log('-------------> CREATE GROUP FOR USER ' + name);
+            /*if (!group) {
+                if (!settings.groups.unlisted) {
+                    settings.groups.push(settings.i18n.unlisted);
+                    settings.groups.unlisted = settings.groups.length - 1;
+                }
+                group = settings.i18n.unlisted;
+            } else if (settings.groups.indexOf(group) == -1) {
+                console.log('GROUP NOT EXIST');
+                settings.groups.push(group);
+            }*/
+
+            settings.users.push({
+                name: name,
+                group: (group ? group : ''),
+                tasks: []
+            });
+
+            if (settings.onUserCreation && typeof settings.onUserCreation === 'function') {
+                settings.onUserCreation(settings);
+            }
+            if (settings.onChange && typeof settings.onChange === 'function') {
+                settings.onChange(settings);
+            }
+            generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
+            generateGroupsPanels();
+            if (assign == true) return openInfoBox(null, settings.users.length - 1, 'assignUser');
+            updateDisplay(settings.currentDisplay);
+        };
+
 
         /********* Generation *********/
 
@@ -760,25 +813,20 @@
 
         /* Generate the groups panels */
         var generateGroupsPanels = function () {
-            if ($('.pts-line-group-container').length) return;
-            var keepUnlisted = true;
-            if (!settings.users) return;
-            settings.groups = [(settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted)];
-            settings.defaultGroupName = settings.groups[0];
-                settings.users.forEach(function (user, i) {
-                    user.index = i;
-                    if (user.group === undefined || user.group === '') {
-                        user.group = settings.defaultGroupName;
-                        keepUnlisted = false;
-                    }
-                    else if (settings.groups.indexOf(user.group) == -1) {
-                        settings.groups.push(user.group);
-                    }
-                });
+            if ($('.pts-line-group-container').length || !settings.users) return;
+
+            settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
+            settings.groups = [settings.defaultGroupName];
+            settings.users.forEach(function (user, i) {
+                user.index = i;
+                if (user.group === undefined || user.group === '') {
+                    user.group = settings.defaultGroupName;
+                }
+                else if (settings.groups.indexOf(user.group) == -1) {
+                    settings.groups.push(user.group);
+                }
+            });
             settings.groups.unlisted = 0; //stores the id of the unlisted group
-            if (keepUnlisted) {
-                settings.groups.shift();
-            }
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
                 if (i !== 'added' && i !== settings.defaultGroupName) {
@@ -793,6 +841,7 @@
 
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
+            console.log(group);
             console.log("group: " + group + " index: " + index);
             console.log("Creat group: " + group);
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
@@ -848,7 +897,7 @@
 
                     if (!settings.groups.unlisted) {
                         console.log('Unlisted group do not exist, creating one');
-                        generateGroupTab({name: settings.i18n.unlisted}, settings.groups.added.length);
+                        generateGroupTab(settings.i18n.unlisted, settings.groups.added.length);
                         settings.groups.unlisted = settings.groups.added.length;
                         settings.groups.added.push({
                             name: settings.i18n.unlisted,
@@ -864,7 +913,7 @@
 
         /* Add one user line */
         var generateUserLine = function (user, group) {
-            if (!user.tasks) return console.warn('Warning: user ' + user.name + 'has no task assigned to himself');
+            if (!user.tasks) return console.warn('Warning: user ' + user.name + ' is assigned to any task');
             if (userLineIsHidden(user) == false) return;
             console.log('Generate line for user: ' + user.name + ' in group: ' + group);
 
@@ -876,8 +925,9 @@
 
         /* Generate the tasks lines */
         var generateTaskLines = function (user, userIndex) {
-            user.userIndex = userIndex;
+            user.index = userIndex;
             var topDistance = 5;
+            if (!user.tasks) return;
             user.tasks.forEach(function (e, i) {
                 if (getTaskById(e.id) === undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
                 var task = $.extend(getTaskById(e.id), e);
@@ -912,7 +962,7 @@
 
         /* Generate one task on the month view */
         var generateTaskLineMonth = function (user, task, topDistance) {
-            var userIndex = user.userIndex;
+            var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
             if (existingTaskLine.length > 0) {
@@ -969,7 +1019,7 @@
 
         /* Generate one task on the month view */
         var generateTaskLineDay = function (user, task, topDistance) {
-            var userIndex = user.userIndex;
+            var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
             if (existingTaskLine.length > 0) {
@@ -1171,7 +1221,27 @@
 
         /* Generate the user creation structure of the info box */
         var generateInfoBoxContentCreateUser = function () {
-            //TODO YOU KNOW WHAT TO DO
+            var $content = ['<div class="panel-body">',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewUser,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<fieldset>',
+                '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
+                '<input id="pts-add-user-input-name" type="text" class="form-control" maxlength="40">',
+                '<div id="pts-add-user-err-name" style="color:red"></div></div>',
+                '<div class="form-group"><label>' + settings.i18n.group + ' :</label>',
+                '<input id="pts-add-user-input-group" type="text" class="form-control" maxlength="60" placeholder="' + settings.i18n.createNewGroup + '">',
+                '<span>' + settings.i18n.or + '</span><select id="pts-add-user-select-group" type="select" class="form-control" maxlength="60">',
+                '<option disabled selected>' + settings.i18n.selectGroup + '</option></select></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="btn pts-create-user-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
+                '<button type="button" class="btn pts-create-user-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
+                '</fieldset>',
+                '</div>'].join('\n');
+            $('#pts-info-box-container').append($content);
+            settings.groups.forEach(function (e) {
+                $('#pts-add-user-select-group').append('<option value="' + e + '">' + e + '</option>');
+            });
         };
 
         /* Generate list view main structure */
@@ -1479,6 +1549,10 @@
             openInfoBox(null, null, "createTask");
         });
 
+        $('#pit-scheduler').on('click', '.pts-add-new-user', function () {
+            openInfoBox(null, null, "createUser");
+        });
+
         $('#pit-scheduler').on('click', '.pts-create-task-btn', function () {
             var name = $('#pts-add-task-input-name').val(),
                 id = $('#pts-add-task-input-id').val(),
@@ -1499,6 +1573,15 @@
             if (name.length < 1) return;
             closeInfoBox();
             createNewTask(name, id, description, color, $(this).data('assign'));
+        });
+
+        $('#pit-scheduler').on('click', '.pts-create-user-btn', function () {
+            var name = $('#pts-add-user-input-name').val(),
+                group = $('#pts-add-user-input-group').val();
+            $('#pts-add-user-err-name').html('');
+            if (name.length < 1) return $('#pts-add-user-err-name').html(settings.i18n.requiredField);
+            closeInfoBox();
+            createNewUser(name, group, $(this).data('assign'));
         });
 
         $('#pit-scheduler').on('click', '.pts-delete-task-btn[data-task]', function () {
@@ -1562,13 +1645,12 @@
             editTask(task, newData);
         });
 
-        $('#pit-scheduler').on('click', '.pts-add-new-user', function () {
-            openInfoBox(null, null, 'createUser');
+        $('#pit-scheduler').on('click', '.pts-info-box-back-btn[data-target]', function () {
+            openInfoBox($(this).data('task'), $(this).data('user'), $(this).data('target'));
         });
 
-        $('#pit-scheduler').on('click', '.pts-info-box-back-btn[data-target]', function () {
-            console.log('hello');
-            openInfoBox($(this).data('task'), $(this).data('user'), $(this).data('target'));
+        $('#pit-scheduler').on('change', '#pts-add-user-select-group', function () {
+            $('#pts-add-user-input-group').val($(this).val());
         });
 
 
