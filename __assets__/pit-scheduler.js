@@ -326,6 +326,7 @@
         /* Update the content of the datepicker */
         var updateDatePicker = function () {
             console.log('CALL FUNCTION: updateDatePicker');
+            
             $('#header-datetimepicker').datetimepicker()
                 .data('DateTimePicker').locale(settings.locale)
                 .defaultDate(settings.date.selected)
