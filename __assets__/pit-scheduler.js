@@ -786,16 +786,6 @@
         var createNewUser = function (name, group, assign) {
             console.warn('CALL FUNCTION: createNewUser');
 
-            /*if (!group) {
-                if (!settings.groups.unlisted) {
-                    settings.groups.push(settings.i18n.unlisted);
-                    settings.groups.unlisted = settings.groups.length - 1;
-                }
-                group = settings.i18n.unlisted;
-            } else if (settings.groups.indexOf(group) == -1) {
-                settings.groups.push(group);
-            }*/
-
             settings.users.push({
                 name: name,
                 group: (group ? group : ''),
