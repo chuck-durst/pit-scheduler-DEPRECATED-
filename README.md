@@ -3,7 +3,7 @@
 
 ![Alt text](https://cloud.githubusercontent.com/assets/15311764/19238902/ed00a51a-8f03-11e6-90a4-911fb4808961.PNG)
 ![Alt text](https://cloud.githubusercontent.com/assets/15311764/19239386/174ea1c6-8f06-11e6-9051-b6ba43d7247d.PNG)
-Pit-scheduler is a jQuery plugin that lets you manage tasks through a complete interface. It has been developed to be used for permissions management but is compatible with both usages.
+Pit-scheduler is a jQuery plugin that lets you manage tasks through a complete interface. It has been developed to be used for permissions management but is compatible with both usages. 
 
 In all the following examples it is used as a permission manager for a hostel.
 *****
@@ -42,7 +42,7 @@ Required files:
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
             locale: 'fr',
-            defaultDisplay: 'months',
+            defaultDisplay: 'months', 
             hideEmptyLines: false,
             disableLabelsMovement: false,
             defaultGroupName: 'Default group',
@@ -124,7 +124,7 @@ Take a look at this table to get informations about each field:
 |defaultDate|(Date)What you want|The current day| Define which date the scheduler must use by default|
 |defaultColor|HEX, RGB, HSL color|#00bdd6| Define the color that must be used for tasks which have no defined color|
 
-For the tasks:
+For the tasks: 
 
 | Name          | Values | Description  |
 | ------------- |--------|--------------|
@@ -133,7 +133,7 @@ For the tasks:
 |description | (Long string)| You can add an optionnal description on each task|
 |color|HEX, RGB, HSL color| Add a splendid color to your tasks. Notice that the label text color will change depending on the brightness of your color, magic!|
 
-And finally, the users:
+And finally, the users: 
 
 | Name          | Values | Description  |
 | ------------- |--------|--------------|
@@ -155,11 +155,11 @@ No, seriously, I'm serious. But if you do not have time for that, here is a smal
 - You can close a group tab by clicking the small 'remove' button on the left
 - The options' menu lets you access to some parameters
 - By Default, when you are scrolling horizontally on the scheduler, the tasks labels will move to stay on the window
-- if you guess to use it with a lot of users and tasks, it will crash or be very slow (yeah I know, it needs some refactoring, I'm working on it).
+- if you guess to use it with a lot of users and tasks, it will crash or be very slow (yeah I know, it needs some refactoring, I'm working on it). 
 
 ## Demo
 
-You'll find a demo in the ___demo___ folder. It shows you how to include the scheduler to your project and how to use it.
+You'll find a demo in the ___demo___ folder. It shows you how to include the scheduler to your project and how to use it. 
 
 ## TODOS
 
