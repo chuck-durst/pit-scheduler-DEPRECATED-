@@ -523,7 +523,7 @@
             if ($infoBox.attr('data-toggle') === 'closed') return;
             $.each($markers, function () {
                 var task = getTaskById($(this).attr('data-task'));
-                $(this).css('background-color', (task ? getTaskById(task).color: ''));
+                $(this).css('background-color', (task ? task.color : settings.defaultColor));
             });
 
             $('.pts-main-group-column').css('background-color', '#fff');
