@@ -1101,8 +1101,9 @@
             if (!task) return;
 
             var $content = ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.editTask,
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color progress-bar-striped" style="background-color:' + task.color + '">' + task.name,
                             '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.editTask + '</h4>',
                             '<fieldset>',
                             '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :',
                             '</label><input id="pts-edit-task-input-name" type="text" class="form-control" maxlength="50" value="' + task.name + '">',
@@ -1124,8 +1125,9 @@
             var task = getTaskById(taskId);
 
             var $content = ['<div class="panel-body">',
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<h4>' + settings.i18n.assignTaskTitle + '</h4>',
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name,
+                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.assignTaskTitle + '</h4>',
                             '<div class="form-group"><label for="sel42">' + settings.i18n.selectUsersToAssign + ' : </label>',
                             '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
                             '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
@@ -1563,6 +1565,13 @@
         $('#pit-scheduler').on('click', '.pts-add-new-user', function () {
             openInfoBox(null, null, 'createUser');
         });
+
+        $('#pit-scheduler').on('click', '.pts-info-box-back-btn[data-target]', function () {
+            console.log('hello');
+            openInfoBox($(this).data('task'), $(this).data('user'), $(this).data('target'));
+        });
+
+
 
         return $scheduler;
     };

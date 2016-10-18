@@ -393,7 +393,7 @@ div.pts-info-box-user-list {
     right: 30px
 }
 
-.pts-info-box-title i {
+.pts-info-box-title i.glyphicon-remove {
     position: relative;
     right: 11%;
     font-size: 16px;
@@ -423,6 +423,13 @@ div.pts-info-box-user-list {
     cursor: pointer;
     color: #f00;
     width: 25px;
+}
+
+.pts-info-box-back-btn {
+    position: relative;
+    top: -1px;
+    padding-right: 4px;
+    cursor: pointer;
 }
 
 /************ List view ************/
