@@ -135,7 +135,7 @@
             }
         }
     };
-    
+
     $.fn.pitScheduler = function (options) {
 
         var $scheduler = $(this);
@@ -171,7 +171,7 @@
         }
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
-        
+
         if (settings.hideEmptyLines === undefined || (settings.hideEmptyLines != true && settings.hideEmptyLines != false)) {
             settings.hideEmptyLines = true;
         }
@@ -357,7 +357,7 @@
             console.log('CALL FUNCTION: getUserLineHeight: user: ' + user.name);
 
             var tasks = [];
-            var lineIsHidden = userLineIsHidden(user);
+            var lineIsHidden = userLineIsShowed(user);
             var originDates = {
                 start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
                 end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
@@ -373,8 +373,8 @@
         };
 
         /* Return true if user task must be showed */
-        var userLineIsHidden = function (user) { // TODO: To much call, need refactoring
-            console.log('CALL FUNCTION: userLineIsHidden: user: ' + user.name);
+        var userLineIsShowed = function (user) {
+            console.log('CALL FUNCTION: userLineIsShowed: user: ' + user.name);
             var response = 0,
                 originDates = {
                 start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
@@ -390,7 +390,7 @@
         /* Move task label on horizontal scroll */
         var setTaskLabelPosition = function () {
             console.log('CALL FUNCTION: setTaskLabelPosition');
-            
+
             if (settings.disableLabelsMovement) return;
             var $elements = $('.pts-line-marker:has(> .pts-line-marker-label)'),
                 limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
@@ -534,7 +534,7 @@
                 }
             });
         };
-        
+
         /* Switch the list view date range */
         var switchListRange = function (range) {
             console.log('CALL FUNCTION: switchListRange: range: ' + range);
@@ -828,7 +828,7 @@
         /* Generate the table columns lines */
         var generateTableLines = function () {
             console.warn('CALL FUNCTION: generateTableLines');
-            
+
             $('.pts-column-title-container > div').empty();
             $('.pts-main-content').empty();
             $('.pts-corner-mask').empty();
@@ -920,13 +920,14 @@
             if (!settings.groups) return;
             settings.groups.added.forEach(function (group, groupIndex) {
                 console.log('GROUP');
-                var $groupMainContent = ['<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
-                                        '<div class="pts-main-group-header"></div></div>'].join('\n');
+                var $groupMainContent = [
+                    '<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
+                    '<div class="pts-main-group-header"></div></div>'].join('\n');
                 $('.pts-main-content').append($groupMainContent);
                 settings.users.forEach(function (user, userIndex) {
                     console.group();
                     var userLineHeight = getUserLineHeight(user);
-                    if (user.group === group.name && userLineIsHidden(user) == true && userLineHeight > 0) {
+                    if (user.group === group.name && userLineIsShowed(user) == true && userLineHeight > 0) {
                         $('#group-container-' + groupIndex).append('<div id="content-user-' + userIndex + '" class="pts-main-group-user" style="height:' + userLineHeight + 'px"></div>');
                     }
                     console.groupEnd();
@@ -981,7 +982,7 @@
 
             var userLineHeight = getUserLineHeight(user);
             if (!user.tasks) return console.warn('Warning: user ' + user.name + ' is assigned to any task');
-            if (userLineIsHidden(user) == false || userLineHeight <= 0) return;
+            if (userLineIsShowed(user) == false || userLineHeight <= 0) return;
 
             var $userNameUI = '<div class="pts-group-user" style="height:' + userLineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
@@ -1031,7 +1032,7 @@
         /* Generate one task on the month view */
         var generateTaskLineMonth = function (user, task, topDistance) {
             console.warn('CALL FUNCTION: generateTaskLineMonth: user: ' + user.name + ':task: ' + task.name);
-            
+
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
@@ -1090,7 +1091,7 @@
         /* Generate one task on the month view */
         var generateTaskLineDay = function (user, task, topDistance) {
             console.warn('CALL FUNCTION: generateTaskLineDay: user: ' + user.name + ': task: ' + task.name);
-            
+
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
 
@@ -1148,7 +1149,7 @@
         /* Generate the tasks structure of the info box */
         var generateInfoBoxContentTask = function (task, user) {
             console.warn('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
-            
+
             var $content =  ['<div class="panel-body">',
                             '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
@@ -1176,7 +1177,7 @@
         /* Generate the users structure of the info box */
         var generateInfoBoxContentUser = function (user) {
             console.warn('CALL FUNCTION: generateInfoBoxContentUser: user: ' + user.name);
-            
+
             var sortedTasks = {};
             user.tasks.forEach(function (e, i) {
                 if (!sortedTasks[e.id]) {
@@ -1207,7 +1208,7 @@
         /* Generate the creation task structure of the info box */
         var generateInfoBoxContentCreateTask = function () {
             console.warn('CALL FUNCTION: generateInfoBoxContentCreateTask');
-            
+
             var $content = ['<div class="panel-body">',
                             '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
                             '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
@@ -1229,7 +1230,7 @@
         /* Generate the edition task structure of the info box */
         var generateInfoBoxContentEditTask = function (taskId) {
             console.warn('CALL FUNCTION: generateInfoBoxContentEditTask');
-            
+
             var task = getTaskById(taskId);
             if (!task) return;
 
@@ -1306,7 +1307,7 @@
         /* Generate the user creation structure of the info box */
         var generateInfoBoxContentCreateUser = function () {
             console.warn('CALL FUNCTION: generateInfoBoxContentCreateUser');
-            
+
             var $content = ['<div class="panel-body">',
                 '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewUser,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
@@ -1333,7 +1334,7 @@
         /* Generate list view main structure */
         var generateListBaseView = function () {
             console.warn('CALL FUNCTION: generateListBaseView');
-            
+
             if (!settings.list) settings.list = {};
             settings.list.display = 'today';
             var $columnContainer =  ['<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>',
@@ -1367,7 +1368,7 @@
         /* Generate the date range picker for the list view */
         var generateRangePicker = function () {
             console.log('CALL FUNCTION: generateRangePicker');
-            
+
             $('.pts-list-range-btn').css('display', 'none');
             var $rangeSelector =    ['<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date pts-datetimepicker-start" id="pts-list-datetimepicker-start">',
                                     '<input type="text" class="form-control"/>',
@@ -1389,7 +1390,7 @@
         /* Generate a task box in the list view */
         var generateListTaskContent = function (task) {
             console.log('CALL FUNCTION: generateListTaskContent');
-            
+
             var totalCycle = 0,
                 thisCycle = 0,
                 totalUsers = 0,
@@ -1440,7 +1441,7 @@
         /* Generate a notification */
         var generateNotification = function (origin, message) {
             console.warn('CALL FUNCTION: generateNotification');
-            
+
             if (settings.disableNotifications) return;
             var uniqueId = generateRandomId();
             var $notification = ['<div class="alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
