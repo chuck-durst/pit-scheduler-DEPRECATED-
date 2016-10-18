@@ -919,6 +919,7 @@
 
             if (!settings.groups) return;
             settings.groups.added.forEach(function (group, groupIndex) {
+                console.log('GROUP');
                 var $groupMainContent = ['<div id="group-container-' + groupIndex + '" class="pts-main-group-container">',
                                         '<div class="pts-main-group-header"></div></div>'].join('\n');
                 $('.pts-main-content').append($groupMainContent);
