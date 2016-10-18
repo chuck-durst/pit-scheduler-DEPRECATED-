@@ -274,16 +274,14 @@
         };
 
         /* Generate the groups panels */
-        var initGroupsAndUsers = function () {
-            console.warn('CALL FUNCTION: initGroupsAndUsers');
+        var initGroup = function () {
+            console.warn('CALL FUNCTION: initGroup');
+
             if ($('.pts-line-group-container').length || !settings.users) return;
 
             settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
             settings.groups = [settings.defaultGroupName];
             settings.users.forEach(function (user, i) {
-                user.isShowed = userLineIsShowed(user);
-                user.lineHeight = getUserLineHeight(user);
-                user.index = i;
                 if (user.group === undefined || user.group === '') {
                     user.group = settings.defaultGroupName;
                 }
@@ -301,6 +299,17 @@
                         id: 'user-group-' + i
                     });
                 }
+            });
+        };
+
+        /* init users */
+        var initUsers = function () {
+            console.warn('CALL FUNCTION: initUsers');
+
+            settings.users.forEach(function (user, i) {
+                user.isShowed = userLineIsShowed(user);
+                user.lineHeight = getUserLineHeight(user);
+                user.index = i;
             });
         };
 
@@ -789,7 +798,7 @@
                 settings.onChange(settings);
             }
             generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
-            initGroupsAndUsers();
+            initGroup();
             if (assign == true) return openInfoBox(null, settings.users.length - 1, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
@@ -851,7 +860,7 @@
 
             generateBaseView();
             generateTableLines();
-            initGroupsAndUsers();
+            initGroup();
             generateGroupMainContent();
             generateUsersList();
             updateDatePicker();
@@ -861,6 +870,7 @@
         var generateTableLines = function () {
             console.warn('CALL FUNCTION: generateTableLines');
 
+            initUsers();
             $('.pts-column-title-container > div').empty();
             $('.pts-main-content').empty();
             $('.pts-corner-mask').empty();
@@ -1743,9 +1753,7 @@
         $('#pit-scheduler').on('change', '#pts-add-user-select-group', function () {
             $('#pts-add-user-input-group').val($(this).val());
         });
-
-
-
+        
         return $scheduler;
     };
 }(jQuery));
