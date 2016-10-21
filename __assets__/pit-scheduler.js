@@ -390,11 +390,17 @@
 
         /* this function is used to show or hide the spinner pre-loader */
         var spinner = function () {
+            if (settings.hideSpinner) return;
             function show () {
-                var $spinner = '<div id="pts-spinner-container"><ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>';
-                $('.pts-main-container').prepend($spinner);
+
+                    var $spinner = '<div id="pts-spinner-container"><ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>';
+                    $('.pts-main-container').prepend($spinner);
+                setInterval(function () {
+                    $('#pts-spinner-container').css('display', 'block');
+                }, 200);
             }
             function hide () {
+                $('#pts-spinner-container').css('display', 'block');
                 $('#pts-spinner-container').remove();
             }
             return {
@@ -1529,6 +1535,7 @@
         });
 
         $('.pts-btn-next').click(function () {
+
             spinner().show();
             setTimeout(function () {
                 $('.pts-scheduler-container').scrollTop(0);
