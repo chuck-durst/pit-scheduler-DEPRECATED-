@@ -391,17 +391,17 @@
         /* this function is used to show or hide the spinner pre-loader */
         var spinner = function () {
             if (settings.hideSpinner) return;
-            function show () {
+            var $spinner = $('#pts-spinner-container');
 
-                    var $spinner = '<div id="pts-spinner-container"><ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>';
-                    $('.pts-main-container').prepend($spinner);
+            function show () {
+                $spinner.addClass('showed');
                 setInterval(function () {
-                    $('#pts-spinner-container').css('display', 'block');
-                }, 200);
+                    $('#pts-spinner-container.showed').css('display', 'block');
+                }, 2);
             }
             function hide () {
-                $('#pts-spinner-container').css('display', 'block');
-                $('#pts-spinner-container').remove();
+                $spinner.removeClass('showed');
+                $spinner.css('display', 'none');
             }
             return {
                 show: show,
@@ -889,6 +889,8 @@
 
             if ($('.pts-main-container').length) return;
             var $mainContainer =    ['<div class="pts-main-container row">',
+                                    '<div id="pts-spinner-container">',
+                                    '<ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>',
                                     '<div id="pts-info-box-container" data-toggle="closed"></div>',
                                     '<div class="pts-corner-mask"></div>',
                                     '<div class="pts-column-title-container">',
