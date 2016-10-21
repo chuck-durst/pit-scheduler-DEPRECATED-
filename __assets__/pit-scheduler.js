@@ -340,26 +340,38 @@
 
         /* Go to the next month/day */
         var goForward = function () {
+            console.group();
             console.warn('CALL FUNCTION: goForward');
+
+            $('h1').css('background-color', 'red');
             closeInfoBox('task');
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(1, 'months');
             } else {
                 settings.date.selected = moment(settings.date.selected).add(1, 'day');
             }
-            //updateDisplay(settings.currentDisplay);
+            generateTableLines();
+            generateGroupMainContent();
+            generateUsersList();
+
+            console.groupEnd();
         };
 
         /* Go to the previous month/day */
         var goBackward = function () {
+            console.group();
             console.warn('CALL FUNCTION: goBackward');
+
             closeInfoBox('task');
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'months');
             } else {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'day');
             }
-            //updateDisplay(settings.currentDisplay);
+            generateTableLines();
+            generateGroupMainContent();
+            generateUsersList();
+            console.groupEnd();
         };
 
         /* Return true if the first date contains the second one */
@@ -1489,18 +1501,12 @@
 
         $('.pts-btn-next').click(function () {
             $('.pts-scheduler-container').scrollTop(0);
-            goForward();
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
+                goForward();
         });
 
         $('.pts-btn-previous').click(function () {
             $('.pts-scheduler-container').scrollTop(0);
             goBackward();
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
         });
 
         $('#header-datetimepicker').on('dp.change', function (e) {
