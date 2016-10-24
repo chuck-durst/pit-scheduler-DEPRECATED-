@@ -394,13 +394,9 @@
             var $spinner = $('#pts-spinner-container');
 
             function show () {
-                $spinner.addClass('showed');
-                setInterval(function () {
-                    $('#pts-spinner-container.showed').css('display', 'block');
-                }, 2);
+                $spinner.css('display', 'block');
             }
             function hide () {
-                $spinner.removeClass('showed');
                 $spinner.css('display', 'none');
             }
             return {
