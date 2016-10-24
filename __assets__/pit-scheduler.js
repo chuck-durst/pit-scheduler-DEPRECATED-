@@ -159,7 +159,7 @@
                 selected: moment()
             },
             currentDisplay: '',
-            projectState : 'NOdevelopment'
+            projectState : 'development'
         }, options);
 
         if (settings.defaultDisplay === undefined) {
@@ -210,26 +210,21 @@
         /* update display view */
         var updateDisplay = function (viewMode) {
             log.warn('CALL FUNCTION: updateDisplay: viewMode:' + viewMode);
+
             updateDisplayReset();
             switch (viewMode) {
                 case 'days':
                     setButtonViewFocus('day');
-                    $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'days';
                     generateMainContent();
                     break;
                 case 'months':
                     setButtonViewFocus('month');
-                    $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
                     settings.currentDisplay = 'months';
                     generateMainContent();
                     break;
                 case 'list':
                     setButtonViewFocus('list');
-                    $('.pts-header-date-display').empty();
-                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     settings.currentDisplay = 'list';
                         $('.pts-btn-next').attr('disabled', 'disabled');
                     $('.pts-btn-previous').attr('disabled', 'disabled');
@@ -254,8 +249,25 @@
             $('.pts-btn-next').removeAttr('disabled');
             $('.pts-btn-previous').removeAttr('disabled');
             $('.pts-header-date-display').css('display', 'block');
-            $('#header-datetimepicker').data("DateTimePicker").enable();
             $('.pts-column-title-container').css('overflow', 'hidden');
+            updateHeaderDates();
+        };
+
+        /* Function used to update the header datepicker */
+        var updateHeaderDates = function () {
+            $('#header-datetimepicker').data("DateTimePicker").enable();
+            $('.pts-header-date-display').empty();
+            switch (settings.currentDisplay) {
+                case 'days':
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
+                    break;
+                case 'months':
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY'));
+                    break;
+                case 'list':
+                    $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
+                    break;
+            }
         };
 
         /* set the focus on the right view mode button */
@@ -366,7 +378,7 @@
             console.group();
             log.warn('CALL FUNCTION: goForward');
 
-            closeInfoBox('task');
+            closeInfoBox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(1, 'months');
             } else {
@@ -375,6 +387,8 @@
             generateTableLines();
             generateGroupMainContent();
             generateUsersList();
+            updateHeaderDates();
+            updateDatePicker();
 
             console.groupEnd();
         };
@@ -384,7 +398,7 @@
             console.group();
             log.warn('CALL FUNCTION: goBackward');
 
-            closeInfoBox('task');
+            closeInfoBox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'months');
             } else {
@@ -393,6 +407,9 @@
             generateTableLines();
             generateGroupMainContent();
             generateUsersList();
+            updateHeaderDates();
+            updateDatePicker();
+
             console.groupEnd();
         };
 
@@ -401,15 +418,13 @@
             if (settings.hideSpinner) return;
             var $spinner = $('#pts-spinner-container');
 
-            function show () {
-                $spinner.css('display', 'block');
-            }
-            function hide () {
-                $spinner.css('display', 'none');
-            }
             return {
-                show: show,
-                hide: hide
+                show: function () {
+                    $spinner.css('display', 'block');
+                },
+                hide: function () {
+                    $spinner.css('display', 'none');
+                }
             }
         };
 
