@@ -1,4 +1,5 @@
-# jQuery pit-scheduler
+# jQuery pit-scheduler v1.2
+###A new version is coming soon!
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/payintech/jquery-easy-search-ui/master/LICENSE)
 
 ![Alt text](https://cloud.githubusercontent.com/assets/15311764/19238902/ed00a51a-8f03-11e6-90a4-911fb4808961.PNG)
