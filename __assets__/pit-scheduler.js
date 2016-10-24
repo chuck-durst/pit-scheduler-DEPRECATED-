@@ -1,6 +1,14 @@
-'use strict';
+/*
+ * jQuery pit-Scheduler Plugin v2.0
+ * https://github.com/chuck-durst/pit-scheduler
+ *
+ * Copyright 2016 Charles Durst
+ * Released under the MIT license
+ */
 
 (function ($) {
+    'use strict';
+
     var i18n = {
         allowed: [
             'en',
@@ -151,7 +159,7 @@
                 selected: moment()
             },
             currentDisplay: '',
-            projectState : 'development'
+            projectState : 'NOdevelopment'
         }, options);
 
         if (settings.defaultDisplay === undefined) {
