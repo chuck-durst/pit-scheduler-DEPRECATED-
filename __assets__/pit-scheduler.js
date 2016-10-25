@@ -321,8 +321,6 @@
             log.warn('CALL FUNCTION: initGroup');
 
             if ($('.pts-line-group-container').length || !settings.users) return;
-            console.log('INIT GROUP');
-
             settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
             settings.groups = [settings.defaultGroupName];
             settings.users.forEach(function (user, i) {
