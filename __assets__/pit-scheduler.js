@@ -321,6 +321,7 @@
             log.warn('CALL FUNCTION: initGroup');
 
             if ($('.pts-line-group-container').length || !settings.users) return;
+            console.log('INIT GROUP');
 
             settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
             settings.groups = [settings.defaultGroupName];
@@ -336,7 +337,7 @@
             settings.groups.added = [];
             settings.groups.forEach(function (e, i) {
                 var usersInGroup =  getUsersInGroup(e);
-                if (i !== 'added' && i !== settings.defaultGroupName && usersInGroup.length > 0) {
+                if (usersInGroup.length > 0) {
                     var mustBeShowed = false;
                     usersInGroup.every(function (userIndex) {
                         if (settings.users[userIndex] && settings.users[userIndex].isShowed == true) {
@@ -866,7 +867,6 @@
         var createNewUser = function (name, group, assign) {
             log.warn('CALL FUNCTION: createNewUser');
 
-            console.log(assign);
             settings.users.push({
                 name: name,
                 group: (group ? group : ''),
@@ -880,7 +880,6 @@
                 settings.onChange(settings);
             }
             generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
-            initGroup();
             if (assign == true) return openInfoBox(null, settings.users.length - 1, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
@@ -915,7 +914,6 @@
             }
             generateNotification('success', settings.i18n.notif.userEdited);
             initUsers();
-            initGroup();
             updateDisplay(settings.currentDisplay);
         };
 
@@ -1034,6 +1032,7 @@
 
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
+            console.log('GENERATE GROUP TAB: ' + group);
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
 
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
@@ -1089,16 +1088,10 @@
                         group = _group.id;
                     }
                 });
+                console.log('user: ' + user.name + ' group: ' + group );
                 if (!group) {
-                    if (!settings.groups.unlisted) {
-                        generateGroupTab(settings.i18n.unlisted, settings.groups.added.length);
-                        settings.groups.unlisted = settings.groups.added.length;
-                        settings.groups.added.push({
-                            name: settings.i18n.unlisted,
-                            id: 'user-group-' + settings.groups.added.length
-                        });
-                    }
-                    group = settings.groups.added[settings.groups.unlisted].id;
+                    var unlisted = settings.groups.added[settings.groups.unlisted];
+                    group = (unlisted ? unlisted.id : '');
                 }
                 generateUserLine(user, group)
             });
@@ -1109,7 +1102,7 @@
             log.log('CALL FUNCTION: generateUserLine: user: ' + user.name);
 
             if (!user.tasks) return log.warn('Warning: user ' + user.name + ' is assigned to any task');
-            if (!user.isShowed || user.lineHeight <= 0) return;
+            if (!user.isShowed || user.lineHeight <= 0 || !group) return;
 
             var $userNameUI = '<div class="pts-group-user" style="height:' + user.lineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
