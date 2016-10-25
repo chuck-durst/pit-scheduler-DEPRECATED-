@@ -452,10 +452,11 @@ div.pts-info-box-user-list {
     -ms-user-select:none;
     user-select:none;
     -o-user-select:none;
+    min-height: 35px;
 }
 .pts-list-row-task > label {
     position: relative;
-    top: 8px;
+    padding-top: 8px;
     left: 5px;
 }
 

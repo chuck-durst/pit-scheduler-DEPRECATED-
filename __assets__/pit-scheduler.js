@@ -68,6 +68,7 @@
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
                 taskRemoved: 'La tâche a correctement été supprimée',
+                userRemoved: 'L\'utilisateur a correctement été supprimée',
                 usersAssigned: 'utilisateurs ont été assignés à la tâche',
                 userAssigned: 'utilisateur a été assigné à la tâche',
                 userUnassigned: 'a correctement été désassigné',
@@ -132,6 +133,7 @@
                 taskCreated: 'The task has been successfully created',
                 userCreated: 'The user has been successfully created',
                 taskRemoved: 'The task has been successfully removed',
+                userRemoved: 'The user has been successfully removed',
                 usersAssigned: 'users has been assigned to the task',
                 userAssigned: 'user has been assigned to the task',
                 userUnassigned: 'has correctly been unassigned',
@@ -870,6 +872,21 @@
             updateDisplay(settings.currentDisplay);
         };
 
+        /* Remove a user */
+        var removeUser = function (user) {
+            console.log(user);
+            delete settings.users[user.index];
+            getUsersTasksInTasks();
+            updateDisplay(settings.currentDisplay);
+            if (settings.onUserRemoval && typeof settings.onUserRemoval === 'function') {
+                settings.onUserRemoval(settings);
+            }
+            if (settings.onChange && typeof settings.onChange === 'function') {
+                settings.onChange(settings);
+            }
+            generateNotification('success', settings.i18n.notif.userRemoved);
+        };
+
 
         /********* Generation *********/
 
@@ -1268,9 +1285,9 @@
                 '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<div class="btn-group">',
-                '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
-                '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.id + '">' + settings.i18n.assign + '</button>',
-                '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.id + '">' + settings.i18n.edit + '</button></div><br>',
+                '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
+                '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
                 '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
@@ -1762,12 +1779,18 @@
         });
 
         $('#pit-scheduler').on('click', '.pts-delete-task-btn[data-task]', function () {
-            if ($(this).attr('data-confirm') && $(this).attr('data-confirm') == 'false') {
-                $(this).text(settings.i18n.confirm);
-                $(this).attr('data-confirm', true);
+            var $button = $(this);
+
+            if ($button.attr('data-confirm') == 'false') {
+                $button.text(settings.i18n.confirm);
+                $button.attr('data-confirm', true);
+                setTimeout(function () {
+                    $button.text(settings.i18n.remove);
+                    $button.attr('data-confirm', false);
+                }, 2000);
                 return;
             }
-            removeTask($(this).data('task'));
+            removeTask($button.data('task'));
         });
 
         $('#pit-scheduler').on('click', '.pts-assign-task-btn', function () {
@@ -1828,6 +1851,24 @@
 
         $('#pit-scheduler').on('change', '#pts-add-user-select-group', function () {
             $('#pts-add-user-input-group').val($(this).val());
+        });
+
+        $('#pit-scheduler').on('click', '.pts-delete-user-btn[data-user]', function () {
+            var $button = $(this),
+                user = settings.users[$button.data('user')];
+
+            if ($button.attr('data-confirm') == 'false') {
+                $button.text(settings.i18n.confirm);
+                $button.attr('data-confirm', true);
+                setTimeout(function () {
+                    $button.text(settings.i18n.remove);
+                    $button.attr('data-confirm', false);
+                }, 2000);
+                return;
+            }
+            if (user) {
+                removeUser(user);
+            }
         });
         
         return $scheduler;
