@@ -1267,6 +1267,10 @@
             var $content =  ['<div class="panel-body">',
                 '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.id + '">' + settings.i18n.assign + '</button>',
+                '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.id + '">' + settings.i18n.edit + '</button></div><br>',
                 '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
