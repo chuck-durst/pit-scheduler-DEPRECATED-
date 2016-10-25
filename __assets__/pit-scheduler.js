@@ -1755,7 +1755,8 @@
         });
 
         $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start', function (e) {
-            $('.pts-datetimepicker-end').data('DateTimePicker').minDate(e.date).date(e.date).viewDate(e.date);
+            console.log(e.date);
+            $('.pts-datetimepicker-end').data('DateTimePicker').date(e.date).minDate(e.date);
         });
 
         $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start, .pts-datetimepicker-end', function (e) {
