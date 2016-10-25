@@ -237,6 +237,7 @@
                     switchListRange('today');
                     break;
             }
+            updateHeaderDates();
         };
 
         /* Reset elements content that have been modified */
@@ -252,11 +253,12 @@
             $('.pts-btn-previous').removeAttr('disabled');
             $('.pts-header-date-display').css('display', 'block');
             $('.pts-column-title-container').css('overflow', 'hidden');
-            updateHeaderDates();
         };
 
         /* Function used to update the header datepicker */
         var updateHeaderDates = function () {
+            log.log('CALL FUNCTION: updateHeaderDates');
+
             $('#header-datetimepicker').data("DateTimePicker").enable();
             $('.pts-header-date-display').empty();
             switch (settings.currentDisplay) {
@@ -874,7 +876,6 @@
 
         /* Remove a user */
         var removeUser = function (user) {
-            console.log(user);
             delete settings.users[user.index];
             getUsersTasksInTasks();
             updateDisplay(settings.currentDisplay);
