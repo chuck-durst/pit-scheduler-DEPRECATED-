@@ -363,10 +363,15 @@
             log.warn('CALL FUNCTION: initUsers');
 
             settings.users.forEach(function (user, i) {
-                user.isShowed = userLineIsShowed(user);
-                user.lineHeight = getUserLineHeight(user);
-                user.index = i;
+                initUser(user, i);
             });
+        };
+
+        /* init user */
+        var initUser = function (user, index) {
+            user.isShowed = userLineIsShowed(user);
+            user.lineHeight = getUserLineHeight(user);
+            user.index = index;
         };
 
         /* Update the content of the datepicker */
@@ -927,14 +932,17 @@
                 tasks: []
             });
 
+            var userIndex = settings.users.length - 1;
+
             if (settings.onUserCreation && typeof settings.onUserCreation === 'function') {
                 settings.onUserCreation(settings);
             }
             if (settings.onChange && typeof settings.onChange === 'function') {
                 settings.onChange(settings);
             }
+            initUser(settings.users[userIndex], settings.users.length - 1);
             generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
-            if (assign == true) return openInfoBox(null, settings.users.length - 1, 'assignUser');
+            if (assign == true) return openInfoBox(null, userIndex, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
 
@@ -1973,7 +1981,10 @@
                 end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
                 tasks = $('.pts-user-assign-tasks-list').val(),
                 user = settings.users[$(this).data('user')];
-            if (tasks && start_date && end_date) {
+            console.log(user);
+            console.log($(this).data('user'));
+            console.log(settings.users);
+            if (user && tasks && start_date && end_date) {
                 assignTasksToUser(user, tasks, start_date, end_date);
             } else {
                 $('#pts-assign-user-err').text(settings.i18n.allInputRequired);
