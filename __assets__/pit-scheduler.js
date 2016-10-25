@@ -42,6 +42,7 @@
             search: 'Recherche',
             addNewTask: 'Créer une tâche',
             addNewUser: 'Créer un utilisateur',
+            editUser: 'Modifier un utilisateur',
             name: 'Nom',
             required: 'Obligatoire',
             color: 'Couleur',
@@ -76,7 +77,8 @@
                 noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
                 taskNotExist: 'est assigné à une tâche qui n\'existe pas',
                 taskInformationsUpdated: 'La tâche a été modifiée',
-                userHasNoTask: 'n\'est assigned à aucune tâche'
+                userHasNoTask: 'n\'est assigned à aucune tâche',
+                userEdited: 'L\'utilisateur a correctement été modifié'
             }
 
         },
@@ -108,6 +110,7 @@
             search: 'Search',
             addNewTask: 'Create a new task',
             addNewUser: 'Create a new user',
+            editUser: 'Edit the user',
             name: 'Name',
             required: 'Required',
             color: 'Color',
@@ -141,7 +144,8 @@
                 noTask: '<b>Warning : </b>No task has been set',
                 taskNotExist: 'is assigned to an inexistent task',
                 taskInformationsUpdated: 'The task has been edited',
-                userHasNoTask: 'is not assigned to any task'
+                userHasNoTask: 'is not assigned to any task',
+                userEdited: 'The user has been successfully edited'
             }
         }
     };
@@ -161,7 +165,7 @@
                 selected: moment()
             },
             currentDisplay: '',
-            projectState : 'development'
+            projectState : 'nodevelopment'
         }, options);
 
         if (settings.defaultDisplay === undefined) {
@@ -393,7 +397,8 @@
             generateUsersList();
             updateHeaderDates();
             updateDatePicker();
-
+            
+            console.log(settings);
             console.groupEnd();
         };
 
@@ -583,6 +588,11 @@
                     break;
                 case 'createUser':
                     generateInfoBoxContentCreateUser();
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'editUser':
+                    var user = settings.users[userIndex];
+                    generateInfoBoxContentEditUser(user);
                     $infoBox.attr('data-toggle', 'opened');
                     break;
                 default:
@@ -856,6 +866,7 @@
         var createNewUser = function (name, group, assign) {
             log.warn('CALL FUNCTION: createNewUser');
 
+            console.log(assign);
             settings.users.push({
                 name: name,
                 group: (group ? group : ''),
@@ -886,6 +897,26 @@
                 settings.onChange(settings);
             }
             generateNotification('success', settings.i18n.notif.userRemoved);
+        };
+
+        /* Edit a user */
+        var editUser = function (userIndex, newData) {
+            if (!settings.users[userIndex]) return;
+
+            settings.users[userIndex].name = newData.name;
+            settings.users[userIndex].group = (newData.group ? newData.group : '');
+
+            console.log(settings.users);
+            if (settings.onUserEdition && typeof settings.onUserEdition === 'function') {
+                settings.onUserEdition(settings);
+            }
+            if (settings.onChange && typeof settings.onChange === 'function') {
+                settings.onChange(settings);
+            }
+            generateNotification('success', settings.i18n.notif.userEdited);
+            initUsers();
+            initGroup();
+            updateDisplay(settings.currentDisplay);
         };
 
 
@@ -1431,6 +1462,35 @@
             });
         };
 
+        /* Generate the user edition structure of the info box */
+        var generateInfoBoxContentEditUser = function (user) {
+            log.warn('CALL FUNCTION: generateInfoBoxContentEditUser');
+
+            if (!user) return;
+
+
+            var $content = ['<div class="panel-body">',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.editUser,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<fieldset>',
+                '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
+                '<input id="pts-edit-user-input-name" type="text" class="form-control" maxlength="40" value="' + user.name + '">',
+                '<div id="pts-edit-user-err-name" style="color:red"></div></div>',
+                '<div class="form-group"><label>' + settings.i18n.group + ' :</label>',
+                '<input id="pts-edit-user-input-group" type="text" class="form-control" maxlength="60" placeholder="' + settings.i18n.createNewGroup + '" value="' + user.group + '">',
+                '<span>' + settings.i18n.or + '</span><select id="pts-edit-user-select-group" type="select" class="form-control" maxlength="60">',
+                '<option disabled selected>' + settings.i18n.selectGroup + '</option></select></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="btn pts-edit-user-confirm-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button>',
+                '</fieldset>',
+                '</div>'].join('\n');
+            $('#pts-info-box-container').append($content);
+            settings.groups.forEach(function (e) {
+                $('#pts-edit-user-select-group').append('<option value="' + e + '">' + e + '</option>');
+            });
+        };
+
         /* Generate list view main structure */
         var generateListBaseView = function () {
             log.warn('CALL FUNCTION: generateListBaseView');
@@ -1854,6 +1914,10 @@
             $('#pts-add-user-input-group').val($(this).val());
         });
 
+        $('#pit-scheduler').on('change', '#pts-edit-user-select-group', function () {
+            $('#pts-edit-user-input-group').val($(this).val());
+        });
+
         $('#pit-scheduler').on('click', '.pts-delete-user-btn[data-user]', function () {
             var $button = $(this),
                 user = settings.users[$button.data('user')];
@@ -1870,6 +1934,19 @@
             if (user) {
                 removeUser(user);
             }
+        });
+
+        $('#pit-scheduler').on('click', '.pts-edit-user-btn[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'editUser');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
+            var newData = {};
+
+            newData.name = $('#pts-edit-user-input-name').val();
+            newData.group = $('#pts-edit-user-input-group').val();
+            if (name.length < 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
+            editUser($(this).data('user'), newData);
         });
         
         return $scheduler;
