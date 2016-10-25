@@ -905,7 +905,6 @@
             settings.users[userIndex].name = newData.name;
             settings.users[userIndex].group = (newData.group ? newData.group : '');
 
-            console.log(settings.users);
             if (settings.onUserEdition && typeof settings.onUserEdition === 'function') {
                 settings.onUserEdition(settings);
             }
@@ -1032,7 +1031,6 @@
 
         /* Add one group to the scheduler */
         var generateGroupTab = function (group, index) {
-            console.log('GENERATE GROUP TAB: ' + group);
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
 
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
@@ -1088,7 +1086,6 @@
                         group = _group.id;
                     }
                 });
-                console.log('user: ' + user.name + ' group: ' + group );
                 if (!group) {
                     var unlisted = settings.groups.added[settings.groups.unlisted];
                     group = (unlisted ? unlisted.id : '');
@@ -1460,12 +1457,10 @@
             log.warn('CALL FUNCTION: generateInfoBoxContentEditUser');
 
             if (!user) return;
-
-
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.editUser,
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + user.name,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<fieldset>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.editUser + '</h4><fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
                 '<input id="pts-edit-user-input-name" type="text" class="form-control" maxlength="40" value="' + user.name + '">',
                 '<div id="pts-edit-user-err-name" style="color:red"></div></div>',
