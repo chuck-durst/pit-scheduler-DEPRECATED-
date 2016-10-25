@@ -56,10 +56,12 @@
             edit: 'Modifier',
             confirm: 'Confirmer',
             assignTaskTitle: 'Assigner des utilisateurs',
+            assignUserTitle: 'Assigner à une tâche',
             allInputRequired: 'Tous les champs sont obligatoires',
             requiredField: 'Ce champ est obligatoire',
             userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
             selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
+            selectTasksToAssign: 'Sélectionnez les tâches à assigner',
             editTask: 'Modifier la tâche',
             group: 'Groupe',
             selectGroup: 'Sélectionnez un groupe existant',
@@ -123,10 +125,12 @@
             edit: 'Edit',
             confirm: 'Confirm',
             assignTaskTitle: 'Assign users',
+            assignUserTitle: 'Assign to a task',
             allInputRequired: 'All fields are required',
             requiredField: 'That field is required',
             userIsAlreadyAssigned: 'is already assigned to this task for this period',
             selectUsersToAssign: 'Select the users to assign',
+            selectTasksToAssign: 'Select the tasks to assign',
             editTask: 'Edit a task',
             group: 'Group',
             selectGroup: 'Select an existing group',
@@ -397,7 +401,6 @@
             updateHeaderDates();
             updateDatePicker();
             
-            console.log(settings);
             console.groupEnd();
         };
 
@@ -592,6 +595,11 @@
                 case 'editUser':
                     var user = settings.users[userIndex];
                     generateInfoBoxContentEditUser(user);
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'assignUser':
+                    var user = settings.users[userIndex];
+                    generateInfoBoxContentAssignUser(user);
                     $infoBox.attr('data-toggle', 'opened');
                     break;
                 default:
@@ -825,6 +833,54 @@
                 settings.onChange(settings);
             }
             generateNotification('success', '<b>' + users.length + '</b> ' + ( users.length > 1 ? settings.i18n.notif.usersAssigned: settings.i18n.notif.userAssigned) + ' <b>' + task.name + '</b>');
+        };
+
+        /* Assign tasks to a user */
+        var assignTasksToUser = function (user, tasks, start_date, end_date) {
+            log.warn('CALL FUNCTION: assignTasksToUser');
+
+            if (!user || !tasks || !start_date || ! end_date) return;
+            $('#pts-assign-user-err').empty();
+
+            var taskDates = {
+                start_date: start_date,
+                end_date: end_date
+            };
+            tasks.forEach(function (taskId) {
+                var task = getTaskById(taskId),
+                    taskExist = false;
+                user.tasks.forEach(function (_task) {
+                    if (_task.id === task.id && (isDateInDate(_task, taskDates) || isDateInDate(taskDates, _task))) {
+                        taskExist = true;
+                    }
+                });
+                if (taskExist) {
+                    return $('#pts-assign-user-err').append('<b>' + user.name + '</b> ' + settings.i18n.userIsAlreadyAssigned + '<br>');
+                }
+                user.tasks.push({
+                    id: task.id,
+                    start_date: moment(start_date).format('YYYY-MM-DD HH:mm'),
+                    end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
+                });
+                generateTaskInTask(task);
+                if ($('.pts-info-box-task-header[data-task=' + task.id + ']').length == 0) {
+                    var $head = ['<p class="animated fadeIn pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '" data-user="' + user.index + '"><b>',
+                                task.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + task.id + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                                '</tbody></table>'].join('\n');
+                    $('.pts-info-box-user-list').append($head);
+                }
+                var $line = '<tr><td><i class="animated fadeIn glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + task.index + '"></i>' +
+                            '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('lll') + '</td></tr>';
+                $('.pts-user-sorted-task[data-task=' + task.id + ']').append($line);
+                $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
+            });
+            if (settings.onTaskAssignation && typeof settings.onTaskAssignation === 'function') {
+                settings.onTaskAssignation(settings);
+            }
+            if (settings.onChange && typeof settings.onChange === 'function') {
+                settings.onChange(settings);
+            }
+            generateNotification('success', 'Youpi');
         };
 
         /* Delete a task line from an user */
@@ -1302,13 +1358,13 @@
                                         '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
-                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<div class="btn-group">',
-                '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
-                '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
-                '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
-                '<div class="pts-info-box-user-list"></div></div>'].join('\n');
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<div class="btn-group">',
+                            '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
+                            '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
+                            '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
+                            '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
@@ -1456,7 +1512,7 @@
 
             if (!user) return;
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + user.name,
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.editUser + '</h4><fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
@@ -1475,6 +1531,62 @@
             settings.groups.forEach(function (e) {
                 $('#pts-edit-user-select-group').append('<option value="' + e + '">' + e + '</option>');
             });
+        };
+
+        /* Generate the user assignation structure of the info box */
+        var generateInfoBoxContentAssignUser = function (user) {
+            log.warn('CALL FUNCTION: generateInfoBoxContentAssignUser');
+
+            var $content = ['<div class="panel-body">',
+                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.assignUserTitle + '</h4>',
+                '<div class="form-group"><label for="sel42">' + settings.i18n.selectTasksToAssign + ' : </label>',
+                '<select multiple="" class="form-control pts-user-assign-tasks-list" id="sel42"></select></div>',
+                '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-user-assign-datepicker-start">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div>',
+                '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-user-assign-datepicker-end">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div><div id="pts-assign-user-err" style="color:red"></div><br><div class="pull-right">',
+                '<button id="pts-user-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-user="' + user.index + '">' + settings.i18n.assign + '</button></div>',
+                '<br><br><div class="pts-info-box-user-list"></div></div>'].join('\n');
+
+            $('#pts-info-box-container').append($content);
+            $('#pts-user-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
+            $('#pts-user-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
+
+            settings.tasks.forEach(function (task, i) {
+                $('.pts-user-assign-tasks-list').append('<option class="pts-user-assign-task-option" value="' + task.id + '" data-task="' + task.id + '">' + task.name + '</option>');
+            });
+
+            var sortedTasks = {};
+            user.tasks.forEach(function (e, i) {
+                if (!sortedTasks[e.id]) {
+                    sortedTasks[e.id] = [];
+                }
+                sortedTasks[e.id].push('<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
+                    '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
+            });
+
+            $.each(sortedTasks, function (i, _task) {
+                var originalTask = getTaskById(i);
+                var $line = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
+                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                    '</tbody></table>'].join('\n');
+                $('.pts-info-box-user-list').append($line);
+                _task.forEach(function (_line) {
+                    $('.pts-user-sorted-task[data-task=' + i + ']').append('<tr><td>' + _line + '</td></tr>');
+                });
+            });
+
+
+            getContrastedColor();
         };
 
         /* Generate list view main structure */
@@ -1748,7 +1860,6 @@
         });
 
         $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start', function (e) {
-            console.log(e.date);
             $('.pts-datetimepicker-end').data('DateTimePicker').date(e.date).minDate(e.date);
         });
 
@@ -1857,6 +1968,18 @@
             }
         });
 
+        $('#pit-scheduler').on('click', '#pts-user-assign-btn[data-user]', function () {
+            var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
+                end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
+                tasks = $('.pts-user-assign-tasks-list').val(),
+                user = settings.users[$(this).data('user')];
+            if (tasks && start_date && end_date) {
+                assignTasksToUser(user, tasks, start_date, end_date);
+            } else {
+                $('#pts-assign-user-err').text(settings.i18n.allInputRequired);
+            }
+        });
+
         $('#pit-scheduler').on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
             if (e.target !== this)
                 return;
@@ -1925,6 +2048,10 @@
 
         $('#pit-scheduler').on('click', '.pts-edit-user-btn[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'editUser');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-assign-user-btn[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'assignUser');
         });
 
         $('#pit-scheduler').on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
