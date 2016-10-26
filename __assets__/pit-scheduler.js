@@ -18,11 +18,14 @@
             days: 'Jours',
             months: 'Mois',
             list: 'Liste',
+            tasks: 'Tâches',
+            users: 'Utilisateurs',
             unlisted: 'Non répertorié',
             settings: 'Options',
             hideEmptyLine: 'Masquer les lignes sans tâche',
             description: 'Description',
-            assignedUsers: 'Utilisateurs assignés',
+            assignedUsers: 'utilisateurs assignés',
+            assignedUser: 'utilisateur assigné',
             from: 'Du',
             to: 'au',
             notSpecified: 'Non spécifiée',
@@ -67,6 +70,9 @@
             selectGroup: 'Sélectionnez un groupe existant',
             createNewGroup: 'Créez un nouveau groupe',
             or: 'ou',
+            seeAll: 'Tout voir',
+            allocations: 'assignations',
+            allocation: 'assignation',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
@@ -88,11 +94,14 @@
             days: 'Days',
             months: 'Months',
             list: 'List',
+            tasks: 'Tasks',
+            users: 'Users',
             unlisted: 'Unlisted',
             settings: 'Settings',
             hideEmptyLine: 'Hide lines with no task',
             description: 'Description',
-            assignedUsers: 'Assigned users',
+            assignedUsers: 'assigned users',
+            assignedUser: 'assigned user',
             from: 'From',
             to: 'to',
             notSpecified: 'Not specified',
@@ -136,6 +145,9 @@
             selectGroup: 'Select an existing group',
             createNewGroup: 'Create a new group',
             or: 'or',
+            seeAll: 'See all',
+            allocations: 'allocations',
+            allocation: 'allocation',
             notif: {
                 taskCreated: 'The task has been successfully created',
                 userCreated: 'The user has been successfully created',
@@ -298,7 +310,7 @@
         var generateTaskInTask = function (task) {
             log.log('CALL FUNCTION: generateTaskInTask: task: ' + task.name);
 
-            task.users = {};
+            task.users = [];
             if (! settings.users) return generateNotification('danger', settings.i18n.notif.noUser );
             if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
             settings.users.forEach(function (user, userIndex) {
@@ -352,6 +364,11 @@
                     }
                 }
             });
+        };
+
+        /* Return the real length of an array */
+        var getLength = function (arr) {
+            return Object.keys(arr).length;
         };
 
         /* init users */
@@ -559,6 +576,7 @@
 
             var $infoBox = $('#pts-info-box-container');
             $infoBox.empty();
+            $infoBox.scrollTop();
 
             switch (viewType) {
                 case 'task':
@@ -603,6 +621,10 @@
                 case 'assignUser':
                     var user = settings.users[userIndex];
                     generateInfoBoxContentAssignUser(user);
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
+                case 'seeAll':
+                    generateInfoBoxContentSeeAll();
                     $infoBox.attr('data-toggle', 'opened');
                     break;
                 default:
@@ -1318,7 +1340,9 @@
             log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
 
             var $content =  ['<div class="panel-body">',
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name,
+                            '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
+                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
                             '<div class="btn-group">',
                             '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
@@ -1354,7 +1378,9 @@
                                         '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:#00BCD4" data-update="true">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                            user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                            '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
                             '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                             '<div class="btn-group">',
                             '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
@@ -1581,6 +1607,35 @@
                 });
             });
 
+
+            getContrastedColor();
+        };
+
+        /* Generate the see all structure of the info box */
+        var generateInfoBoxContentSeeAll = function () {
+            log.info('CALL FUNCTION: generateInfoBoxContentSeeAll');
+
+            var $content =  ['<div class="panel-body">',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.seeAll,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4>' + settings.i18n.users + ' (' + settings.users.length + ')</h4><div class="pts-info-box-user-list"></div>',
+                '<h4>' + settings.i18n.tasks  + ' (' + settings.tasks.length + ')</h4><div class="pts-info-box-task-list"></div></div>'].join('\n');
+
+            $('#pts-info-box-container').append($content);
+
+            settings.tasks.forEach(function (task) {
+                var length = getLength(task.users);
+                var $taskLine = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '"><b>',
+                                task.name + '</b> - ' + length + ' ' + (length> 1 ? settings.i18n.assignedUsers : settings.i18n.assignedUser) + '</p>'].join('\n');
+                $('.pts-info-box-task-list').append($taskLine);
+            });
+
+            settings.users.forEach(function (user) {
+                var length = user.tasks.length;
+                var $taskLine = ['<p class="pts-check-color pts-info-box-user-header" style="background-color:' + settings.defaultColor + ';margin-top:10px" data-user="' + user.index + '"><b>',
+                                user.name + '</b> - ' + user.tasks.length + ' ' + (length > 1 ? settings.i18n.allocations : settings.i18n.allocation) + '</p>'].join('\n');
+                $('.pts-info-box-user-list').append($taskLine);
+            });
 
             getContrastedColor();
         };
@@ -1817,8 +1872,12 @@
             openInfoBox(null, $(this).data('user'), 'user');
         });
 
-        $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task][data-user]', function () {
-            openInfoBox($(this).data('task'), $(this).data('user'), 'task');
+        $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task]', function () {
+            openInfoBox($(this).data('task'), null, 'task');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-info-box-user-header[data-user]', function () {
+            openInfoBox(null, $(this).data('user'), 'user');
         });
 
         $('#pit-scheduler').on('click', '#pts-list-task-select-all', function () {
@@ -2060,7 +2119,12 @@
             if (name.length < 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
             editUser($(this).data('user'), newData);
         });
-        
+
+        $('#pit-scheduler').on('click', '.pts-button-see-all', function (e) {
+            e.stopPropagation();
+            openInfoBox(null, null, 'seeAll');
+        });
+
         return $scheduler;
     };
 }(jQuery));

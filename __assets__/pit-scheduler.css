@@ -386,7 +386,7 @@
     background-color: #dbdbdb;
 }
 
-div.pts-info-box-user-list {
+div.pts-info-box-user-list, div.pts-info-box-task-list {
     position: relative;
     right: 30px
 }
@@ -406,9 +406,10 @@ div.pts-info-box-user-list {
     position: relative;
     margin-top: -15px;
     cursor: pointer;
+    height: 40px;
 }
 
-.pts-info-box-task-header {
+.pts-info-box-task-header, .pts-info-box-user-header {
     position: relative;
     left: 5px;
     padding: 5px 20px 5px 20px;
@@ -428,6 +429,12 @@ div.pts-info-box-user-list {
     top: -1px;
     padding-right: 4px;
     cursor: pointer;
+}
+
+.pts-button-see-all {
+    margin-left: 10px;
+    background-color: #fff;
+    color: #000 !important;
 }
 
 /************ List view ************/
