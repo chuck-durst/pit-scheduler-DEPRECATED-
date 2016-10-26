@@ -160,7 +160,9 @@ No, seriously, I'm serious. But if you do not have time for that, here is a smal
 
 ## Demo
 
-You'll find a demo in the ___demo___ folder. It shows you how to include the scheduler to your project and how to use it. 
+You'll find a demo in the ___demo___ folder. It shows you how to include the scheduler to your project and how to use it.
+
+[See the demo](http://chuck-engine.fr/demos/pit-scheduler/__demo__/index.html)
 
 ## TODOS
 
