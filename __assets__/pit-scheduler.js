@@ -226,12 +226,12 @@
                 case 'days':
                     setButtonViewFocus('day');
                     settings.currentDisplay = 'days';
-                    generateMainContent();
+                    initMainContent();
                     break;
                 case 'months':
                     setButtonViewFocus('month');
                     settings.currentDisplay = 'months';
-                    generateMainContent();
+                    initMainContent();
                     break;
                 case 'list':
                     setButtonViewFocus('list');
@@ -246,6 +246,7 @@
                     break;
             }
             updateHeaderDates();
+            console.log(settings);
         };
 
         /* Reset elements content that have been modified */
@@ -280,6 +281,18 @@
                     $('.pts-header-date-display').append(moment(settings.date.selected).locale(settings.locale).format('LL'));
                     break;
             }
+        };
+
+        /* Launch all the main generations */
+        var initMainContent = function () {
+            log.warn('CALL FUNCTION: initMainContent');
+
+            generateBaseView();
+            generateTableLines();
+            initGroup();
+            generateGroupMainContent();
+            generateUsersList();
+            updateDatePicker();
         };
 
         /* set the focus on the right view mode button */
@@ -341,10 +354,9 @@
                 var usersInGroup =  getUsersInGroup(e);
                 if (usersInGroup.length > 0) {
                     var mustBeShowed = false;
-                    usersInGroup.every(function (userIndex) {
+                    usersInGroup.forEach(function (userIndex) {
                         if (settings.users[userIndex] && settings.users[userIndex].isShowed == true) {
                             mustBeShowed = true;
-                            return false;
                         }
                     });
                     if (mustBeShowed) {
@@ -431,14 +443,15 @@
 
         /* this function is used to show or hide the spinner pre-loader */
         var spinner = function () {
-            if (settings.hideSpinner) return;
             var $spinner = $('#pts-spinner-container');
 
             return {
                 show: function () {
+                    if (settings.hideSpinner) return;
                     $spinner.css('display', 'block');
                 },
                 hide: function () {
+                    if (settings.hideSpinner) return;
                     $spinner.css('display', 'none');
                 }
             }
@@ -896,6 +909,8 @@
 
             delete user.tasks[taskIndex];
             generateTaskInTask(task);
+            initUsers();
+            initGroup();
             if (settings.onUserTaskDeletion && typeof settings.onUserTaskDeletion === 'function') {
                 settings.onUserTaskDeletion(settings);
             }
@@ -1029,18 +1044,6 @@
                                     '</div></div></div>'].join('\n');
 
             $scheduler.append($mainContainer);
-        };
-
-        /* Launch all the main generations */
-        var generateMainContent = function () {
-            log.warn('CALL FUNCTION: generateMainContent');
-
-            generateBaseView();
-            generateTableLines();
-            initGroup();
-            generateGroupMainContent();
-            generateUsersList();
-            updateDatePicker();
         };
 
         /* Generate the table columns lines */
@@ -1546,7 +1549,7 @@
             log.warn('CALL FUNCTION: generateInfoBoxContentAssignUser');
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                '<h4 class="pts-check-color text-semibold pts-info-box-title pts-close-info-box" style="background-color:' + settings.defaultColor + '" data-update="true">',
                 user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.assignUserTitle + '</h4>',
