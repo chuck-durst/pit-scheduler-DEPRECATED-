@@ -402,6 +402,7 @@
 
         /* Return a temporary object that contains the data required to make an undo */
         var getUndo = function () {
+            if (settings.disableUndo == true) return null;
             return {
                 tasks: clone(settings.tasks),
                 users: clone(settings.users),
@@ -1761,7 +1762,7 @@
             var $notification = ['<div class="animated fadeIn alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
                                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
                                 message + ' ' + '</div>'].join('\n');
-            $('#pts-notification-container').html($notification);
+            $('#pts-notification-container').append($notification);
             $('.alert[data-id=' + uniqueId + ']').append($undoLink);
 
             setTimeout(function(){
