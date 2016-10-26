@@ -168,47 +168,28 @@
         var settings = $.extend({
             date: {
                 current: moment(),
-                selected: moment()
+                selected: (options.defaultDate && moment(settings.defaultDate).isValid() ? options.defaultDate : moment())
             },
-            currentDisplay: '',
-            projectState : 'nodevelopment',
+            locale: (options.locale && i18n.allowed.indexOf(options.locale) != -1 ? options.locale : i18n.allowed[0]), //if no locale is defined, it takes the first allowed one
+            currentDisplay: (options.defaultDisplay && 'days;months;list'.indexOf(options.defaultDisplay) != -1 ? options.defaultDisplay : 'months'),
+            projectState : 'nodevelopment', //debug will log all function calls, development will only log the important ones
             tasks: options.tasks || [],
-            users: options.users || []
+            users: options.users || [],
+            defaultColor: options.defaultColor ||'#00BCD4',
+            notificationDuration: options.notificationDuration || 4000,
+            hideEmptyLines: options.hideEmptyLines || true
         }, options);
 
-        if (settings.defaultDisplay === undefined) {
-            settings.currentDisplay = 'days';
-        } else {
-            settings.defaultDisplay.toLowerCase();
-            if (settings.defaultDisplay !== 'days' && settings.defaultDisplay !== 'months' && settings.defaultDisplay !== 'list') {
-                settings.currentDisplay = 'months';
-            } else
-                settings.currentDisplay = settings.defaultDisplay;
-        }
 
-        settings.defaultColor = (settings.defaultColor? settings.defaultColor : '#00BCD4');
-        settings.notificationDuration = (settings.notificationDuration ? settings.notificationDuration : 4000);
-
-        if (settings.locale === undefined || i18n.allowed.indexOf(settings.locale) == -1) {
-            settings.locale = 'en';
-        }
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
-
-        if (settings.hideEmptyLines === undefined || (settings.hideEmptyLines != true && settings.hideEmptyLines != false)) {
-            settings.hideEmptyLines = true;
-        }
-
-        if (settings.defaultDate !== undefined && moment(settings.defaultDate).isValid()) {
-            settings.date.selected = moment(settings.defaultDate);
-        }
-
+        
         console.groupEnd();
 
         /* Function used to  hide console.log on production */
         var log =  {
                 log : function (data) {
-                    if (settings.projectState == 'development') {
+                    if (settings.projectState == 'debug') {
                         console.log(data);
                     }
                 },
