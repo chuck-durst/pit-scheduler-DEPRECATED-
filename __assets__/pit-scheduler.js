@@ -160,19 +160,17 @@
 
 
         /********* Settings initialization *********/
-        console.group();
-        console.info('Settings initialization');
 
         options = options || {};
 
         var settings = $.extend({
             date: {
                 current: moment(),
-                selected: (options.defaultDate && moment(settings.defaultDate).isValid() ? options.defaultDate : moment())
+                selected: (options.defaultDate && moment(options.defaultDate).isValid() ? moment(options.defaultDate) : moment())
             },
             locale: (options.locale && i18n.allowed.indexOf(options.locale) != -1 ? options.locale : i18n.allowed[0]), //if no locale is defined, it takes the first allowed one
             currentDisplay: (options.defaultDisplay && 'days;months;list'.indexOf(options.defaultDisplay) != -1 ? options.defaultDisplay : 'months'),
-            projectState : 'nodevelopment', //debug will log all function calls, development will only log the important ones
+            projectState : 'development', //debug will log all function calls, development will only log the important ones
             tasks: options.tasks || [],
             users: options.users || [],
             defaultColor: options.defaultColor ||'#00BCD4',
@@ -180,11 +178,8 @@
             hideEmptyLines: options.hideEmptyLines || true
         }, options);
 
-
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
-        
-        console.groupEnd();
 
         /* Function used to  hide console.log on production */
         var log =  {
@@ -197,14 +192,18 @@
                     if (settings.projectState == 'development') {
                         console.warn(data);
                     }
+                },
+                info: function (data) {
+                    if (settings.projectState == 'development') {
+                        console.info(data);
+                    }
                 }
         };
-
         /********* Main functions *********/
 
         /* update display view */
         var updateDisplay = function (viewMode) {
-            log.warn('CALL FUNCTION: updateDisplay: viewMode:' + viewMode);
+            log.info('CALL FUNCTION: updateDisplay: viewMode:' + viewMode);
 
             updateDisplayReset();
             switch (viewMode) {
@@ -236,7 +235,7 @@
 
         /* Reset elements content that have been modified */
         var updateDisplayReset = function () {
-            log.warn('CALL FUNCTION: updateDisplayReset');
+            log.info('CALL FUNCTION: updateDisplayReset');
             closeInfoBox();
             $('.pts-main-content').empty();
             $('.pts-column-title-container > div').empty();
@@ -270,8 +269,7 @@
 
         /* Launch all the main generations */
         var initMainContent = function () {
-            log.warn('CALL FUNCTION: initMainContent');
-
+            log.info('CALL FUNCTION: initMainContent');
             generateBaseView();
             generateTableLines();
             initGroup();
@@ -288,7 +286,7 @@
 
         /* Init function that saves users index into associated tasks */
         var getUsersTasksInTasks = function () {
-            log.warn('CALL FUNCTION: getUsersTasksInTasks');
+            log.info('CALL FUNCTION: getUsersTasksInTasks');
 
             if (!settings.tasks || settings.tasks.length == 0) return generateNotification('danger', settings.i18n.notif.noTask);
             settings.tasks.forEach(function (task) {
@@ -321,7 +319,7 @@
 
         /* Generate the groups panels */
         var initGroup = function () {
-            log.warn('CALL FUNCTION: initGroup');
+            log.info('CALL FUNCTION: initGroup');
 
             if ($('.pts-line-group-container').length || !settings.users) return;
             settings.defaultGroupName = (settings.defaultGroupName ? settings.defaultGroupName : settings.i18n.unlisted);
@@ -358,7 +356,7 @@
 
         /* init users */
         var initUsers = function () {
-            log.warn('CALL FUNCTION: initUsers');
+            log.info('CALL FUNCTION: initUsers');
 
             if (!settings.users) return;
             settings.users.forEach(function (user, i) {
@@ -390,8 +388,8 @@
 
         /* Go to the next month/day */
         var goForward = function () {
-            console.group();
-            log.warn('CALL FUNCTION: goForward');
+            console.groupCollapsed('goForward');
+            log.info('CALL FUNCTION: goForward');
 
             closeInfoBox();
             if (settings.currentDisplay == 'months') {
@@ -410,8 +408,8 @@
 
         /* Go to the previous month/day */
         var goBackward = function () {
-            console.group();
-            log.warn('CALL FUNCTION: goBackward');
+            console.groupCollapsed('goBackward');
+            log.info('CALL FUNCTION: goBackward');
 
             closeInfoBox();
             if (settings.currentDisplay == 'months') {
@@ -557,7 +555,7 @@
 
         /* Open the info-box panel */
         var openInfoBox = function (taskId, userIndex, viewType) {
-            log.warn('CALL FUNCTION: openInfoBox: taskId: ' + taskId + ': userIndex: ' + userIndex + ': viewType: ' + viewType);
+            log.info('CALL FUNCTION: openInfoBox: taskId: ' + taskId + ': userIndex: ' + userIndex + ': viewType: ' + viewType);
 
             var $infoBox = $('#pts-info-box-container');
             $infoBox.empty();
@@ -619,7 +617,7 @@
 
         /* Close the info-box panel */
         var closeInfoBox = function () {
-            log.warn('CALL FUNCTION: closeInfoBox');
+            log.info('CALL FUNCTION: closeInfoBox');
 
             var $infoBox = $('#pts-info-box-container'),
                 $markers = $('.pts-line-marker');
@@ -734,7 +732,7 @@
 
         /* Create a task */
         var createNewTask = function (name, id, description, color, assign) {
-            log.warn('CALL FUNCTION: createNewTask');
+            log.info('CALL FUNCTION: createNewTask');
 
             var newTask = {
                 id: (id.length > 0 ? id : generateRandomId()),
@@ -766,7 +764,7 @@
 
         /* Remove a task */
         var removeTask = function (taskId) {
-            log.warn('CALL FUNCTION: removeTask');
+            log.info('CALL FUNCTION: removeTask');
 
             $.each(settings.tasks, function (i, task) {
                 if (task && task.id === taskId) {
@@ -792,7 +790,7 @@
 
         /* Assign users to a task */
         var assignUsersToTask = function (users, task, start_date, end_date) {
-            log.warn('CALL FUNCTION: assignUsersToTask');
+            log.info('CALL FUNCTION: assignUsersToTask');
 
             var taskDates = {
                     start_date: start_date,
@@ -842,7 +840,7 @@
 
         /* Assign tasks to a user */
         var assignTasksToUser = function (user, tasks, start_date, end_date) {
-            log.warn('CALL FUNCTION: assignTasksToUser');
+            log.info('CALL FUNCTION: assignTasksToUser');
 
             if (!user || !tasks || !start_date || ! end_date) return;
             $('#pts-assign-user-err').empty();
@@ -890,7 +888,7 @@
 
         /* Delete a task line from an user */
         var deleteTaskFromUser = function (user, task, taskIndex) {
-            log.warn('CALL FUNCTION: deleteTaskFromUser');
+            log.info('CALL FUNCTION: deleteTaskFromUser');
 
             if (!user.tasks[taskIndex]) return;
 
@@ -909,7 +907,7 @@
 
         /* Edit the informations of an existing task */
         var editTask = function (task, newData) {
-            log.warn('CALL FUNCTION: editTask');
+            log.info('CALL FUNCTION: editTask');
 
             task.name = (newData.name ? newData.name : task.name);
             task.color = (newData.color ? newData.color : task.color);
@@ -926,7 +924,7 @@
 
         /*create a new user */
         var createNewUser = function (name, group, assign) {
-            log.warn('CALL FUNCTION: createNewUser');
+            log.info('CALL FUNCTION: createNewUser');
 
             settings.users.push({
                 name: name,
@@ -985,7 +983,7 @@
 
         /* Generate the header content */
         var generateHeader = function () {
-            log.warn('CALL FUNCTION: generateHeader');
+            log.info('CALL FUNCTION: generateHeader');
 
             var $header =   ['<div id="pts-notification-container"></div>',
                             '<div class="pts-header row">',
@@ -1014,7 +1012,7 @@
 
         /* Generate base empty base structure */
         var generateBaseView = function () {
-            log.warn('CALL FUNCTION: generateBaseView');
+            log.info('CALL FUNCTION: generateBaseView');
 
             if ($('.pts-main-container').length) return;
             var $mainContainer =    ['<div class="pts-main-container row">',
@@ -1035,7 +1033,7 @@
 
         /* Generate the table columns lines */
         var generateTableLines = function () {
-            log.warn('CALL FUNCTION: generateTableLines');
+            log.info('CALL FUNCTION: generateTableLines');
 
             initUsers();
             $('.pts-column-title-container > div').empty();
@@ -1127,7 +1125,7 @@
 
         /* Generate the left users list */
         var generateUsersList = function () {
-            log.warn('CALL FUNCTION: generateUsersList');
+            log.info('CALL FUNCTION: generateUsersList');
             if (!settings.users || settings.users.length <= 0) return generateNotification('warning', settings.i18n.notif.noUser );
 
             $('.pts-group-content').empty();
@@ -1161,7 +1159,7 @@
 
         /* Generate the tasks lines */
         var generateTaskLines = function (user, userIndex) {
-            log.warn('CALL FUNCTION: generateTaskLines: user: ' + user.name);
+            log.info('CALL FUNCTION: generateTaskLines: user: ' + user.name);
 
             if (!userHasTask(user)) return log.log('No task for this user in that period');
             user.index = userIndex;
@@ -1200,7 +1198,7 @@
 
         /* Generate one task on the month view */
         var generateTaskLineMonth = function (user, task, topDistance) {
-            log.warn('CALL FUNCTION: generateTaskLineMonth: user: ' + user.name + ':task: ' + task.name);
+            log.info('CALL FUNCTION: generateTaskLineMonth: user: ' + user.name + ':task: ' + task.name);
 
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
@@ -1259,7 +1257,7 @@
 
         /* Generate one task on the month view */
         var generateTaskLineDay = function (user, task, topDistance) {
-            log.warn('CALL FUNCTION: generateTaskLineDay: user: ' + user.name + ': task: ' + task.name);
+            log.info('CALL FUNCTION: generateTaskLineDay: user: ' + user.name + ': task: ' + task.name);
 
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
@@ -1317,7 +1315,7 @@
 
         /* Generate the tasks structure of the info box */
         var generateInfoBoxContentTask = function (task, user) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
+            log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
 
             var $content =  ['<div class="panel-body">',
                             '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name + '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
@@ -1345,7 +1343,7 @@
 
         /* Generate the users structure of the info box */
         var generateInfoBoxContentUser = function (user) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentUser: user: ' + user.name);
+            log.info('CALL FUNCTION: generateInfoBoxContentUser: user: ' + user.name);
 
             var sortedTasks = {};
             user.tasks.forEach(function (e, i) {
@@ -1380,7 +1378,7 @@
 
         /* Generate the creation task structure of the info box */
         var generateInfoBoxContentCreateTask = function () {
-            log.warn('CALL FUNCTION: generateInfoBoxContentCreateTask');
+            log.info('CALL FUNCTION: generateInfoBoxContentCreateTask');
 
             var $content = ['<div class="panel-body">',
                             '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
@@ -1402,7 +1400,7 @@
 
         /* Generate the edition task structure of the info box */
         var generateInfoBoxContentEditTask = function (taskId) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentEditTask');
+            log.info('CALL FUNCTION: generateInfoBoxContentEditTask');
 
             var task = getTaskById(taskId);
             if (!task) return;
@@ -1429,7 +1427,7 @@
 
         /* Generate the assignation task structure of the info box */
         var generateInfoBoxContentAssignTask = function (taskId) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentAssignTask');
+            log.info('CALL FUNCTION: generateInfoBoxContentAssignTask');
             var task = getTaskById(taskId);
 
             var $content = ['<div class="panel-body">',
@@ -1479,7 +1477,7 @@
 
         /* Generate the user creation structure of the info box */
         var generateInfoBoxContentCreateUser = function () {
-            log.warn('CALL FUNCTION: generateInfoBoxContentCreateUser');
+            log.info('CALL FUNCTION: generateInfoBoxContentCreateUser');
 
             var $content = ['<div class="panel-body">',
                 '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewUser,
@@ -1506,7 +1504,7 @@
 
         /* Generate the user edition structure of the info box */
         var generateInfoBoxContentEditUser = function (user) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentEditUser');
+            log.info('CALL FUNCTION: generateInfoBoxContentEditUser');
 
             if (!user) return;
             var $content = ['<div class="panel-body">',
@@ -1533,7 +1531,7 @@
 
         /* Generate the user assignation structure of the info box */
         var generateInfoBoxContentAssignUser = function (user) {
-            log.warn('CALL FUNCTION: generateInfoBoxContentAssignUser');
+            log.info('CALL FUNCTION: generateInfoBoxContentAssignUser');
 
             var $content = ['<div class="panel-body">',
                 '<h4 class="pts-check-color text-semibold pts-info-box-title pts-close-info-box" style="background-color:' + settings.defaultColor + '" data-update="true">',
@@ -1589,7 +1587,7 @@
 
         /* Generate list view main structure */
         var generateListBaseView = function () {
-            log.warn('CALL FUNCTION: generateListBaseView');
+            log.info('CALL FUNCTION: generateListBaseView');
 
             if (!settings.list) settings.list = {};
             settings.list.display = 'today';
@@ -1696,7 +1694,7 @@
 
         /* Generate a notification */
         var generateNotification = function (origin, message) {
-            log.warn('CALL FUNCTION: generateNotification');
+            log.info('CALL FUNCTION: generateNotification');
 
             if (settings.disableNotifications) return;
             var uniqueId = generateRandomId();
@@ -1710,8 +1708,7 @@
         };
 
         /********* Initialization *********/
-        console.group();
-        console.info("Initialization");
+        console.groupCollapsed('Initialization');
 
         getUsersTasksInTasks();
         generateHeader();
