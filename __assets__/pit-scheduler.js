@@ -181,7 +181,7 @@
         moment.locale(settings.locale);
         settings.i18n = i18n[settings.locale];
 
-        /* Function used to  hide console.log on production */
+        /* Debug tool */
         var log =  {
                 log : function (data) {
                     if (settings.projectState == 'debug') {
