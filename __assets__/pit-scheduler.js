@@ -19,6 +19,7 @@
             months: 'Mois',
             list: 'Liste',
             tasks: 'Tâches',
+            task: 'Tâche',
             users: 'Utilisateurs',
             unlisted: 'Non répertorié',
             settings: 'Options',
@@ -86,7 +87,8 @@
                 taskNotExist: 'est assigné à une tâche qui n\'existe pas',
                 taskInformationsUpdated: 'La tâche a été modifiée',
                 userHasNoTask: 'n\'est assigned à aucune tâche',
-                userEdited: 'L\'utilisateur a correctement été modifié'
+                userEdited: 'L\'utilisateur a correctement été modifié',
+                userAssignedTo: 'a été assigné à'
             }
 
         },
@@ -95,6 +97,7 @@
             months: 'Months',
             list: 'List',
             tasks: 'Tasks',
+            task: 'Task',
             users: 'Users',
             unlisted: 'Unlisted',
             settings: 'Settings',
@@ -161,7 +164,8 @@
                 taskNotExist: 'is assigned to an inexistent task',
                 taskInformationsUpdated: 'The task has been edited',
                 userHasNoTask: 'is not assigned to any task',
-                userEdited: 'The user has been successfully edited'
+                userEdited: 'The user has been successfully edited',
+                userAssignedTo: 'has been assigned to'
             }
         }
     };
@@ -187,7 +191,8 @@
             users: options.users || [],
             defaultColor: options.defaultColor ||'#00BCD4',
             notificationDuration: options.notificationDuration || 4000,
-            hideEmptyLines: options.hideEmptyLines || true
+            hideEmptyLines: options.hideEmptyLines || true,
+            undo: []
         }, options);
 
         moment.locale(settings.locale);
@@ -310,7 +315,7 @@
         var generateTaskInTask = function (task) {
             log.log('CALL FUNCTION: generateTaskInTask: task: ' + task.name);
 
-            task.users = [];
+            task.users = {};
             if (! settings.users) return generateNotification('danger', settings.i18n.notif.noUser );
             if (!task.color) task.color = (settings.defaultColor ? settings.defaultColor : '#00bdd6');
             settings.users.forEach(function (user, userIndex) {
@@ -379,6 +384,30 @@
             settings.users.forEach(function (user, i) {
                 initUser(user, i);
             });
+        };
+
+        /* used to clone an array of arrays */
+        var clone = function (existingArray) {
+            var newObj = (existingArray instanceof Array) ? [] : {};
+            for (var i in existingArray) {
+                if (i == 'clone') continue;
+                if (existingArray[i] && typeof existingArray[i] == "object") {
+                    newObj[i] = clone(existingArray[i]);
+                } else {
+                    newObj[i] = existingArray[i]
+                }
+            }
+            return newObj;
+        };
+
+        /* Return a temporary object that contains the data required to make an undo */
+        var getUndo = function () {
+            return {
+                tasks: clone(settings.tasks),
+                users: clone(settings.users),
+                groups: clone(settings.groups)
+
+            };
         };
 
         /* init user */
@@ -756,6 +785,8 @@
         var createNewTask = function (name, id, description, color, assign) {
             log.info('CALL FUNCTION: createNewTask');
 
+            var undo = getUndo();
+
             var newTask = {
                 id: (id.length > 0 ? id : generateRandomId()),
                 name: name,
@@ -764,13 +795,8 @@
             };
             newTask = generateTaskInTask(newTask);
             settings.tasks.push(newTask);
-            if (settings.onTaskCreation && typeof settings.onTaskCreation === 'function') {
-                settings.onTaskCreation(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', settings.i18n.notif.taskCreated + ' : <b>' + newTask.name + '</b>');
+            updateDisplay(settings.currentDisplay);
+            generateNotification('success', settings.i18n.notif.taskCreated + ' : <b>' + newTask.name + '</b>', undo, settings.onTaskCreation);
             if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
         };
 
@@ -788,6 +814,8 @@
         var removeTask = function (taskId) {
             log.info('CALL FUNCTION: removeTask');
 
+            var undo = getUndo();
+
             $.each(settings.tasks, function (i, task) {
                 if (task && task.id === taskId) {
                     delete settings.tasks[i];
@@ -801,18 +829,14 @@
                 });
             });
             updateDisplay(settings.currentDisplay);
-            if (settings.onTaskRemoval && typeof settings.onTaskRemoval === 'function') {
-                settings.onTaskRemoval(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', settings.i18n.notif.taskRemoved);
+            generateNotification('success', settings.i18n.notif.taskRemoved, undo, settings.onTaskRemoval);
         };
 
         /* Assign users to a task */
         var assignUsersToTask = function (users, task, start_date, end_date) {
             log.info('CALL FUNCTION: assignUsersToTask');
+
+            var undo = getUndo();
 
             var taskDates = {
                     start_date: start_date,
@@ -851,18 +875,15 @@
                 $('.pts-info-box-user-list[data-head=' + user.index + ']').append($userTasks);
                 $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
             });
-            if (settings.onTaskAssignation && typeof settings.onTaskAssignation === 'function') {
-                settings.onTaskAssignation(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', '<b>' + users.length + '</b> ' + ( users.length > 1 ? settings.i18n.notif.usersAssigned: settings.i18n.notif.userAssigned) + ' <b>' + task.name + '</b>');
+            generateNotification('success', '<b>' + users.length + '</b> ' + ( users.length > 1 ? settings.i18n.notif.usersAssigned: settings.i18n.notif.userAssigned) + ' <b>' + task.name + '</b>',
+                undo, settings.onTaskAssignation);
         };
 
         /* Assign tasks to a user */
         var assignTasksToUser = function (user, tasks, start_date, end_date) {
             log.info('CALL FUNCTION: assignTasksToUser');
+
+            var undo = getUndo();
 
             if (!user || !tasks || !start_date || ! end_date) return;
             $('#pts-assign-user-err').empty();
@@ -899,18 +920,16 @@
                 $('.pts-user-sorted-task[data-task=' + task.id + ']').append($line);
                 $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
             });
-            if (settings.onTaskAssignation && typeof settings.onTaskAssignation === 'function') {
-                settings.onTaskAssignation(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', 'Youpi');
+
+            generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userAssignedTo + ' <b>' + tasks.length + '</b> ' + (tasks.length > 1 ? settings.i18n.tasks : settings.i18n.task),
+                undo, settings.onTaskAssignation);
         };
 
         /* Delete a task line from an user */
         var deleteTaskFromUser = function (user, task, taskIndex) {
             log.info('CALL FUNCTION: deleteTaskFromUser');
+
+            var undo = getUndo();
 
             if (!user.tasks[taskIndex]) return;
 
@@ -918,35 +937,27 @@
             generateTaskInTask(task);
             initUsers();
             initGroup();
-            if (settings.onUserTaskDeletion && typeof settings.onUserTaskDeletion === 'function') {
-                settings.onUserTaskDeletion(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userUnassigned);
+            generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userUnassigned, undo, settings.onUserTaskDeletion);
         };
 
         /* Edit the informations of an existing task */
         var editTask = function (task, newData) {
             log.info('CALL FUNCTION: editTask');
 
+            var undo = getUndo();
+
             task.name = (newData.name ? newData.name : task.name);
             task.color = (newData.color ? newData.color : task.color);
             task.description = (newData.description ? newData.description : task.description);
             updateDisplay(settings.currentDisplay);
-            if (settings.onTaskEdition && typeof settings.onTaskEdition === 'function') {
-                settings.onTaskEdition(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', settings.i18n.notif.taskInformationsUpdated);
+            generateNotification('success', settings.i18n.notif.taskInformationsUpdated, undo, settings.onTaskEdition);
         };
 
         /*create a new user */
         var createNewUser = function (name, group, assign) {
             log.info('CALL FUNCTION: createNewUser');
+
+            var undo = getUndo();
 
             settings.users.push({
                 name: name,
@@ -956,48 +967,36 @@
 
             var userIndex = settings.users.length - 1;
 
-            if (settings.onUserCreation && typeof settings.onUserCreation === 'function') {
-                settings.onUserCreation(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
             initUser(settings.users[userIndex], settings.users.length - 1);
-            generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>');
+            generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>', undo, settings.onUserCreation);
             if (assign == true) return openInfoBox(null, userIndex, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
 
         /* Remove a user */
         var removeUser = function (user) {
+
+            var undo = getUndo();
+
             delete settings.users[user.index];
-            getUsersTasksInTasks();
             updateDisplay(settings.currentDisplay);
-            if (settings.onUserRemoval && typeof settings.onUserRemoval === 'function') {
-                settings.onUserRemoval(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', settings.i18n.notif.userRemoved);
+            getUsersTasksInTasks();
+
+            generateNotification('success', settings.i18n.notif.userRemoved, undo, settings.onUserRemoval);
         };
 
         /* Edit a user */
         var editUser = function (userIndex, newData) {
             if (!settings.users[userIndex]) return;
 
+            var undo = getUndo();
+
             settings.users[userIndex].name = newData.name;
             settings.users[userIndex].group = (newData.group ? newData.group : '');
 
-            if (settings.onUserEdition && typeof settings.onUserEdition === 'function') {
-                settings.onUserEdition(settings);
-            }
-            if (settings.onChange && typeof settings.onChange === 'function') {
-                settings.onChange(settings);
-            }
-            generateNotification('success', settings.i18n.notif.userEdited);
             initUsers();
             updateDisplay(settings.currentDisplay);
+            generateNotification('success', settings.i18n.notif.userEdited, undo, settings.onUserEdition);
         };
 
 
@@ -1748,17 +1747,34 @@
         };
 
         /* Generate a notification */
-        var generateNotification = function (origin, message) {
+        var generateNotification = function (origin, message, undo, callback) {
             log.info('CALL FUNCTION: generateNotification');
-
             if (settings.disableNotifications) return;
             var uniqueId = generateRandomId();
-            var $notification = ['<div class="alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
+            var $undoLink = '';
+
+            if (undo && undo.groups && undo.tasks && undo.users) {
+                $undoLink = '<a href="#" data-notification="' + uniqueId + '" class="pts-notif-undo-btn">' + settings.i18n.cancel + '</a>';
+                settings.undo[uniqueId] = undo;
+            }
+
+            var $notification = ['<div class="animated fadeIn alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
                                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
-                                message +  '</div>'].join('\n');
-            $('#pts-notification-container').append($notification);
+                                message + ' ' + '</div>'].join('\n');
+            $('#pts-notification-container').html($notification);
+            $('.alert[data-id=' + uniqueId + ']').append($undoLink);
+
             setTimeout(function(){
                 $('.alert[data-id=' + uniqueId + ']').remove();
+                if (settings.undo[uniqueId]) {
+                    if (callback && typeof callback === 'function') {
+                        callback(settings);
+                    }
+                    if (settings.onChange && typeof settings.onChange === 'function') {
+                        settings.onChange(settings);
+                    }
+                }
+                delete settings.undo[uniqueId];
             },settings.notificationDuration);
         };
 
@@ -2123,6 +2139,22 @@
         $('#pit-scheduler').on('click', '.pts-button-see-all', function (e) {
             e.stopPropagation();
             openInfoBox(null, null, 'seeAll');
+        });
+
+        $('#pit-scheduler').on('click', '.pts-notif-undo-btn[data-notification]', function (e) {
+            e.stopPropagation();
+            var notifId = $(this).data('notification'),
+                undo = settings.undo[notifId];
+            if (undo) {
+                settings.tasks = undo.tasks;
+                settings.users = undo.users;
+                settings.groups = undo.groups;
+                getUsersTasksInTasks();
+                initUsers();
+                initGroup();
+                updateDisplay(settings.currentDisplay);
+                $('.alert[data-id=' + notifId + ']').remove();
+            }
         });
 
         return $scheduler;
