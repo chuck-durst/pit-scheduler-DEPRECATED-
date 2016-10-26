@@ -163,13 +163,17 @@
         console.group();
         console.info('Settings initialization');
 
+        options = options || {};
+
         var settings = $.extend({
             date: {
                 current: moment(),
                 selected: moment()
             },
             currentDisplay: '',
-            projectState : 'nodevelopment'
+            projectState : 'nodevelopment',
+            tasks: options.tasks || [],
+            users: options.users || []
         }, options);
 
         if (settings.defaultDisplay === undefined) {
@@ -304,7 +308,8 @@
         /* Init function that saves users index into associated tasks */
         var getUsersTasksInTasks = function () {
             log.warn('CALL FUNCTION: getUsersTasksInTasks');
-            if (!settings.tasks) return generateNotification('danger', settings.i18n.notif.noTask);
+
+            if (!settings.tasks || settings.tasks.length == 0) return generateNotification('danger', settings.i18n.notif.noTask);
             settings.tasks.forEach(function (task) {
                 task = generateTaskInTask(task);
             });
@@ -374,6 +379,7 @@
         var initUsers = function () {
             log.warn('CALL FUNCTION: initUsers');
 
+            if (!settings.users) return;
             settings.users.forEach(function (user, i) {
                 initUser(user, i);
             });
@@ -1141,7 +1147,7 @@
         /* Generate the left users list */
         var generateUsersList = function () {
             log.warn('CALL FUNCTION: generateUsersList');
-            if (!settings.users || settings.users.length <= 0) return generateNotification('danger', settings.i18n.notif.noUser );
+            if (!settings.users || settings.users.length <= 0) return generateNotification('warning', settings.i18n.notif.noUser );
 
             $('.pts-group-content').empty();
             settings.users.forEach(function (user) {

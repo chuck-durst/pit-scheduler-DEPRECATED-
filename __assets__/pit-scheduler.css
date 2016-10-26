@@ -489,6 +489,7 @@ div.pts-info-box-user-list {
     position: relative;
     left: 15px;
     top: 15px;
+    width:100%;
 }
 
 .pts-list-user-name, .pts-list-task-header {
