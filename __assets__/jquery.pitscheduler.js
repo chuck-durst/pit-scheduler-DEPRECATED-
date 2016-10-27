@@ -200,21 +200,21 @@
 
         /* Debug tool */
         var log =  {
-                log : function (data) {
-                    if (settings.projectState == 'debug') {
-                        console.log(data);
-                    }
-                },
-                warn: function (data) {
-                    if (settings.projectState == 'development') {
-                        console.warn(data);
-                    }
-                },
-                info: function (data) {
-                    if (settings.projectState == 'development') {
-                        console.info(data);
-                    }
+            log : function (data) {
+                if (settings.projectState == 'debug') {
+                    console.log(data);
                 }
+            },
+            warn: function (data) {
+                if (settings.projectState == 'development') {
+                    console.warn(data);
+                }
+            },
+            info: function (data) {
+                if (settings.projectState == 'development') {
+                    console.info(data);
+                }
+            }
         };
         /********* Main functions *********/
 
@@ -237,7 +237,7 @@
                 case 'list':
                     setButtonViewFocus('list');
                     settings.currentDisplay = 'list';
-                        $('.pts-btn-next').attr('disabled', 'disabled');
+                    $('.pts-btn-next').attr('disabled', 'disabled');
                     $('.pts-btn-previous').attr('disabled', 'disabled');
                     $('.pts-header-date-display').css('display', 'none');
                     $('.pts-column-title-container').css('overflow', 'visible');
@@ -421,7 +421,7 @@
         /* Update the content of the datepicker */
         var updateDatePicker = function () {
             log.log('CALL FUNCTION: updateDatePicker');
-            
+
             $('#header-datetimepicker').datetimepicker()
                 .data('DateTimePicker').locale(settings.locale)
                 .defaultDate(settings.date.selected)
@@ -449,7 +449,7 @@
             generateUsersList();
             updateHeaderDates();
             updateDatePicker();
-            
+
             console.groupEnd();
         };
 
@@ -556,9 +556,9 @@
             log.log('CALL FUNCTION: userLineIsShowed: user: ' + user.name);
             var response = 0,
                 originDates = {
-                start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
-                end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
-            };
+                    start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
+                    end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
+                };
             if (!user.tasks) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.userHasNoTask);
             user.tasks.forEach(function (task) {
                 if (isDateInDate(originDates, task)) response++;
@@ -771,7 +771,7 @@
                     break;
                 case 'personalized':
                     var $content =  '<h4 style="margin:0 0 15px 15px"><b>' + settings.i18n.from + '</b> ' + settings.list.start_date.locale(settings.locale).format('lll') +
-                                    ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
+                        ' <b>' + settings.i18n.to + '</b> ' + settings.list.end_date.locale(settings.locale).format('lll') + ' :</h4>';
                     $('.pts-list-tasks-container').append($content);
                     break;
             }
@@ -825,7 +825,7 @@
             $.each(settings.users, function (userIndex, user) {
                 $.each(user.tasks, function (taskIndex, task) {
                     if (task && task.id === taskId) {
-                       delete settings.users[userIndex].tasks[taskIndex];
+                        delete settings.users[userIndex].tasks[taskIndex];
                     }
                 });
             });
@@ -840,9 +840,9 @@
             var undo = getUndo();
 
             var taskDates = {
-                    start_date: start_date,
-                    end_date: end_date
-                };
+                start_date: start_date,
+                end_date: end_date
+            };
 
             $('#pts-assign-task-err').empty();
             if (!users || !task || !start_date || ! end_date) return;
@@ -858,21 +858,21 @@
                 if (taskExist) {
                     return $('#pts-assign-task-err').append('<b>' + user.name + '</b> ' + settings.i18n.userIsAlreadyAssigned + '<br>');
                 }
-               user.tasks.push({
-                   id: task.id,
-                   start_date: moment(start_date).format('YYYY-MM-DD HH:mm'),
-                   end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
-               });
+                user.tasks.push({
+                    id: task.id,
+                    start_date: moment(start_date).format('YYYY-MM-DD HH:mm'),
+                    end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
+                });
                 generateTaskInTask(task);
                 if ($('.pts-info-box-user[data-user=' + user.index + ']').length == 0) {
                     var $head = '<hr><div class="pts-info-box-user animated fadeIn" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
-                                '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
+                        '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
                     $('#pts-info-box-container > .panel-body').append($head);
                 }
                 var $userTasks =    ['<tr class="animated fadeIn"><td>',
-                                    '<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + (user.tasks.length - 1) + '"></i>',
-                                    '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll'),
-                                    ' <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
+                    '<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + (user.tasks.length - 1) + '"></i>',
+                    '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll'),
+                    ' <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
                 $('.pts-info-box-user-list[data-head=' + user.index + ']').append($userTasks);
                 $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
             });
@@ -912,12 +912,12 @@
                 generateTaskInTask(task);
                 if ($('.pts-info-box-task-header[data-task=' + task.id + ']').length == 0) {
                     var $head = ['<p class="animated fadeIn pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '" data-user="' + user.index + '"><b>',
-                                task.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + task.id + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
-                                '</tbody></table>'].join('\n');
+                        task.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + task.id + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                        '</tbody></table>'].join('\n');
                     $('.pts-info-box-user-list').append($head);
                 }
                 var $line = '<tr><td><i class="animated fadeIn glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + task.index + '"></i>' +
-                            '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('lll') + '</td></tr>';
+                    '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('lll') + '</td></tr>';
                 $('.pts-user-sorted-task[data-task=' + task.id + ']').append($line);
                 $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
             });
@@ -1008,25 +1008,25 @@
             log.info('CALL FUNCTION: generateHeader');
 
             var $header =   ['<div id="pts-notification-container"></div>',
-                            '<div class="pts-header row">',
-                            '<div class="pts-header-left-container pull-left">',
-                            '<div class="form-group">',
-                            '<div class="input-group date" id="header-datetimepicker">',
-                            '<input type="text" class="form-control"/>',
-                            '<span class="input-group-addon">',
-                            '<span class="glyphicon glyphicon-calendar"></span>',
-                            '</span></div></div>',
-                            '<div class="pts-nav-buttons">',
-                            '<button class="btn pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>',
-                            '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>',
-                            '</div>',
-                            '<span class="pts-header-date-display">',
-                            (settings.currentDisplay === "months" ? moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY') : moment(settings.date.selected).locale(settings.locale).format('LL')),
-                            '</span></div>',
-                            '<div class="pts-header-right-container pull-right">',
-                            '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>',
-                            '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>',
-                            '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>'].join('\n');
+                '<div class="pts-header row">',
+                '<div class="pts-header-left-container pull-left">',
+                '<div class="form-group">',
+                '<div class="input-group date" id="header-datetimepicker">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div></div>',
+                '<div class="pts-nav-buttons">',
+                '<button class="btn pts-btn-previous"><i class="glyphicon glyphicon-chevron-left"></i></button>',
+                '<button class="btn pts-btn-next"><i class="glyphicon glyphicon-chevron-right"></i></button>',
+                '</div>',
+                '<span class="pts-header-date-display">',
+                (settings.currentDisplay === "months" ? moment(settings.date.selected).locale(settings.locale).format('MMMM YYYY') : moment(settings.date.selected).locale(settings.locale).format('LL')),
+                '</span></div>',
+                '<div class="pts-header-right-container pull-right">',
+                '<button class="btn btn-sm pts-btn-day-view ' + (settings.currentDisplay === "days" ? "pts-active" : "") + '">' + settings.i18n.days + '</button>',
+                '<button class="btn btn-sm pts-btn-month-view ' + (settings.currentDisplay === "months" ? "pts-active" : "") + '">' + settings.i18n.months + '</button>',
+                '<button class="btn btn-sm pts-btn-list-view" ' + (settings.currentDisplay === "list" ? "pts-active" : "") + '>' + settings.i18n.list + '</button></div></div>'].join('\n');
 
             $scheduler.append($header);
             updateDatePicker();
@@ -1038,17 +1038,17 @@
 
             if ($('.pts-main-container').length) return;
             var $mainContainer =    ['<div class="pts-main-container row">',
-                                    '<div id="pts-spinner-container">',
-                                    '<ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>',
-                                    '<div id="pts-info-box-container" data-toggle="closed"></div>',
-                                    '<div class="pts-corner-mask"></div>',
-                                    '<div class="pts-column-title-container">',
-                                    '<div></div></div>',
-                                    '<div class="pts-line-title-container"><div>',
-                                    '</div></div>',
-                                    '<div class="pts-scheduler-container">',
-                                    '<div class="pts-main-content">',
-                                    '</div></div></div>'].join('\n');
+                '<div id="pts-spinner-container">',
+                '<ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>',
+                '<div id="pts-info-box-container" data-toggle="closed"></div>',
+                '<div class="pts-corner-mask"></div>',
+                '<div class="pts-column-title-container">',
+                '<div></div></div>',
+                '<div class="pts-line-title-container"><div>',
+                '</div></div>',
+                '<div class="pts-scheduler-container">',
+                '<div class="pts-main-content">',
+                '</div></div></div>'].join('\n');
 
             $scheduler.append($mainContainer);
         };
@@ -1087,17 +1087,17 @@
                 }
             }
             var $settingsMenu = ['<div style="display:inline-flex"><div class="dropdown" style="top:2px"><button id="addDropdown" class="btn btn-sm pts-btn-add-elem dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
-                                '<i class="glyphicon glyphicon-plus"></i></button>',
-                                '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
-                                '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
-                                '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li>',
-                                '</ul></div><div class="dropdown">',
-                                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
-                                settings.i18n.settings + ' <span class="caret"></span></button>',
-                                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">',
-                                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>',
-                                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>',
-                                '</div></div>'].join('\n');
+                '<i class="glyphicon glyphicon-plus"></i></button>',
+                '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
+                '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
+                '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li>',
+                '</ul></div><div class="dropdown">',
+                '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                settings.i18n.settings + ' <span class="caret"></span></button>',
+                '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">',
+                '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>',
+                '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>',
+                '</div></div>'].join('\n');
             $('.pts-corner-mask').append($settingsMenu);
         };
 
@@ -1106,10 +1106,10 @@
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
 
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
-                                        '<div class="pts-group-header">',
-                                        '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>',
-                                        '<span>' + group + '</span></div>',
-                                        '<div class="pts-group-content"></div></div>'].join('\n');
+                '<div class="pts-group-header">',
+                '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>',
+                '<span>' + group + '</span></div>',
+                '<div class="pts-group-content"></div></div>'].join('\n');
             $('.pts-line-title-container > div').append($groupHeaderContent);
         };
 
@@ -1194,23 +1194,23 @@
                 task.index = i;
                 if (task === undefined) return log.warn('CALL FUNCTION: Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date > task.end_date) return log.warn('CALL FUNCTION: Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
-               if (settings.currentDisplay === 'months') {
-                  task = hideTaskSuperposition(i, task, user);
-                   if (task.end_date && task.disabled != true) {
-                       if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
-                           && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
-                           topDistance += generateTaskLineMonth(user, task, topDistance);
-                       }
-                   }
-               }
-               else if (settings.currentDisplay === 'days') {
-                   if (task.end_date) {
-                       if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
-                           && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
-                                topDistance += generateTaskLineDay(user, task, topDistance);
-                       }
-                   }
-               }
+                if (settings.currentDisplay === 'months') {
+                    task = hideTaskSuperposition(i, task, user);
+                    if (task.end_date && task.disabled != true) {
+                        if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
+                            && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
+                            topDistance += generateTaskLineMonth(user, task, topDistance);
+                        }
+                    }
+                }
+                else if (settings.currentDisplay === 'days') {
+                    if (task.end_date) {
+                        if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
+                            && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
+                            topDistance += generateTaskLineDay(user, task, topDistance);
+                        }
+                    }
+                }
                 delete task.disabled;
                 delete task.index;
                 delete task.start_date;
@@ -1246,8 +1246,8 @@
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                            '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1260,7 +1260,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -1269,7 +1269,7 @@
             if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             setTaskLabelPosition();
@@ -1305,8 +1305,8 @@
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1318,7 +1318,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                                 '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -1327,7 +1327,7 @@
             if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
@@ -1340,15 +1340,15 @@
             log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
 
             var $content =  ['<div class="panel-body">',
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name,
-                            '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
-                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
-                            '<div class="btn-group">',
-                            '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
-                            '<button type="button" class="btn pts-assign-task-btn" style="background-color:#00BCD4;color:#fff" data-task="' + task.id + '">' + settings.i18n.assign + '</button>',
-                            '<button type="button" class="btn pts-edit-task-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div><br>',
-                            '<br><div class="divider"></div></div>'].join('\n');
+                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name,
+                '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-assign-task-btn" style="background-color:#00BCD4;color:#fff" data-task="' + task.id + '">' + settings.i18n.assign + '</button>',
+                '<button type="button" class="btn pts-edit-task-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div><br>',
+                '<br><div class="divider"></div></div>'].join('\n');
             $('#pts-info-box-container').append($content);
 
             $.each(task.users, function (i) {
@@ -1374,26 +1374,26 @@
                 if (!sortedTasks[e.id]) {
                     sortedTasks[e.id] = [];
                 }
-                 sortedTasks[e.id].push('<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
-                                        '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
+                sortedTasks[e.id].push('<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
+                    '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">',
-                            user.name + ' - <small style="color:#fff">' + user.group + '</small>',
-                            '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
-                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<div class="btn-group">',
-                            '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
-                            '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
-                            '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
-                            '<div class="pts-info-box-user-list"></div></div>'].join('\n');
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
+                '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
+                '<div class="pts-info-box-user-list"></div></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             $.each(sortedTasks, function (i, _task) {
                 var originalTask = getTaskById(i);
                 var $line = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
-                            originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
-                            '</tbody></table>'].join('\n');
+                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                    '</tbody></table>'].join('\n');
                 $('.pts-info-box-user-list').append($line);
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<tr><td>' + _line + '</td></tr>');
@@ -1407,20 +1407,20 @@
             log.info('CALL FUNCTION: generateInfoBoxContentCreateTask');
 
             var $content = ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
-                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<fieldset>',
-                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
-                            '<div id="pts-add-task-err-name" style="color:red"></div></div>',
-                            '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
-                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
-                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
-                            '<div class="btn-group">',
-                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
-                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
-                            '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
-                            '</fieldset>',
-                            '</div>'].join('\n');
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<fieldset>',
+                '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
+                '<div id="pts-add-task-err-name" style="color:red"></div></div>',
+                '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
+                '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
+                '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
+                '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
+                '</fieldset>',
+                '</div>'].join('\n');
             $('#pts-info-box-container').append($content);
         };
 
@@ -1432,22 +1432,22 @@
             if (!task) return;
 
             var $content = ['<div class="panel-body">',
-                            '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color progress-bar-striped" style="background-color:' + task.color + '">' + task.name,
-                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.editTask + '</h4>',
-                            '<fieldset>',
-                            '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :',
-                            '</label><input id="pts-edit-task-input-name" type="text" class="form-control" maxlength="50" value="' + task.name + '">',
-                            '<div id="pts-edit-task-err-name" style="color:red"></div></div>',
-                            '<div class="form-group"><label>Id :</label><input id="pts-edit-task-input-id" type="text" class="form-control" maxlength="80" value="' + task.id + '" disabled="disabled"></div>',
-                            '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-edit-task-input-color" type="color" class="form-control" value="' + task.color + '"></div>',
-                            '<div class="form-group"><label>' + settings.i18n.description + ' :</label>',
-                            '<textarea id="pts-edit-task-input-description" type="text" class="form-control"  maxlength="255">' + (task.description != undefined ? task.description : '') + '</textarea></div>',
-                            '<div class="btn-group">',
-                            '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
-                            '<button type="button" class="btn pts-edit-task-confirm-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div>',
-                            '</fieldset>',
-                            '</div>'].join('\n');
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color progress-bar-striped" style="background-color:' + task.color + '">' + task.name,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.editTask + '</h4>',
+                '<fieldset>',
+                '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :',
+                '</label><input id="pts-edit-task-input-name" type="text" class="form-control" maxlength="50" value="' + task.name + '">',
+                '<div id="pts-edit-task-err-name" style="color:red"></div></div>',
+                '<div class="form-group"><label>Id :</label><input id="pts-edit-task-input-id" type="text" class="form-control" maxlength="80" value="' + task.id + '" disabled="disabled"></div>',
+                '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-edit-task-input-color" type="color" class="form-control" value="' + task.color + '"></div>',
+                '<div class="form-group"><label>' + settings.i18n.description + ' :</label>',
+                '<textarea id="pts-edit-task-input-description" type="text" class="form-control"  maxlength="255">' + (task.description != undefined ? task.description : '') + '</textarea></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="btn pts-edit-task-confirm-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div>',
+                '</fieldset>',
+                '</div>'].join('\n');
             $('#pts-info-box-container').append($content);
         };
 
@@ -1457,23 +1457,23 @@
             var task = getTaskById(taskId);
 
             var $content = ['<div class="panel-body">',
-                            '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name,
-                            '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                            '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.assignTaskTitle + '</h4>',
-                            '<div class="form-group"><label for="sel42">' + settings.i18n.selectUsersToAssign + ' : </label>',
-                            '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
-                            '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
-                            '<input type="text" class="form-control"/>',
-                            '<span class="input-group-addon">',
-                            '<span class="glyphicon glyphicon-calendar"></span>',
-                            '</span></div>',
-                            '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-task-assign-datepicker-end">',
-                            '<input type="text" class="form-control"/>',
-                            '<span class="input-group-addon">',
-                            '<span class="glyphicon glyphicon-calendar"></span>',
-                            '</span></div><div id="pts-assign-task-err" style="color:red"></div><br><div class="pull-right">',
-                            '<button id="pts-task-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-task="' + taskId + '">' + settings.i18n.assign + '</button></div>',
-                            '<br></div>'].join('\n');
+                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name,
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.assignTaskTitle + '</h4>',
+                '<div class="form-group"><label for="sel42">' + settings.i18n.selectUsersToAssign + ' : </label>',
+                '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
+                '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div>',
+                '<b>' + settings.i18n.to + '</b><div class="input-group date pts-datetimepicker-end" id="pts-task-assign-datepicker-end">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div><div id="pts-assign-task-err" style="color:red"></div><br><div class="pull-right">',
+                '<button id="pts-task-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-task="' + taskId + '">' + settings.i18n.assign + '</button></div>',
+                '<br></div>'].join('\n');
 
             $('#pts-info-box-container').append($content);
             $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
@@ -1486,14 +1486,14 @@
             $.each(task.users, function (i) {
                 var user = settings.users[i];
                 var $head = ['<hr><div class="pts-info-box-user" data-user="' + user.index + '">',
-                            '<h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
-                            '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>'].join('\n');
+                    '<h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
+                    '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>'].join('\n');
                 $('#pts-info-box-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
                         var $userTasks =    ['<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + _task.id + '" data-task-index="' + taskIndex + '"></i>',
-                                            '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
-                                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
+                            '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
+                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
                         $('.pts-info-box-user-list[data-head=' + user.index + ']').append($userTasks);
                     }
                 });
@@ -1626,14 +1626,14 @@
             settings.tasks.forEach(function (task) {
                 var length = getLength(task.users);
                 var $taskLine = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '"><b>',
-                                task.name + '</b> - ' + length + ' ' + (length> 1 ? settings.i18n.assignedUsers : settings.i18n.assignedUser) + '</p>'].join('\n');
+                    task.name + '</b> - ' + length + ' ' + (length> 1 ? settings.i18n.assignedUsers : settings.i18n.assignedUser) + '</p>'].join('\n');
                 $('.pts-info-box-task-list').append($taskLine);
             });
 
             settings.users.forEach(function (user) {
                 var length = user.tasks.length;
                 var $taskLine = ['<p class="pts-check-color pts-info-box-user-header" style="background-color:' + settings.defaultColor + ';margin-top:10px" data-user="' + user.index + '"><b>',
-                                user.name + '</b> - ' + user.tasks.length + ' ' + (length > 1 ? settings.i18n.allocations : settings.i18n.allocation) + '</p>'].join('\n');
+                    user.name + '</b> - ' + user.tasks.length + ' ' + (length > 1 ? settings.i18n.allocations : settings.i18n.allocation) + '</p>'].join('\n');
                 $('.pts-info-box-user-list').append($taskLine);
             });
 
@@ -1647,18 +1647,18 @@
             if (!settings.list) settings.list = {};
             settings.list.display = 'today';
             var $columnContainer =  ['<button class="btn btn-sm pts-list-range-btn" data-value="all">' + settings.i18n.all + '</button>',
-                                    '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>',
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>',
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>',
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>',
-                                    '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>',
-                                    '<div class="pts-list-personalized-inputs-container row"></div>'].join('\n');
+                '<button class="btn btn-sm pts-list-range-btn selected" data-value="today">' + settings.i18n.today + '</button>',
+                '<button class="btn btn-sm pts-list-range-btn" data-value="week">' + settings.i18n.thisWeek + '</button>',
+                '<button class="btn btn-sm pts-list-range-btn" data-value="month">' + settings.i18n.thisMonth + '</button>',
+                '<button class="btn btn-sm pts-list-range-btn" data-value="year">' + settings.i18n.thisYear + '</button>',
+                '<button class="btn btn-sm pts-list-range-btn" data-value="personalized">' + settings.i18n.personalized + '</button>',
+                '<div class="pts-list-personalized-inputs-container row"></div>'].join('\n');
 
             var $dropdownMenu =     ['<div class="dropdown" style="top:2px"><button id="addDropdown" class="btn btn-sm pts-btn-add-elem dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
-                                    '<i class="glyphicon glyphicon-plus"></i></button>',
-                                    '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
-                                    '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
-                                    '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li></ul></div>'].join('\n');
+                '<i class="glyphicon glyphicon-plus"></i></button>',
+                '<ul class="dropdown-menu" aria-labelledby="addDropdown">',
+                '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
+                '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li></ul></div>'].join('\n');
             $('.pts-column-title-container > div').append($columnContainer);
             $('.pts-corner-mask').append($dropdownMenu);
             var $headerInputs = ['<input class="pts-list-search-task" placeholder="' + settings.i18n.search + '">',
@@ -1666,7 +1666,7 @@
             $('.pts-line-title-container').append($headerInputs);
             settings.tasks.forEach(function (_task) {
                 var $taskLabel =    ['<div class="pts-list-row-task progress-bar-striped pts-check-color" style="background-color:' + _task.color + '">',
-                                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>'].join('\n');
+                    '<label class="checkbox-inline"><input class="pts-list-task-enabler-input" type="checkbox" checked="checked" data-task="' + _task.id + '">' + _task.name + '</label></div>'].join('\n');
                 $('.pts-line-title-container').append($taskLabel);
             });
 
@@ -1680,17 +1680,17 @@
 
             $('.pts-list-range-btn').css('display', 'none');
             var $rangeSelector =    ['<div class="col-sm-5"><span>' + settings.i18n.from + '</span><div class="input-group date pts-datetimepicker-start" id="pts-list-datetimepicker-start">',
-                                    '<input type="text" class="form-control"/>',
-                                    '<span class="input-group-addon">',
-                                    '<span class="glyphicon glyphicon-calendar"></span>',
-                                    '</span></div></div>',
-                                    '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date pts-datetimepicker-end" id="pts-list-datetimepicker-end">',
-                                    '<input type="text" class="form-control"/>',
-                                    '<span class="input-group-addon">',
-                                    '<span class="glyphicon glyphicon-calendar"></span>',
-                                    '</span></div></div>',
-                                    '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>',
-                                    '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div></div>',
+                '<div class="col-sm-5"><span>' + settings.i18n.to + '</span><div class="input-group date pts-datetimepicker-end" id="pts-list-datetimepicker-end">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div></div>',
+                '<div class="col-sm-2"><button class="btn pts-list-range-submit btn-icon"><i class="glyphicon glyphicon-ok"></i></button>',
+                '<button class="btn pts-list-range-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
             $('.pts-list-personalized-inputs-container').append($rangeSelector);
             $('#pts-list-datetimepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale);
             $('#pts-list-datetimepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
@@ -1706,15 +1706,15 @@
                 thisUsers = 0;
 
             var $container =    ['<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">',
-                                '<div class="panel panel-primary" style="border-color:' + task.color + '">',
-                                '<div class="panel-heading progress-bar-striped pts-check-color pts-list-task-header" style="background-color:' + task.color + ';border-color:' + task.color + '"',
-                                'data-task="' + task.id + '">',
-                                '<h6 class="panel-title">' + task.name + '</h6>',
-                                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>',
-                                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>',
-                                '<div class="panel-body"><div class="table-responsive">',
-                                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>',
-                                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>'].join('\n');
+                '<div class="panel panel-primary" style="border-color:' + task.color + '">',
+                '<div class="panel-heading progress-bar-striped pts-check-color pts-list-task-header" style="background-color:' + task.color + ';border-color:' + task.color + '"',
+                'data-task="' + task.id + '">',
+                '<h6 class="panel-title">' + task.name + '</h6>',
+                '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>',
+                '<div class="panel-body">' + (task.description ? task.description : '') + '</div>',
+                '<div class="panel-body"><div class="table-responsive">',
+                '<table class="table table-bordered"><tbody class="pts-list-date-list" data-task="' + task.id + '"></tbody></table>',
+                '</div></div><div class="panel-footer pts-list-task-footer"></div></div></div>'].join('\n');
             $('.pts-list-tasks-container').append($container);
 
             $.each(task.users, function (i, user) {
@@ -1741,7 +1741,7 @@
             }
 
             var $footer =   ['<p><b>' + totalUsers + '</b> ' + settings.i18n.usersWhose + ' <b>' + thisUsers + '</b> ' + settings.i18n.inSelectedPeriod + '</p>',
-                            '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>'].join('\n');
+                '<p><b>' + totalCycle + '</b> ' + settings.i18n.cycleWhose + ' <b>' + thisCycle + '</b> ' + settings.i18n.inSelectedPeriod + '</p>'].join('\n');
             $('.pts-list-task-container[data-task=' + task.id + '] .pts-list-task-footer').append($footer);
 
             getContrastedColor();
@@ -1760,8 +1760,8 @@
             }
 
             var $notification = ['<div class="animated fadeIn alert alert-' + origin + ' alert-dismissible" role="alert" data-id="' + uniqueId + '">',
-                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
-                                message + ' ' + '</div>'].join('\n');
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
+                message + ' ' + '</div>'].join('\n');
             $('#pts-notification-container').append($notification);
             $('.alert[data-id=' + uniqueId + ']').append($undoLink);
 
@@ -1787,7 +1787,7 @@
         updateDisplay(settings.currentDisplay);
 
         console.groupEnd();
-        
+
         /********* Events *********/
 
         $('.pts-btn-day-view').click( function () {
