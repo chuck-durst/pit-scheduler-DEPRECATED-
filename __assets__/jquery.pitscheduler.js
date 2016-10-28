@@ -170,7 +170,8 @@
         }
     };
 
-    $.fn.pitScheduler = function (options) {
+    $.fn.pitScheduler
+= function (options) {
 
         var $scheduler = $(this);
 
@@ -218,7 +219,10 @@
         };
         /********* Main functions *********/
 
-        /* update display view */
+        /**
+         * Update display view
+         * @param {String} viewMode: can be 'days', 'months' or 'list'
+         */
         var updateDisplay = function (viewMode) {
             log.info('CALL FUNCTION: updateDisplay: viewMode:' + viewMode);
 
@@ -228,11 +232,13 @@
                     setButtonViewFocus('day');
                     settings.currentDisplay = 'days';
                     initMainContent();
+                    updateHeaderDates();
                     break;
                 case 'months':
                     setButtonViewFocus('month');
                     settings.currentDisplay = 'months';
                     initMainContent();
+                    updateHeaderDates();
                     break;
                 case 'list':
                     setButtonViewFocus('list');
@@ -246,11 +252,12 @@
                     switchListRange('today');
                     break;
             }
-            updateHeaderDates();
             console.log(settings);
         };
 
-        /* Reset elements content that have been modified */
+        /**
+         * Reset elements content that have been modified
+         */
         var updateDisplayReset = function () {
             log.info('CALL FUNCTION: updateDisplayReset');
             closeInfoBox();
@@ -265,7 +272,9 @@
             $('.pts-column-title-container').css('overflow', 'hidden');
         };
 
-        /* Function used to update the header datepicker */
+        /**
+         * Function used to update the header datetimepicker
+         */
         var updateHeaderDates = function () {
             log.log('CALL FUNCTION: updateHeaderDates');
 
@@ -284,7 +293,9 @@
             }
         };
 
-        /* Launch all the main generations */
+        /**
+         * Launch all the main generations
+         */
         var initMainContent = function () {
             log.info('CALL FUNCTION: initMainContent');
             generateBaseView();
@@ -295,13 +306,18 @@
             updateDatePicker();
         };
 
-        /* set the focus on the right view mode button */
+        /**
+         * Set the focus on the right view mode button
+         * @param {String} viewMode: can be 'days', 'months' or 'list'
+         */
         var setButtonViewFocus = function (viewMode) {
             $('.pts-header-right-container  button').removeClass('pts-active');
             $('.pts-header-right-container  .pts-btn-' + viewMode + '-view').addClass('pts-active');
         };
 
-        /* Init function that saves users index into associated tasks */
+        /**
+         * Init function that saves users index into associated tasks
+         */
         var getUsersTasksInTasks = function () {
             log.info('CALL FUNCTION: getUsersTasksInTasks');
 
@@ -311,7 +327,11 @@
             });
         };
 
-        /* Add an index list of the assigned users to this task */
+        /**
+         * Add an index list of the assigned users of the task
+         * @param {Object} task
+         * @returns {Object} task
+         */
         var generateTaskInTask = function (task) {
             log.log('CALL FUNCTION: generateTaskInTask: task: ' + task.name);
 
@@ -334,7 +354,9 @@
             return task;
         };
 
-        /* Generate the groups panels */
+        /**
+         * Generates the groups panels
+         */
         var initGroup = function () {
             log.info('CALL FUNCTION: initGroup');
 
@@ -371,12 +393,18 @@
             });
         };
 
-        /* Return the real length of an array */
+        /**
+         * Returns the real length of an array
+         * @param {Object | Array} arr
+         * @returns {Number} The real object length
+         */
         var getLength = function (arr) {
             return Object.keys(arr).length;
         };
 
-        /* init users */
+        /**
+         * Init all the users
+         */
         var initUsers = function () {
             log.info('CALL FUNCTION: initUsers');
 
@@ -386,21 +414,28 @@
             });
         };
 
-        /* used to clone an array of arrays */
-        var clone = function (existingArray) {
-            var newObj = (existingArray instanceof Array) ? [] : {};
-            for (var i in existingArray) {
+        /**
+         * Used to clone an array and all the data it contains
+         * @param {Array | Object} origin
+         * @returns {Array | Object} cloned
+         */
+        var clone = function (origin) {
+            var cloned = (origin instanceof Array) ? [] : {};
+            for (var i in origin) {
                 if (i == 'clone') continue;
-                if (existingArray[i] && typeof existingArray[i] == "object") {
-                    newObj[i] = clone(existingArray[i]);
+                if (origin[i] && typeof origin[i] == "object") {
+                    cloned[i] = clone(origin[i]);
                 } else {
-                    newObj[i] = existingArray[i]
+                    cloned[i] = origin[i]
                 }
             }
-            return newObj;
+            return cloned;
         };
 
-        /* Return a temporary object that contains the data required to make an undo */
+        /**
+         * Returns a temporary object that contains the data required to make an undo
+         * @returns {Object} contains the saved data
+         */
         var getUndo = function () {
             if (settings.disableUndo == true) return null;
             return {
@@ -411,14 +446,20 @@
             };
         };
 
-        /* init user */
+        /**
+         * Add some useful data to an user
+         * @param {Object} user
+         * @param {Number} index of the user
+         */
         var initUser = function (user, index) {
             user.isShowed = userLineIsShowed(user);
             user.lineHeight = getUserLineHeight(user);
             user.index = index;
         };
 
-        /* Update the content of the datepicker */
+        /**
+         * Update the content of the datepicker
+         */
         var updateDatePicker = function () {
             log.log('CALL FUNCTION: updateDatePicker');
 
@@ -433,7 +474,9 @@
 
         };
 
-        /* Go to the next month/day */
+        /**
+         * Go to the next month/day
+         */
         var goForward = function () {
             console.groupCollapsed('goForward');
             log.info('CALL FUNCTION: goForward');
@@ -453,7 +496,9 @@
             console.groupEnd();
         };
 
-        /* Go to the previous month/day */
+        /**
+         * Go to the previous month/day
+         */
         var goBackward = function () {
             console.groupCollapsed('goBackward');
             log.info('CALL FUNCTION: goBackward');
@@ -473,7 +518,10 @@
             console.groupEnd();
         };
 
-        /* this function is used to show or hide the spinner pre-loader */
+        /**
+         * Shows or hides the  pre-loader spinner
+         * @returns {{show: show, hide: hide}}
+         */
         var spinner = function () {
             var $spinner = $('#pts-spinner-container');
 
@@ -489,7 +537,12 @@
             }
         };
 
-        /* Return true if the first date contains the second one */
+        /**
+         * Returns true if the first date contains the second one
+         * @param {Object} origin
+         * @param {Object} date
+         * @returns {Boolean}
+         */
         var isDateInDate = function (origin, date) {
             log.log('CALL FUNCTION: isDateInDate');
             if ((moment(date.start_date) <= moment(origin.start_date) && moment(date.end_date) >= moment(origin.end_date))
@@ -500,21 +553,30 @@
             return false;
         };
 
-        /* Return a task from his Id */
+        /**
+         * Returns a task from its Id
+         * @param {String] taskId
+         * @returns {Object} the task
+         */
         var getTaskById = function (taskId) {
             log.log('CALL FUNCTION: getTaskById: taskId: ' + taskId);
+
             if (!settings.tasks) return;
 
             var task;
-            settings.tasks.forEach(function (e) {
-                if (e.id === taskId) {
-                    task = e;
+            settings.tasks.forEach(function (_task) {
+                if (_task.id === taskId) {
+                    task = _task;
                 }
             });
             return task;
         };
 
-        /* Return true if the user has tasks for the selected month/day */
+        /**
+         * Return true if the user has tasks in the selected month/day
+         * @param {Object} user
+         * @returns {Boolean}
+         */
         var userHasTask = function (user) {
             log.log('CALL FUNCTION: userHasTask: user: ' + user.name);
 
@@ -531,7 +593,11 @@
             return response;
         };
 
-        /* Get the height of a user line */
+        /**
+         *  Get the height of an user line
+         * @param {Object} user
+         * @returns {Number}
+         */
         var getUserLineHeight = function (user) {
             log.log('CALL FUNCTION: getUserLineHeight: user: ' + user.name);
 
@@ -551,7 +617,11 @@
             return tasks.length * 40;
         };
 
-        /* Return true if user task must be showed */
+        /**
+         * Return true if the user line must be showed
+         * @param {Object} user
+         * @returns {Boolean}
+         */
         var userLineIsShowed = function (user) {
             log.log('CALL FUNCTION: userLineIsShowed: user: ' + user.name);
             var response = 0,
@@ -566,7 +636,9 @@
             return ((response > 0) || settings.hideEmptyLines === false);
         };
 
-        /* Move task label on horizontal scroll */
+        /**
+         *  Moves the tasks labels on horizontal scroll
+         */
         var setTaskLabelPosition = function () {
             log.log('CALL FUNCTION: setTaskLabelPosition');
 
@@ -586,7 +658,11 @@
             });
         };
 
-        /* Return an array of the index of the users that are in the specified group */
+        /**
+         * Returns an array of the users index that are in the specified group
+         * @param {String} groupName
+         * @returns {Array}
+         */
         var getUsersInGroup = function (groupName) {
             log.log('CALL FUNCTION: getUsersInGroup: groupName' + groupName);
 
@@ -600,7 +676,12 @@
             return inGroup;
         };
 
-        /* Open the info-box panel */
+        /**
+         * Opens the info-box panel
+         * @param {String} taskId
+         * @param {Number} userIndex
+         * @param {String} viewType
+         */
         var openInfoBox = function (taskId, userIndex, viewType) {
             log.info('CALL FUNCTION: openInfoBox: taskId: ' + taskId + ': userIndex: ' + userIndex + ': viewType: ' + viewType);
 
@@ -667,7 +748,9 @@
             getContrastedColor();
         };
 
-        /* Close the info-box panel */
+        /**
+         * Closes the info-box panel
+         */
         var closeInfoBox = function () {
             log.info('CALL FUNCTION: closeInfoBox');
 
@@ -688,7 +771,13 @@
             getContrastedColor();
         };
 
-        /* Mix tasks that have a superposition */
+        /**
+         * Mixes the overlaid tasks
+         * @param {String} originIndex: The index of the task
+         * @param {Object} task: the task to check from
+         * @param {Object} user: the owner of the task
+         * @returns {Object} the mixed (or not) task
+         */
         var hideTaskSuperposition = function (originIndex, task, user) {
             log.log('CALL FUNCTION: hideTaskSuperposition: originIndex: ' + originIndex + ':task: ' + task.name + ': user: ' + user.name);
 
@@ -709,7 +798,10 @@
             return task;
         };
 
-        /* Check which color match with the element background color */
+        /**
+         * Replaces all elements with the class pts-check-color color
+         * depending on their background color and their contrast
+         */
         var getContrastedColor = function () {
             log.log('CALL FUNCTION: getContrastedColor');
 
@@ -729,7 +821,10 @@
             });
         };
 
-        /* Switch the list view date range */
+        /**
+         * Changes the selected list view date range
+         * @param {String} range: the range to display
+         */
         var switchListRange = function (range) {
             log.log('CALL FUNCTION: switchListRange: range: ' + range);
 
@@ -782,7 +877,14 @@
             });
         };
 
-        /* Create a task */
+        /**
+         * Creates a new task
+         * @param {String} name
+         * @param {String} id
+         * @param {String} description
+         * @param {String} color
+         * @param {Boolean} assign: true if the task must be assigned after being created
+         */
         var createNewTask = function (name, id, description, color, assign) {
             log.info('CALL FUNCTION: createNewTask');
 
@@ -801,7 +903,10 @@
             if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
         };
 
-        /* Generate a random Id */
+        /**
+         * Generates a random Id
+         * @returns {String}
+         */
         var generateRandomId = function () {
             log.log('CALL FUNCTION: generateRandomId');
 
@@ -811,7 +916,10 @@
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         };
 
-        /* Remove a task */
+        /**
+         * Removes a task
+         * @param {String} taskId
+         */
         var removeTask = function (taskId) {
             log.info('CALL FUNCTION: removeTask');
 
@@ -833,7 +941,13 @@
             generateNotification('success', settings.i18n.notif.taskRemoved, undo, settings.onTaskRemoval);
         };
 
-        /* Assign users to a task */
+        /**
+         * Assigns users to a specific task
+         * @param {Array} users: the users index
+         * @param {Object} task: the task to assign too
+         * @param {Date} start_date
+         * @param {Date} end_date
+         */
         var assignUsersToTask = function (users, task, start_date, end_date) {
             log.info('CALL FUNCTION: assignUsersToTask');
 
@@ -880,7 +994,13 @@
                 undo, settings.onTaskAssignation);
         };
 
-        /* Assign tasks to a user */
+        /**
+         * Assigns tasks to a specific user
+         * @param {Object} user
+         * @param {Array} tasks
+         * @param {Date} start_date
+         * @param {Date} end_date
+         */
         var assignTasksToUser = function (user, tasks, start_date, end_date) {
             log.info('CALL FUNCTION: assignTasksToUser');
 
@@ -926,7 +1046,12 @@
                 undo, settings.onTaskAssignation);
         };
 
-        /* Delete a task line from an user */
+        /**
+         * Removes a task line from a user
+         * @param {Object} user
+         * @param {Object} task
+         * @param {Number} taskIndex
+         */
         var deleteTaskFromUser = function (user, task, taskIndex) {
             log.info('CALL FUNCTION: deleteTaskFromUser');
 
@@ -941,7 +1066,11 @@
             generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userUnassigned, undo, settings.onUserTaskDeletion);
         };
 
-        /* Edit the informations of an existing task */
+        /**
+         * Edited the information of an existing task
+         * @param {Object} task
+         * @param {Array} newData
+         */
         var editTask = function (task, newData) {
             log.info('CALL FUNCTION: editTask');
 
@@ -954,7 +1083,12 @@
             generateNotification('success', settings.i18n.notif.taskInformationsUpdated, undo, settings.onTaskEdition);
         };
 
-        /*create a new user */
+        /**
+         * Creates a new user
+         * @param {String} name
+         * @param {String} group
+         * @param {Boolean} assign: true if the user must be assigned after being created
+         */
         var createNewUser = function (name, group, assign) {
             log.info('CALL FUNCTION: createNewUser');
 
@@ -974,7 +1108,10 @@
             updateDisplay(settings.currentDisplay);
         };
 
-        /* Remove a user */
+        /**
+         * Removes a user
+         * @param {Object} user
+         */
         var removeUser = function (user) {
 
             var undo = getUndo();
@@ -986,7 +1123,11 @@
             generateNotification('success', settings.i18n.notif.userRemoved, undo, settings.onUserRemoval);
         };
 
-        /* Edit a user */
+        /**
+         * Edited a user
+         * @param {Number} userIndex
+         * @param {Array} newData
+         */
         var editUser = function (userIndex, newData) {
             if (!settings.users[userIndex]) return;
 
@@ -1003,7 +1144,9 @@
 
         /********* Generation *********/
 
-        /* Generate the header content */
+        /**
+         * Generates the header content
+         */
         var generateHeader = function () {
             log.info('CALL FUNCTION: generateHeader');
 
@@ -1032,7 +1175,9 @@
             updateDatePicker();
         };
 
-        /* Generate base empty base structure */
+        /**
+         * Generates the empty base structure
+         */
         var generateBaseView = function () {
             log.info('CALL FUNCTION: generateBaseView');
 
@@ -1053,7 +1198,9 @@
             $scheduler.append($mainContainer);
         };
 
-        /* Generate the table columns lines */
+        /**
+         * Generates the columns lines
+         */
         var generateTableLines = function () {
             log.info('CALL FUNCTION: generateTableLines');
 
@@ -1101,7 +1248,11 @@
             $('.pts-corner-mask').append($settingsMenu);
         };
 
-        /* Add one group to the scheduler */
+        /**
+         * Adds one group to the scheduler
+         * @param {String} group: The group name
+         * @param index: The index of the group
+         */
         var generateGroupTab = function (group, index) {
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
 
@@ -1113,7 +1264,9 @@
             $('.pts-line-title-container > div').append($groupHeaderContent);
         };
 
-        /* Generate the main group content and header */
+        /**
+         * Generates the main group content and header
+         */
         var generateGroupMainContent = function () {
             log.log('CALL FUNCTION: generateGroupMainContent');
 
@@ -1145,7 +1298,9 @@
             });
         };
 
-        /* Generate the left users list */
+        /**
+         * Generates the left users list
+         */
         var generateUsersList = function () {
             log.info('CALL FUNCTION: generateUsersList');
             if (!settings.users || settings.users.length <= 0) return generateNotification('warning', settings.i18n.notif.noUser );
@@ -1166,7 +1321,11 @@
             });
         };
 
-        /* Add one user line */
+        /**
+         * Adds one user line
+         * @param {Object} user
+         * @param {String} group
+         */
         var generateUserLine = function (user, group) {
             log.log('CALL FUNCTION: generateUserLine: user: ' + user.name);
 
@@ -1179,7 +1338,11 @@
 
         };
 
-        /* Generate the tasks lines */
+        /**
+         * Generates the tasks lines
+         * @param {Object} user: the owner of the tasks
+         * @param {String} userIndex
+         */
         var generateTaskLines = function (user, userIndex) {
             log.info('CALL FUNCTION: generateTaskLines: user: ' + user.name);
 
@@ -1218,7 +1381,13 @@
             });
         };
 
-        /* Generate one task on the month view */
+        /**
+         * Generates one task into the month view
+         * @param {Object} user
+         * @param {Object} task
+         * @param {Number} topDistance
+         * @returns {Number} topDistance
+         */
         var generateTaskLineMonth = function (user, task, topDistance) {
             log.info('CALL FUNCTION: generateTaskLineMonth: user: ' + user.name + ':task: ' + task.name);
 
@@ -1277,7 +1446,13 @@
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
-        /* Generate one task on the month view */
+        /**
+         * Generates one task into the month view
+         * @param {Object} user
+         * @param {Object} task
+         * @param {String} topDistance
+         * @returns {Number} topDistance
+         */
         var generateTaskLineDay = function (user, task, topDistance) {
             log.info('CALL FUNCTION: generateTaskLineDay: user: ' + user.name + ': task: ' + task.name);
 
@@ -1335,8 +1510,11 @@
             return (existingTaskLine.length > 0 ? 0 : 40);
         };
 
-        /* Generate the tasks structure of the info box */
-        var generateInfoBoxContentTask = function (task, user) {
+        /**
+         * Generates the task structure of the info box
+         * @param {Object} task
+         */
+        var generateInfoBoxContentTask = function (task) {
             log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
 
             var $content =  ['<div class="panel-body">',
@@ -1365,7 +1543,10 @@
             getContrastedColor();
         };
 
-        /* Generate the users structure of the info box */
+        /**
+         * Generates the users structure of the info box
+         * @param {Object} user
+         */
         var generateInfoBoxContentUser = function (user) {
             log.info('CALL FUNCTION: generateInfoBoxContentUser: user: ' + user.name);
 
@@ -1402,7 +1583,9 @@
             getContrastedColor();
         };
 
-        /* Generate the creation task structure of the info box */
+        /**
+         * Generates the task creation structure of the info box
+         */
         var generateInfoBoxContentCreateTask = function () {
             log.info('CALL FUNCTION: generateInfoBoxContentCreateTask');
 
@@ -1424,7 +1607,10 @@
             $('#pts-info-box-container').append($content);
         };
 
-        /* Generate the edition task structure of the info box */
+        /**
+         * Generates the task edition structure of the info box
+         * @param {String} taskId
+         */
         var generateInfoBoxContentEditTask = function (taskId) {
             log.info('CALL FUNCTION: generateInfoBoxContentEditTask');
 
@@ -1451,7 +1637,10 @@
             $('#pts-info-box-container').append($content);
         };
 
-        /* Generate the assignation task structure of the info box */
+        /**
+         * Generates the task assignation structure of the info box
+         * @param {String} taskId
+         */
         var generateInfoBoxContentAssignTask = function (taskId) {
             log.info('CALL FUNCTION: generateInfoBoxContentAssignTask');
             var task = getTaskById(taskId);
@@ -1501,7 +1690,9 @@
             getContrastedColor();
         };
 
-        /* Generate the user creation structure of the info box */
+        /**
+         * Generates the user creation structure of the info box
+         */
         var generateInfoBoxContentCreateUser = function () {
             log.info('CALL FUNCTION: generateInfoBoxContentCreateUser');
 
@@ -1528,7 +1719,10 @@
             });
         };
 
-        /* Generate the user edition structure of the info box */
+        /**
+         * Generates the user edition structure of the info box
+         * @param {Object} user
+         */
         var generateInfoBoxContentEditUser = function (user) {
             log.info('CALL FUNCTION: generateInfoBoxContentEditUser');
 
@@ -1555,7 +1749,10 @@
             });
         };
 
-        /* Generate the user assignation structure of the info box */
+        /**
+         * Generates the user assignation structure of the info box
+         * @param {Object} user
+         */
         var generateInfoBoxContentAssignUser = function (user) {
             log.info('CALL FUNCTION: generateInfoBoxContentAssignUser');
 
@@ -1611,7 +1808,9 @@
             getContrastedColor();
         };
 
-        /* Generate the see all structure of the info box */
+        /**
+         * Generates the see all structure of the info box
+         */
         var generateInfoBoxContentSeeAll = function () {
             log.info('CALL FUNCTION: generateInfoBoxContentSeeAll');
 
@@ -1640,7 +1839,9 @@
             getContrastedColor();
         };
 
-        /* Generate list view main structure */
+        /**
+         * Generates the list view main structure
+         */
         var generateListBaseView = function () {
             log.info('CALL FUNCTION: generateListBaseView');
 
@@ -1674,7 +1875,9 @@
             getContrastedColor();
         };
 
-        /* Generate the date range picker for the list view */
+        /**
+         * Generates the date range picker of the list view
+         */
         var generateRangePicker = function () {
             log.log('CALL FUNCTION: generateRangePicker');
 
@@ -1696,7 +1899,10 @@
             $('#pts-list-datetimepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale);
         };
 
-        /* Generate a task box in the list view */
+        /**
+         * Generates a task box in the list view
+         * @param {Object} task
+         */
         var generateListTaskContent = function (task) {
             log.log('CALL FUNCTION: generateListTaskContent');
 
@@ -1747,9 +1953,16 @@
             getContrastedColor();
         };
 
-        /* Generate a notification */
+        /**
+         * Generates a notification and call a callback function if the process is not broken
+         * @param {String} origin: The notification type (danger, success, info, warning)
+         * @param [String} message: The content of the notification
+         * @param {Object} undo: Contains the backup data in case of interruption from the user
+         * @param {Function} callback: A function to be called after the notification if there was no interruption
+         */
         var generateNotification = function (origin, message, undo, callback) {
             log.info('CALL FUNCTION: generateNotification');
+            
             if (settings.disableNotifications) return;
             var uniqueId = generateRandomId();
             var $undoLink = '';
@@ -2133,7 +2346,7 @@
 
             newData.name = $('#pts-edit-user-input-name').val();
             newData.group = $('#pts-edit-user-input-group').val();
-            if (name.length < 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
+            if (newData.name.length <= 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
             editUser($(this).data('user'), newData);
         });
 
