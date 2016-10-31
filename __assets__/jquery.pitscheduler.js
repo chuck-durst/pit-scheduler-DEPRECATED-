@@ -74,6 +74,8 @@
             seeAll: 'Tout voir',
             allocations: 'assignations',
             allocation: 'assignation',
+            tag: 'Etiquette',
+            tagColor: 'Couleur de l\'étiquette',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
@@ -151,6 +153,8 @@
             seeAll: 'See all',
             allocations: 'allocations',
             allocation: 'allocation',
+            tag: 'Tag',
+            tagColor: 'Tag color',
             notif: {
                 taskCreated: 'The task has been successfully created',
                 userCreated: 'The user has been successfully created',
@@ -883,9 +887,10 @@
          * @param {String} id
          * @param {String} description
          * @param {String} color
+         * @param {Object} tag: contains the tag informations (name and color)
          * @param {Boolean} assign: true if the task must be assigned after being created
          */
-        var createNewTask = function (name, id, description, color, assign) {
+        var createNewTask = function (name, id, description, color, tag, assign) {
             log.info('CALL FUNCTION: createNewTask');
 
             var undo = getUndo();
@@ -894,7 +899,9 @@
                 id: (id.length > 0 ? id : generateRandomId()),
                 name: name,
                 description: (description.length > 0 ? description : ''),
-                color: (color.length > 0 ? color : settings.defaultColor)
+                color: (color.length > 0 ? color : settings.defaultColor),
+                tag: tag.name,
+                tagColor: tag.color
             };
             newTask = generateTaskInTask(newTask);
             settings.tasks.push(newTask);
@@ -1076,9 +1083,11 @@
 
             var undo = getUndo();
 
-            task.name = (newData.name ? newData.name : task.name);
-            task.color = (newData.color ? newData.color : task.color);
-            task.description = (newData.description ? newData.description : task.description);
+            task.name = (newData.name || task.name);
+            task.color = (newData.color || task.color);
+            task.description = (newData.description || '');
+            task.tag = (newData.tag || '');
+            task.tagColor = (newData.tagColor || '');
             updateDisplay(settings.currentDisplay);
             generateNotification('success', settings.i18n.notif.taskInformationsUpdated, undo, settings.onTaskEdition);
         };
@@ -1393,6 +1402,7 @@
 
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
+            var $tag = (task.tag? ' <span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span>' : '');
 
             if (existingTaskLine.length > 0) {
                 topDistance = existingTaskLine.css('top');
@@ -1416,7 +1426,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                     '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1429,7 +1439,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -1438,7 +1448,7 @@
             if (moment(settings.date.selected).format('YYYYMM') != moment(task.end_date).format('YYYYMM') && moment(settings.date.selected).format('YYYYMM') != moment(task.start_date).format('YYYYMM')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
             setTaskLabelPosition();
@@ -1458,6 +1468,7 @@
 
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
+            var $tag = (task.tag? ' <span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span>' : '');
 
             if (existingTaskLine.length > 0) {
                 topDistance = existingTaskLine.css('top');
@@ -1481,7 +1492,7 @@
                 leftDistance = parseInt(leftDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
                     '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1493,7 +1504,7 @@
 
                     topDistance = parseInt(topDistance);
                     var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+taskWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -1502,7 +1513,7 @@
             if (moment(settings.date.selected).format('YYYYMMDD') != moment(task.end_date).format('YYYYMMDD') && moment(settings.date.selected).format('YYYYMMDD') != moment(task.start_date).format('YYYYMMDD')) {
                 topDistance = parseInt(topDistance);
                 var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker middle" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + '</p></div>';
+                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             };
             setTaskLabelPosition();
@@ -1517,10 +1528,11 @@
         var generateInfoBoxContentTask = function (task) {
             log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
 
+            var $tag = (task.tag ? '<span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span><br>' : '');
             var $content =  ['<div class="panel-body">',
                 '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name,
                 '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
-                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' + $tag,
                 '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
                 '<div class="btn-group">',
                 '<button type="button" class="pts-delete-task-btn btn btn-danger" data-task="' + task.id + '" data-confirm="false">' + settings.i18n.remove + '</button>',
@@ -1601,6 +1613,8 @@
                 '<div class="form-group"><label>Id :</label><input id="pts-add-task-input-id" type="text" class="form-control" maxlength="80"><div id="pts-add-task-err-id" style="color:red"></div></div>',
                 '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-add-task-input-color" type="color" class="form-control" value="' + settings.defaultColor + '"></div>',
                 '<div class="form-group"><label>' + settings.i18n.description + ' :</label><textarea id="pts-add-task-input-description" type="text" class="form-control"  maxlength="255"></textarea></div>',
+                '<div class="form-group"><label>' + settings.i18n.tag + ' :</label><input id="pts-add-task-input-tag" type="text" class="form-control" maxlength="15"></div>',
+                '<div class="form-group"><label>' + settings.i18n.tagColor + ' :</label><input id="pts-add-task-input-tagColor" type="color" class="form-control" value="#777777"></div>',
                 '<div class="btn-group">',
                 '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
@@ -1631,7 +1645,9 @@
                 '<div class="form-group"><label>Id :</label><input id="pts-edit-task-input-id" type="text" class="form-control" maxlength="80" value="' + task.id + '" disabled="disabled"></div>',
                 '<div class="form-group"><label>' + settings.i18n.color + ' :</label><input id="pts-edit-task-input-color" type="color" class="form-control" value="' + task.color + '"></div>',
                 '<div class="form-group"><label>' + settings.i18n.description + ' :</label>',
-                '<textarea id="pts-edit-task-input-description" type="text" class="form-control"  maxlength="255">' + (task.description != undefined ? task.description : '') + '</textarea></div>',
+                '<textarea id="pts-edit-task-input-description" type="text" class="form-control"  maxlength="255">' + (task.description || '') + '</textarea></div>',
+                '<div class="form-group"><label>' + settings.i18n.tag + ' :</label><input id="pts-edit-task-input-tag" type="text" class="form-control" maxlength="15" value="' + (task.tag || '') + '"></div>',
+                '<div class="form-group"><label>' + settings.i18n.tagColor + ' :</label><input id="pts-edit-task-input-tagColor" type="color" class="form-control" value="' + (task.tagColor || '#777777') + '"></div>',
                 '<div class="btn-group">',
                 '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-edit-task-confirm-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div>',
@@ -1914,11 +1930,12 @@
                 totalUsers = 0,
                 thisUsers = 0;
 
+            var $tag = (task.tag ? ' <span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span><br>' : '');
             var $container =    ['<div class="col-lg-12 pts-list-task-container" data-task="' + task.id + '">',
                 '<div class="panel panel-primary" style="border-color:' + task.color + '">',
                 '<div class="panel-heading progress-bar-striped pts-check-color pts-list-task-header" style="background-color:' + task.color + ';border-color:' + task.color + '"',
                 'data-task="' + task.id + '">',
-                '<h6 class="panel-title">' + task.name + '</h6>',
+                '<h6 class="panel-title">' + task.name + $tag + '</h6>',
                 '<a class="heading-elements-toggle"><i class="icon-menu"></i></a></div>',
                 '<div class="panel-body">' + (task.description ? task.description : '') + '</div>',
                 '<div class="panel-body"><div class="table-responsive">',
@@ -2197,7 +2214,12 @@
             var name = $('#pts-add-task-input-name').val(),
                 id = $('#pts-add-task-input-id').val(),
                 description = $('#pts-add-task-input-description').val(),
-                color = $('#pts-add-task-input-color').val();
+                color = $('#pts-add-task-input-color').val(),
+                tag = {
+                    name: $('#pts-add-task-input-tag').val(),
+                    color: $('#pts-add-task-input-tagColor').val()
+                };
+
             $('#pts-add-task-err-name').html('');
             $('#pts-add-task-err-id').html('');
             $.each(settings.tasks, function (i, e) {
@@ -2212,7 +2234,7 @@
             });
             if (name.length < 1) return;
             closeInfoBox();
-            createNewTask(name, id, description, color, $(this).data('assign'));
+            createNewTask(name, id, description, color, tag, $(this).data('assign'));
         });
 
         $('#pit-scheduler').on('click', '.pts-create-user-btn', function () {
@@ -2303,6 +2325,8 @@
             newData.name = $('#pts-edit-task-input-name').val();
             newData.color = $('#pts-edit-task-input-color').val();
             newData.description = $('#pts-edit-task-input-description').val();
+            newData.tag = $('#pts-edit-task-input-tag').val();
+            newData.tagColor = $('#pts-edit-task-input-tagColor').val();
             editTask(task, newData);
         });
 

@@ -23,6 +23,10 @@
     cursor: pointer;
 }
 
+.label {
+    font-weight: normal !important;
+}
+
 /************ Animation ************/
 .animated {
     -webkit-animation-duration: 1s;
@@ -355,6 +359,11 @@
     width: 100%;
 }
 
+.pts-line-marker-label > .label {
+    position: relative;
+    bottom: 2px;
+}
+
 /************ Infos box view ************/
 
 #pts-info-box-container {
@@ -441,6 +450,11 @@ div.pts-info-box-user-list, div.pts-info-box-task-list {
     color: #000 !important;
 }
 
+.panel-body > .label {
+    position: relative;
+    bottom: 5px;
+}
+
 /************ List view ************/
 
 .pts-list-range-btn.selected {
@@ -516,7 +530,11 @@ div.pts-info-box-user-list, div.pts-info-box-task-list {
     width: 95%;
     margin: 5px 0 10px 3px;
 }
-
+.pts-list-task-header .label {
+    position: relative;
+    bottom: 2px;
+    left: 4px;
+}
 /*********** Notifications **********/
 #pts-notification-container {
     position: absolute;

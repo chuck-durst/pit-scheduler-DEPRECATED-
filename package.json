@@ -22,7 +22,10 @@
     "jquery",
     "bootstrap",
     "organizer",
-    "calendar"
+    "calendar",
+    "permission",
+    "task",
+    "planning"
   ],
   "author": "Chuck Durst",
   "license": "MIT",
