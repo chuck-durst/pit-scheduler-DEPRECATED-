@@ -1154,7 +1154,7 @@
                 '<div class="pts-header row">',
                 '<div class="pts-header-left-container pull-left">',
                 '<div class="form-group">',
-                '<div class="input-group date" id="header-datetimepicker">',
+                '<div class="input-group date hidden-xs" id="header-datetimepicker">',
                 '<input type="text" class="form-control"/>',
                 '<span class="input-group-addon">',
                 '<span class="glyphicon glyphicon-calendar"></span>',
