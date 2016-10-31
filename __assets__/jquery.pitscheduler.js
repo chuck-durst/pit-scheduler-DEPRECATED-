@@ -170,8 +170,7 @@
         }
     };
 
-    $.fn.pitScheduler
-= function (options) {
+    $.fn.pitScheduler = function (options) {
 
         var $scheduler = $(this);
 
@@ -217,6 +216,7 @@
                 }
             }
         };
+
         /********* Main functions *********/
 
         /**
@@ -2370,6 +2370,59 @@
                 $('.alert[data-id=' + notifId + ']').remove();
             }
         });
+
+
+        /********* callback functions *********/
+
+        $.fn.pitScheduler.default = function () {
+            return {
+                options: function (data) {
+                    switch (data) {
+                        case 'users':
+                            return settings.users;
+                        case 'tasks':
+                            return settings.tasks;
+                        default:
+                            return settings;
+                    }
+                },
+
+                show : function () {
+                    return $scheduler.show();
+                },
+
+                hide: function () {
+                    return $scheduler.hide();
+                },
+
+                date: function (date) {
+                    if (date && moment(date).isValid()) {
+                        settings.date.selected = date;
+                        updateDisplay(settings.currentDisplay);
+                    }
+                    return settings.date.selected;
+                },
+
+                locale: function (locale) {
+                    if (settings.i18n.allowed.indexOf(locale) !== -1) {
+                        settings.locale = locale;
+                    } else {
+                        console.error('Error: the specified locale is not allowed for the current settings');
+                    }
+                    return settings.locale;
+                },
+
+                viewMode: function (viewMode) {
+                    if ('days;months;list'.indexOf(viewMode) !== -1) {
+                        settings.currentDisplay = viewMode;
+                        updateDisplay(settings.currentDisplay);
+                    } else {
+                        console.error('Error: the specified view mode do not exist');
+                    }
+                    return settings.currentDisplay;
+                }
+            };
+        };
 
         return $scheduler;
     };
