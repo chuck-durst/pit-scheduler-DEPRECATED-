@@ -19,6 +19,10 @@
     -o-user-select:none;
 }
 
+.pts-show-user{
+    cursor: pointer;
+}
+
 /************ Animation ************/
 .animated {
     -webkit-animation-duration: 1s;

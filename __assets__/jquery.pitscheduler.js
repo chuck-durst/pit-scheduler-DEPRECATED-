@@ -1332,7 +1332,7 @@
             if (!user.tasks) return log.warn('Warning: user ' + user.name + ' is assigned to any task');
             if (!user.isShowed || user.lineHeight <= 0 || !group) return;
 
-            var $userNameUI = '<div class="pts-group-user" style="height:' + user.lineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
+            var $userNameUI = '<div class="pts-group-user pts-show-user" style="height:' + user.lineHeight + 'px" data-user="' + user.index + '"><p>' + user.name + '</p></div>';
 
             $('#' + group + ' > .pts-group-content').append($userNameUI);
 
@@ -1531,12 +1531,15 @@
 
             $.each(task.users, function (i) {
                 var user = settings.users[i];
-                var $head = '<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided">' + user.name + '</h4><table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>';
+                var $head = ['<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided pts-show-user" data-user="' + user.index + '">' + user.name + '</h4>',
+                            '<table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>'].join('\n');
                 $('#pts-info-box-container > .panel-body').append($head);
-                user.tasks.forEach(function (_task) {
+                user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
-                        $('.pts-info-box-user-list[data-head=' + i + ']').append('<tr><td><b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll') +
-                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>');
+                        var $userLine = ['<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
+                        '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
+                                        ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
+                        $('.pts-info-box-user-list[data-head=' + i + ']').append($userLine);
                     }
                 });
             });
@@ -2098,7 +2101,7 @@
             }
         });
 
-        $('#pit-scheduler').on('click', ' .pts-group-user[data-user]', function () {
+        $('#pit-scheduler').on('click', ' .pts-show-user[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
         });
 
