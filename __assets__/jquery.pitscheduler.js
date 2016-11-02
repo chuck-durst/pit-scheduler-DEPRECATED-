@@ -2293,8 +2293,7 @@
         });
 
         $('#pit-scheduler').on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
-            if (e.target !== this)
-                return;
+            if (e.target !== this || $('#pts-info-box-container[data-toggle=opened]').length <= 0) return;
             if ($('.pts-close-info-box').data('update') == true) {
                 updateDisplay(settings.currentDisplay);
             } else {
