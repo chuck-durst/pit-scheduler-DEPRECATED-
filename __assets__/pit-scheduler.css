@@ -324,6 +324,11 @@
     top: 5px;
     cursor: pointer;
     overflow: hidden;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
 }
 
 .pts-line-marker.complete {
@@ -352,6 +357,11 @@
     left: 10px;
     color: #fff;
     display: inline-table;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
 }
 
 .pts-line-marker-group {
@@ -362,6 +372,14 @@
 .pts-line-marker-label > .label {
     position: relative;
     bottom: 2px;
+}
+
+.pts-line-marker i {
+    position: relative;
+    float: right;
+    top: 9px;
+    font-size: 11px;
+    cursor: e-resize;
 }
 
 /************ Infos box view ************/

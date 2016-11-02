@@ -196,7 +196,8 @@
             defaultColor: options.defaultColor ||'#00BCD4',
             notificationDuration: options.notificationDuration || 4000,
             hideEmptyLines: options.hideEmptyLines || true,
-            undo: []
+            undo: [],
+            drag: {}
         }, options);
 
         moment.locale(settings.locale);
@@ -650,7 +651,7 @@
             var $elements = $('.pts-line-marker:has(> .pts-line-marker-label)'),
                 limit = parseInt($('.pts-line-title-container').offset().left + $('.pts-line-title-container').width());
             $.each($elements, function() {
-                var $label = $(this).children(),
+                var $label = $(this).children('p'),
                     right = parseInt($(this).offset().left) + parseInt($(this).width()) - parseInt($label.width()),
                     left = parseInt($(this).offset().left);
                 if (left < limit && right > limit + 20) {
@@ -1424,9 +1425,10 @@
                 }
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
-                var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                    '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
+                var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">',
+                            '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + ' - ' + (task.tag || '') + '">' + task.name + $tag + '</p>',
+                            '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></div>'].join('\n');
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -2106,7 +2108,7 @@
             generateGroupMainContent();
         });
 
-        $('#pit-scheduler').on('click', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
+        $('#pit-scheduler').on('mousedown', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
             openInfoBox($(this).attr('data-task'), null, 'task');
         });
 
@@ -2394,6 +2396,46 @@
                 initGroup();
                 updateDisplay(settings.currentDisplay);
                 $('.alert[data-id=' + notifId + ']').remove();
+            }
+        });
+
+        $('#pit-scheduler').on('mousedown', '.pts-task-dragger[data-task][data-user][data-end]', function (e) {
+            e.stopPropagation();
+            settings.drag = {
+                origin:  $(this).offset().left,
+                element: $(this).parent(),
+                count: 0,
+                task: $(this).data('task'),
+                user: $(this).data('user'),
+                end_date: $(this).data('end'),
+                timeout: setInterval(function () {
+                    $(document).css('cursor', 'e-resize');
+                }, 200)
+            };
+        });
+
+        $(document).on('mouseup', function(){
+            clearInterval(settings.drag.timeout);
+            settings.drag.timeout = 0;
+            settings.users[settings.drag.user].tasks.forEach(function (task) {
+                if (task.id == settings.drag.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.drag.end_date).format('YYYYMMDD')) {
+                    task.end_date = moment(task.end_date).add(settings.drag.count , (settings.currentDisplay == 'months' ? 'day' : 'hour'));
+                }
+            })
+        });
+
+        $(document).on('mousemove', function (e) {
+            if (settings.drag.timeout > 0 && (e.pageX > settings.drag.origin + 60 || e.pageX < settings.drag.origin - 60)) {
+                if (e.pageX > settings.drag.origin + 60) {
+                    settings.drag.count = settings.drag.count + 0.5;
+                } else if (e.pageX < settings.drag.origin - 60) {
+                    settings.drag.count = settings.drag.count - 0.5;
+                }
+                var move = (settings.drag.origin > e.pageX ? 60 : -60),
+                    $element = settings.drag.element,
+                    original_width = parseInt($element.css('width'));
+                $element.css('width', original_width - move + 'px');
+                settings.drag.origin = e.pageX;
             }
         });
 
