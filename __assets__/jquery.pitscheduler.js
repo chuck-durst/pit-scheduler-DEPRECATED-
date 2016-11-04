@@ -90,7 +90,8 @@
                 taskInformationsUpdated: 'La tâche a été modifiée',
                 userHasNoTask: 'n\'est assigned à aucune tâche',
                 userEdited: 'L\'utilisateur a correctement été modifié',
-                userAssignedTo: 'a été assigné à'
+                userAssignedTo: 'a été assigné à',
+                userTaskModified: 'La tâche prendra maintenant fin le'
             }
 
         },
@@ -169,7 +170,8 @@
                 taskInformationsUpdated: 'The task has been edited',
                 userHasNoTask: 'is not assigned to any task',
                 userEdited: 'The user has been successfully edited',
-                userAssignedTo: 'has been assigned to'
+                userAssignedTo: 'has been assigned to',
+                userTaskModified: 'The task will now end the'
             }
         }
     };
@@ -231,6 +233,7 @@
         var updateDisplay = function (viewMode) {
             log.info('CALL FUNCTION: updateDisplay: viewMode:' + viewMode);
 
+            var scrollTop = $('.pts-scheduler-container').scrollTop();
             updateDisplayReset();
             switch (viewMode) {
                 case 'days':
@@ -238,12 +241,14 @@
                     settings.currentDisplay = 'days';
                     initMainContent();
                     updateHeaderDates();
+                    $('.pts-line-title-container div').scrollTop(scrollTop);
                     break;
                 case 'months':
                     setButtonViewFocus('month');
                     settings.currentDisplay = 'months';
                     initMainContent();
                     updateHeaderDates();
+                    $('.pts-line-title-container div').scrollTop(scrollTop);
                     break;
                 case 'list':
                     setButtonViewFocus('list');
@@ -788,15 +793,10 @@
 
             user.tasks.forEach(function (userTask, index) {
                 if (userTask.id === task.id && index !== originIndex) {
-                    if (moment(userTask.start_date).format('YYYYMMDD') ==  moment(task.end_date).format('YYYYMMDD')  &&
-                        ((moment(userTask.start_date).format('H') <= 12 && moment(task.end_date).format('H') <= 12) ||
-                        (moment(userTask.start_date).format('H') > 12 && moment(task.end_date).format('H') > 12))) {
-                        task.end_date = userTask.end_date;
-                    }
                     if (moment(task.start_date).format('YYMMDD') == moment(userTask.end_date).format('YYMMDD')&&
                         ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12) ||
                         (moment(task.start_date).format('H') > 12 && moment(userTask.end_date).format('H') > 12))) {
-                        task.disabled = true;
+                        task.superposed = 'border-left: 2px dotted #000';
                     }
                 }
             });
@@ -817,10 +817,12 @@
                     if (L > 0.60) {
                         $(this).children().css('color', '#000');
                         $(this).css('color', '#000');
+                        $(this).css('border-color', '#000');
                     }
                     else {
                         $(this).children().css('color', '#fff');
                         $(this).css('color', '#fff');
+                        $(this).css('border-color', '#fff');
                     }
                 }
             });
@@ -1059,11 +1061,12 @@
          * @param {Object} user
          * @param {Object} task
          * @param {Number} taskIndex
+         * @param {Object} undo
          */
-        var deleteTaskFromUser = function (user, task, taskIndex) {
+        var deleteTaskFromUser = function (user, task, taskIndex, undo) {
             log.info('CALL FUNCTION: deleteTaskFromUser');
 
-            var undo = getUndo();
+            var undo = undo || getUndo();
 
             if (!user.tasks[taskIndex]) return;
 
@@ -1363,13 +1366,13 @@
             user.tasks.forEach(function (e, i) {
                 var task = $.extend(getTaskById(e.id), e);
                 if (task === undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
-                task.disabled = false;
                 task.index = i;
+                task.superposed = '';
                 if (task === undefined) return log.warn('CALL FUNCTION: Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
                 if (task.start_date > task.end_date) return log.warn('CALL FUNCTION: Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
                 if (settings.currentDisplay === 'months') {
                     task = hideTaskSuperposition(i, task, user);
-                    if (task.end_date && task.disabled != true) {
+                    if (task.end_date) {
                         if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
                             && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
                             topDistance += generateTaskLineMonth(user, task, topDistance);
@@ -1384,7 +1387,7 @@
                         }
                     }
                 }
-                delete task.disabled;
+                delete task.superposed;
                 delete task.index;
                 delete task.start_date;
                 delete task.end_date;
@@ -1426,9 +1429,9 @@
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
                 var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">',
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px;' + task.superposed + '" data-task="' + task.id + '" data-user="' + userIndex + '">',
                             '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + ' - ' + (task.tag || '') + '">' + task.name + $tag + '</p>',
-                            '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></div>'].join('\n');
+                            '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i></div>'].join('\n');
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1440,8 +1443,9 @@
                     var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
 
                     topDistance = parseInt(topDistance);
-                    var $task = '<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">' +
-                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p></div>';
+                    var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">',
+                                '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p>',
+                                '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i></div>'].join('\n');
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -2415,13 +2419,38 @@
         });
 
         $(document).on('mouseup', function(){
+            if (!settings.drag.count) return;
+            console.log('interval: ' + (settings.drag.count));
             clearInterval(settings.drag.timeout);
-            settings.drag.timeout = 0;
-            settings.users[settings.drag.user].tasks.forEach(function (task) {
+
+            settings.users[settings.drag.user].tasks.forEach(function (task, taskIndex) {
+
                 if (task.id == settings.drag.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.drag.end_date).format('YYYYMMDD')) {
-                    task.end_date = moment(task.end_date).add(settings.drag.count , (settings.currentDisplay == 'months' ? 'day' : 'hour'));
+                    var undo = getUndo();
+                    var count = settings.drag.count;
+                    var splitted = (settings.currentDisplay == 'months' ? (moment(task.end_date).format('H') <= 12 ? true : false) :  (moment(task.start_date).format('mm') <= 30 ? true : false));
+                    task.end_date = moment(task.end_date).add((count * (settings.currentDisplay == 'months' ? 1440 : 60)) , 'minute');
+                    if ((splitted && count % 1 !== 0) || (!splitted && count % 1 == 0)) {
+                        if (moment(task.end_date).format('HHmm') != '0000') {
+                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).endOf('day') : moment(task.end_date).endOf('hour'));
+                        } else {
+                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).add(-1, 'minute') : moment(task.end_date).add(-1, 'second'));
+                        }
+                    } else {
+                        task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).hours(12).minutes(0) : moment(task.end_date).minutes(30));
+                    }
+                    console.log(moment(task.start_date).format('YYYYMMDDhhmm'));
+                    console.log(moment(task.end_date).format('YYYYMMDDhhmm'));
+                    if (parseInt(moment(task.start_date).format('YYYYMMDDhhmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDhhmm'))) {
+                        console.log('REMOVE');
+                        deleteTaskFromUser(settings.users[settings.drag.user], task, taskIndex, undo);
+                    } else {
+                        generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
+                    }
+                    updateDisplay(settings.currentDisplay);
                 }
-            })
+            });
+            settings.drag = {};
         });
 
         $(document).on('mousemove', function (e) {

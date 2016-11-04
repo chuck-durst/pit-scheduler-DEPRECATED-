@@ -369,17 +369,17 @@
     width: 100%;
 }
 
-.pts-line-marker-label > .label {
-    position: relative;
-    bottom: 2px;
-}
 
 .pts-line-marker i {
-    position: relative;
-    float: right;
+    position: absolute;
     top: 9px;
     font-size: 11px;
     cursor: e-resize;
+    right: 0;
+}
+
+.pts-line-marker.start i {
+    display: none;
 }
 
 /************ Infos box view ************/
