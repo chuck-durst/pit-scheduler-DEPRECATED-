@@ -51,11 +51,11 @@
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
             locale: 'fr', //default: en
-            defaultDisplay: 'monjths', //default: months
+            defaultDisplay: 'months', //default: months
             hideEmptyLines: true, //default: true
             disableLabelsMovement: false, //default: false
             defaultGroupName: 'Default group',
-            defaultDate: '2016-09-26 16:30',
+            defaultDate: '2016-09-01 16:30',
             disableNotifications: false, //default: false
             notificationDuration: 4000, //default: 4000
             hideSpinner: true, //default: true
@@ -69,6 +69,7 @@
             onUserTaskDeletion: '', // Function called when a task is removed from a user
             onTaskEdition: '', // Function called when a task is edited
             disableUndo: false, //default: false
+            resizeTask: true, //default: false
             tasks:  [
                 {
                     id: 'djJ3d7sjk928S0',
@@ -102,8 +103,8 @@
                     tasks: [
                         {
                             id: 'djJ3d7sjk928S0',
-                            start_date: '2015-09-26 03:00',
-                            end_date: '2016-09-26 16:30'
+                            start_date: '2015-09-10 00:00',
+                            end_date: '2016-09-20 00:00'
                         },
                         {
                             id: 'djJ3d7sjk928S0',
@@ -134,7 +135,7 @@
                         {
                             id: 'djJ3d7sjk928S0', 
                             start_date: '2016-09-01 06:00', 
-                            end_date: '2016-09-04 09:00'
+                            end_date: '2016-09-04 00:00'
                         },
                         {
                             id: 'djJ3d7sjk928S0', 
@@ -155,7 +156,7 @@
                         {
                             id: 'djJ3d7sjk928S0', 
                             start_date: '2016-09-01 02:30',
-                            end_date: '2016-09-01 02:42'
+                            end_date: '2016-09-03 00:00'
                         },
                         {
                             id: 'djJ3d7sjk928S0',
