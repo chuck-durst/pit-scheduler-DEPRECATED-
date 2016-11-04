@@ -794,7 +794,7 @@
             user.tasks.forEach(function (userTask, index) {
                 if (userTask.id === task.id && index !== originIndex) {
                     if (moment(task.start_date).format('YYMMDD') == moment(userTask.end_date).format('YYMMDD')&&
-                        ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12) ||
+                        ((moment(task.start_date).format('H') <= 12 && moment(userTask.end_date).format('H') <= 12 && moment(userTask.end_date).format('H') > 0) ||
                         (moment(task.start_date).format('H') > 12 && moment(userTask.end_date).format('H') > 12))) {
                         task.superposed = 'border-left: 2px dotted #000';
                     }
@@ -1424,7 +1424,7 @@
                 if (moment(task.end_date).format('YYYYMM') > moment(settings.date.selected).format('YYYYMM')) {
                     var labelWidth = 120 * (parseInt(moment(settings.date.selected).daysInMonth()) - parseInt(moment(task.start_date).format('D'))) + (splitted == 0 ? 120 : 60);
                 } else {
-                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60) - (moment(task.end_date).format('H') <= 12 ? 60 : 0);
+                    var labelWidth = 120 * (moment(task.end_date).format('D') - moment(task.start_date).format('D') ) + (splitted == 0 ? 120 : 60) - (moment(task.end_date).format('H') <= 12 ? (moment(task.end_date).format('H') == 0 ? 120 : 60) : 0);
                     label_end = true;
                 }
                 topDistance = parseInt(topDistance);
@@ -1441,7 +1441,7 @@
                 if (moment(task.start_date).format('YYYYMM') < moment(settings.date.selected).format('YYYYMM')) {
 
                     var splitted = (moment(task.end_date).format('H') <= 12 ? 60 : 0);
-                    var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted;
+                    var labelWidth = 120 * (moment(task.end_date).format('D')) - splitted - (moment(task.end_date).format('H') == 0 ? 60 : 0);
 
                     topDistance = parseInt(topDistance);
                     var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">',
@@ -2431,7 +2431,9 @@
                     var undo = getUndo();
                     var count = settings.drag.count;
                     console.log('minutes ' + moment(task.end_date).format('m'));
-                    var splitted = (settings.currentDisplay == 'months' ? (moment(task.end_date).format('H') <= 12 ? true : false) : (moment(task.end_date).format('mm') <= 30 && parseInt(moment(task.end_date).format('mm')) > 0 ? true : false));
+                    var splitted = (settings.currentDisplay == 'months' ?
+                        (moment(task.end_date).format('H') <= 12 && parseInt(moment(task.end_date).format('Hmm')) > 0? true : false) :
+                        (moment(task.end_date).format('mm') <= 30 && parseInt(moment(task.end_date).format('mm')) > 0 ? true : false));
                     task.end_date = moment(task.end_date).add((count * (settings.currentDisplay == 'months' ? 1440 : 60)) , 'minute');
                     console.log((count * (settings.currentDisplay == 'months' ? 1440 : 60)));
                     console.log('splitted: ' + splitted + ' modulo: ' + (count % 1));
