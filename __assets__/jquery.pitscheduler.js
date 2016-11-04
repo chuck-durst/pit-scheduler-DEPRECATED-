@@ -1154,6 +1154,41 @@
             generateNotification('success', settings.i18n.notif.userEdited, undo, settings.onUserEdition);
         };
 
+        /**
+         * update a task when it has been resized
+         */
+        var resizeTask = function () {
+            clearInterval(settings.drag.timeout);
+
+            settings.users[settings.drag.user].tasks.forEach(function (task, taskIndex) {
+
+                if (task.id == settings.drag.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.drag.end_date).format('YYYYMMDD')) {
+                    var undo = getUndo();
+                    var count = settings.drag.count;
+                    var splitted = (settings.currentDisplay == 'months' ?
+                        (moment(task.end_date).format('H') <= 12 && parseInt(moment(task.end_date).format('Hmm')) > 0? true : false) :
+                        (moment(task.end_date).format('mm') <= 30 && parseInt(moment(task.end_date).format('mm')) > 0 ? true : false));
+                    task.end_date = moment(task.end_date).add((count * (settings.currentDisplay == 'months' ? 1440 : 60)) , 'minute');
+                    if ((splitted && count % 1 !== 0) || (!splitted && count % 1 == 0)) { //On main border
+                        if (moment(task.end_date).format('HHmm') != '0000') {
+                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).endOf('day') : moment(task.end_date));
+                        } else {
+                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).add(-1, 'minute') : moment(task.end_date));
+                        }
+                    } else {
+                        task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).hours(12).minutes(0) : moment(task.end_date).minutes(30));
+                    }
+                    if (parseInt(moment(task.start_date).format('YYYYMMDDhhmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDhhmm'))) {
+                        deleteTaskFromUser(settings.users[settings.drag.user], task, taskIndex, undo);
+                    } else {
+                        generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
+                    }
+                    updateDisplay(settings.currentDisplay);
+                }
+            });
+            settings.drag = {};
+        };
+
 
         /********* Generation *********/
 
@@ -2422,42 +2457,7 @@
 
         $(document).on('mouseup', function(){
             if (!settings.drag.count) return;
-            console.log('interval: ' + (settings.drag.count));
-            clearInterval(settings.drag.timeout);
-
-            settings.users[settings.drag.user].tasks.forEach(function (task, taskIndex) {
-
-                if (task.id == settings.drag.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.drag.end_date).format('YYYYMMDD')) {
-                    var undo = getUndo();
-                    var count = settings.drag.count;
-                    console.log('minutes ' + moment(task.end_date).format('m'));
-                    var splitted = (settings.currentDisplay == 'months' ?
-                        (moment(task.end_date).format('H') <= 12 && parseInt(moment(task.end_date).format('Hmm')) > 0? true : false) :
-                        (moment(task.end_date).format('mm') <= 30 && parseInt(moment(task.end_date).format('mm')) > 0 ? true : false));
-                    task.end_date = moment(task.end_date).add((count * (settings.currentDisplay == 'months' ? 1440 : 60)) , 'minute');
-                    console.log((count * (settings.currentDisplay == 'months' ? 1440 : 60)));
-                    console.log('splitted: ' + splitted + ' modulo: ' + (count % 1));
-                    if ((splitted && count % 1 !== 0) || (!splitted && count % 1 == 0)) { //On main border
-                        console.log('SPLITTED');
-                        if (moment(task.end_date).format('HHmm') != '0000') {
-                            console.log('FIRST');
-                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).endOf('day') : moment(task.end_date));
-                        } else {
-                            console.log('SECOND');
-                            task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).add(-1, 'minute') : moment(task.end_date));
-                        }
-                    } else {
-                        task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).hours(12).minutes(0) : moment(task.end_date).minutes(30));
-                    }
-                    if (parseInt(moment(task.start_date).format('YYYYMMDDhhmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDhhmm'))) {
-                        deleteTaskFromUser(settings.users[settings.drag.user], task, taskIndex, undo);
-                    } else {
-                        generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
-                    }
-                    updateDisplay(settings.currentDisplay);
-                }
-            });
-            settings.drag = {};
+            resizeTask();
         });
 
         $(document).on('mousemove', function (e) {
