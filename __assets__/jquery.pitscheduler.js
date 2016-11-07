@@ -20,6 +20,7 @@
             list: 'Liste',
             tasks: 'Tâches',
             task: 'Tâche',
+            hours: 'Heures',
             users: 'Utilisateurs',
             unlisted: 'Non répertorié',
             settings: 'Options',
@@ -101,6 +102,7 @@
             list: 'List',
             tasks: 'Tasks',
             task: 'Task',
+            hours: 'Hours',
             users: 'Users',
             unlisted: 'Unlisted',
             settings: 'Settings',
@@ -199,7 +201,7 @@
             notificationDuration: options.notificationDuration || 4000,
             hideEmptyLines: options.hideEmptyLines || true,
             undo: [],
-            drag: {}
+            resize: {}
         }, options);
 
         moment.locale(settings.locale);
@@ -1160,13 +1162,13 @@
          * update a task when it has been resized
          */
         var resizeTask = function () {
-            clearInterval(settings.drag.timeout);
+            clearInterval(settings.resize.timeout);
 
-            settings.users[settings.drag.user].tasks.forEach(function (task, taskIndex) {
+            settings.users[settings.resize.user].tasks.forEach(function (task, taskIndex) {
 
-                if (task.id == settings.drag.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.drag.end_date).format('YYYYMMDD')) {
+                if (task.id == settings.resize.task && moment(task.end_date).format('YYYYMMDD') == moment(settings.resize.end_date).format('YYYYMMDD')) {
                     var undo = getUndo();
-                    var count = settings.drag.count;
+                    var count = settings.resize.count;
                     var splitted = (settings.currentDisplay == 'months' ?
                         (moment(task.end_date).format('H') <= 12 && parseInt(moment(task.end_date).format('Hmm')) > 0? true : false) :
                         (moment(task.end_date).format('mm') <= 30 && parseInt(moment(task.end_date).format('mm')) > 0 ? true : false));
@@ -1184,7 +1186,7 @@
                     task.end_date = moment(task.end_date).format('YYYY-MM-DD HH:mm');
                     console.log(task.end_date);
                     if (parseInt(moment(task.start_date).format('YYYYMMDDHHmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDHHmm'))) {
-                        deleteTaskFromUser(settings.users[settings.drag.user], task, taskIndex, undo);
+                        deleteTaskFromUser(settings.users[settings.resize.user], task, taskIndex, undo);
                     } else {
                         generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
                     }
@@ -1192,7 +1194,7 @@
                     console.log(task);
                 }
             });
-            settings.drag = {};
+            settings.resize = {};
         };
 
 
@@ -1448,7 +1450,7 @@
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
             var $tag = (task.tag  ? ' <span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span>' : '');
-            var $resizer = (settings.resizeTask ? '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i>' : '');
+            var $resizer = (settings.resizeTask ? '<i class="pts-task-resizer glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i>' : '');
 
             if (existingTaskLine.length > 0) {
                 topDistance = existingTaskLine.css('top');
@@ -1517,7 +1519,7 @@
             var userIndex = user.index;
             var existingTaskLine = $('div[data-task=' + task.id + '][data-user=' + userIndex + '] > .pts-line-marker');
             var $tag = (task.tag? ' <span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span>' : '');
-            var $resizer = (settings.resizeTask ? '<i class="pts-task-dragger glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i>' : '');
+            var $resizer = (settings.resizeTask ? '<i class="pts-task-resizer glyphicon glyphicon-option-vertical" data-task="' + task.id + '" data-user="' + userIndex + '" data-end="' + task.end_date + '"></i>' : '');
 
             if (existingTaskLine.length > 0) {
                 topDistance = existingTaskLine.css('top');
@@ -2446,9 +2448,9 @@
             }
         });
 
-        $('#pit-scheduler').on('mousedown', '.pts-task-dragger[data-task][data-user][data-end]', function (e) {
+        $('#pit-scheduler').on('mousedown', '.pts-task-resizer[data-task][data-user][data-end]', function (e) {
             e.stopPropagation();
-            settings.drag = {
+            settings.resize = {
                 origin:  $(this).offset().left,
                 element: $(this).parent(),
                 count: 0,
@@ -2462,15 +2464,18 @@
         });
 
         $(document).on('mouseup', function(){
-            if (!settings.drag.count) return;
-            resizeTask();
+            if (settings.resize.count) {
+                $('.pts-task-tooltip').remove();
+                resizeTask();
+            }
         });
 
         $(document).on('mousemove', function (e) {
-            if (settings.drag.timeout > 0 && (e.pageX > settings.drag.origin + 60 || e.pageX < settings.drag.origin - 60)) {
-                var $taskMarker = settings.drag.element;
+            if (settings.resize.timeout > 0 && (e.pageX > settings.resize.origin + 60 || e.pageX < settings.resize.origin - 60)) {
+                var $taskMarker = settings.resize.element;
+                $('.pts-task-tooltip').remove();
                 var overlapse = false;
-                $('.pts-line-marker[data-task=' + settings.drag.task + '][data-user=' + settings.drag.user + ']').each(function () {
+                $('.pts-line-marker[data-task=' + settings.resize.task + '][data-user=' + settings.resize.user + ']').each(function () {
                     if ($(this).offset().left !== $taskMarker.offset().left) {
                         var markerLeft = parseInt($taskMarker.offset().left),
                             markerRight = parseInt(markerLeft + $taskMarker.width()),
@@ -2478,20 +2483,21 @@
                         if (elemLeft <= markerRight && markerLeft < elemLeft) overlapse = true;
                     }
                 });
-                if (e.pageX > settings.drag.origin + 60 && !overlapse) {
-                    settings.drag.count = settings.drag.count + 0.5;
-                    var move = (settings.drag.origin > e.pageX ? 60 : -60),
-                        $element = settings.drag.element,
-                        original_width = parseInt($element.css('width'));
+                var move = (settings.resize.origin > e.pageX ? 60 : -60),
+                    $element = settings.resize.element,
+                    original_width = parseInt($element.css('width'));
+                if (e.pageX > settings.resize.origin + 60 && !overlapse) {
+                    var newDate = (settings.resize.count + 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.days : settings.i18n.hours);
+                    $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left) + 'px"><div>+' + newDate + '</div></div>');
+                    settings.resize.count = settings.resize.count + 0.5;
                     $element.css('width', original_width - move + 'px');
-                    settings.drag.origin = e.pageX;
-                } else if (e.pageX < settings.drag.origin - 60) {
-                    settings.drag.count = settings.drag.count - 0.5;
-                    var move = (settings.drag.origin > e.pageX ? 60 : -60),
-                        $element = settings.drag.element,
-                        original_width = parseInt($element.css('width'));
+                    settings.resize.origin = e.pageX;
+                } else if (e.pageX < settings.resize.origin - 60) {
+                    var newDate = (settings.resize.count - 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.days : settings.i18n.hours);
+                    $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left - 120) + 'px"><div>' + newDate + '</div></div>');
+                    settings.resize.count = settings.resize.count - 0.5;
                     $element.css('width', original_width - move + 'px');
-                    settings.drag.origin = e.pageX;
+                    settings.resize.origin = e.pageX;
                 }
             }
         });

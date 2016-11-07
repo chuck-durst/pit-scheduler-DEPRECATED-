@@ -382,6 +382,24 @@
     display: none;
 }
 
+.pts-task-tooltip > div  {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none
+}
+
+.pts-task-tooltip {
+    position: relative;
+    bottom: 23px;
+    display: inline-block;
+    background-color: #000;
+    padding: 3px 5px 3px 5px;
+    color: #fff;
+    border-radius: 7px;
+}
+
 /************ Infos box view ************/
 
 #pts-info-box-container {
