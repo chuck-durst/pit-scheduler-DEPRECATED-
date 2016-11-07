@@ -2468,16 +2468,30 @@
 
         $(document).on('mousemove', function (e) {
             if (settings.drag.timeout > 0 && (e.pageX > settings.drag.origin + 60 || e.pageX < settings.drag.origin - 60)) {
-                if (e.pageX > settings.drag.origin + 60) {
+                var $taskMarker = settings.drag.element;
+                var overlapse = false;
+                $('.pts-line-marker[data-task=' + settings.drag.task + '][data-user=' + settings.drag.user + ']').each(function () {
+                    if ($(this).offset().left !== $taskMarker.offset().left) {
+                        var markerRight = parseInt($taskMarker.offset().left + $taskMarker.width()),
+                            elemLeft = parseInt($(this).offset().left);
+                        if (elemLeft <= markerRight) overlapse = true;
+                    }
+                });
+                if (e.pageX > settings.drag.origin + 60 && !overlapse) {
                     settings.drag.count = settings.drag.count + 0.5;
+                    var move = (settings.drag.origin > e.pageX ? 60 : -60),
+                        $element = settings.drag.element,
+                        original_width = parseInt($element.css('width'));
+                    $element.css('width', original_width - move + 'px');
+                    settings.drag.origin = e.pageX;
                 } else if (e.pageX < settings.drag.origin - 60) {
                     settings.drag.count = settings.drag.count - 0.5;
+                    var move = (settings.drag.origin > e.pageX ? 60 : -60),
+                        $element = settings.drag.element,
+                        original_width = parseInt($element.css('width'));
+                    $element.css('width', original_width - move + 'px');
+                    settings.drag.origin = e.pageX;
                 }
-                var move = (settings.drag.origin > e.pageX ? 60 : -60),
-                    $element = settings.drag.element,
-                    original_width = parseInt($element.css('width'));
-                $element.css('width', original_width - move + 'px');
-                settings.drag.origin = e.pageX;
             }
         });
 
