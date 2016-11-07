@@ -2472,9 +2472,10 @@
                 var overlapse = false;
                 $('.pts-line-marker[data-task=' + settings.drag.task + '][data-user=' + settings.drag.user + ']').each(function () {
                     if ($(this).offset().left !== $taskMarker.offset().left) {
-                        var markerRight = parseInt($taskMarker.offset().left + $taskMarker.width()),
+                        var markerLeft = parseInt($taskMarker.offset().left),
+                            markerRight = parseInt(markerLeft + $taskMarker.width()),
                             elemLeft = parseInt($(this).offset().left);
-                        if (elemLeft <= markerRight) overlapse = true;
+                        if (elemLeft <= markerRight && markerLeft < elemLeft) overlapse = true;
                     }
                 });
                 if (e.pageX > settings.drag.origin + 60 && !overlapse) {
