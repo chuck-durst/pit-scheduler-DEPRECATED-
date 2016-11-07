@@ -941,11 +941,13 @@
                 }
             });
             $.each(settings.users, function (userIndex, user) {
-                $.each(user.tasks, function (taskIndex, task) {
-                    if (task && task.id === taskId) {
-                        delete settings.users[userIndex].tasks[taskIndex];
-                    }
-                });
+                if (user) {
+                    $.each(user.tasks, function (taskIndex, task) {
+                        if (task && task.id === taskId) {
+                            delete settings.users[userIndex].tasks[taskIndex];
+                        }
+                    });
+                }
             });
             updateDisplay(settings.currentDisplay);
             generateNotification('success', settings.i18n.notif.taskRemoved, undo, settings.onTaskRemoval);
@@ -1178,12 +1180,16 @@
                     } else {
                         task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).hours(12).minutes(0) : moment(task.end_date).minutes(30));
                     }
-                    if (parseInt(moment(task.start_date).format('YYYYMMDDhhmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDhhmm'))) {
+                    console.log(task.end_date);
+                    task.end_date = moment(task.end_date).format('YYYY-MM-DD HH:mm');
+                    console.log(task.end_date);
+                    if (parseInt(moment(task.start_date).format('YYYYMMDDHHmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDHHmm'))) {
                         deleteTaskFromUser(settings.users[settings.drag.user], task, taskIndex, undo);
                     } else {
                         generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
                     }
                     updateDisplay(settings.currentDisplay);
+                    console.log(task);
                 }
             });
             settings.drag = {};
@@ -2025,7 +2031,7 @@
          */
         var generateNotification = function (origin, message, undo, callback) {
             log.info('CALL FUNCTION: generateNotification');
-            
+
             if (settings.disableNotifications) return;
             var uniqueId = generateRandomId();
             var $undoLink = '';
