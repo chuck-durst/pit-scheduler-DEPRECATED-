@@ -15,11 +15,13 @@
             'fr'
         ],
         fr: {
+            day: 'Jour',
             days: 'Jours',
             months: 'Mois',
             list: 'Liste',
             tasks: 'Tâches',
             task: 'Tâche',
+            hour: 'Heure',
             hours: 'Heures',
             users: 'Utilisateurs',
             unlisted: 'Non répertorié',
@@ -97,11 +99,13 @@
 
         },
         en: {
+            day: 'Day',
             days: 'Days',
             months: 'Months',
             list: 'List',
             tasks: 'Tasks',
             task: 'Task',
+            hour: 'Hour',
             hours: 'Hours',
             users: 'Users',
             unlisted: 'Unlisted',
@@ -1191,6 +1195,36 @@
                 }
             });
             settings.resize = {};
+        };
+
+        var moveTaskResize = function (e) {
+            var $taskMarker = settings.resize.element;
+            $('.pts-task-tooltip').remove();
+            var overlapse = false;
+            $('.pts-line-marker[data-task=' + settings.resize.task + '][data-user=' + settings.resize.user + ']').each(function () {
+                if ($(this).offset().left !== $taskMarker.offset().left) {
+                    var markerLeft = parseInt($taskMarker.offset().left),
+                        markerRight = parseInt(markerLeft + $taskMarker.width()),
+                        elemLeft = parseInt($(this).offset().left);
+                    if (elemLeft <= markerRight && markerLeft < elemLeft) overlapse = true;
+                }
+            });
+            var move = (settings.resize.origin > e.pageX ? 60 : -60),
+                $element = settings.resize.element,
+                original_width = parseInt($element.css('width'));
+            if (e.pageX > settings.resize.origin + 60 && !overlapse) {
+                var newDate = (settings.resize.count + 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.day : settings.i18n.hour) + (settings.resize.count + 0.5 > 1 || settings.resize.count - 0.5 < -1 ? 's' : '');
+                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left) + 'px"><div>' + (settings.resize.count + 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
+                settings.resize.count = settings.resize.count + 0.5;
+                $element.css('width', original_width - move + 'px');
+                settings.resize.origin = e.pageX;
+            } else if (e.pageX < settings.resize.origin - 60) {
+                var newDate = (settings.resize.count - 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.day : settings.i18n.hour) + (settings.resize.count - 0.5 > 1 || settings.resize.count - 0.5 < -1 ? 's' : '');
+                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left - 120) + 'px"><div>' + (settings.resize.count - 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
+                settings.resize.count = settings.resize.count - 0.5;
+                $element.css('width', original_width - move + 'px');
+                settings.resize.origin = e.pageX;
+            }
         };
 
 
@@ -2474,33 +2508,7 @@
 
         $(document).on('mousemove', function (e) {
             if (settings.resize.timeout > 0 && (e.pageX > settings.resize.origin + 60 || e.pageX < settings.resize.origin - 60)) {
-                var $taskMarker = settings.resize.element;
-                $('.pts-task-tooltip').remove();
-                var overlapse = false;
-                $('.pts-line-marker[data-task=' + settings.resize.task + '][data-user=' + settings.resize.user + ']').each(function () {
-                    if ($(this).offset().left !== $taskMarker.offset().left) {
-                        var markerLeft = parseInt($taskMarker.offset().left),
-                            markerRight = parseInt(markerLeft + $taskMarker.width()),
-                            elemLeft = parseInt($(this).offset().left);
-                        if (elemLeft <= markerRight && markerLeft < elemLeft) overlapse = true;
-                    }
-                });
-                var move = (settings.resize.origin > e.pageX ? 60 : -60),
-                    $element = settings.resize.element,
-                    original_width = parseInt($element.css('width'));
-                if (e.pageX > settings.resize.origin + 60 && !overlapse) {
-                    var newDate = (settings.resize.count + 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.days : settings.i18n.hours);
-                    $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left) + 'px"><div>+' + newDate + '</div></div>');
-                    settings.resize.count = settings.resize.count + 0.5;
-                    $element.css('width', original_width - move + 'px');
-                    settings.resize.origin = e.pageX;
-                } else if (e.pageX < settings.resize.origin - 60) {
-                    var newDate = (settings.resize.count - 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.days : settings.i18n.hours);
-                    $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left - 120) + 'px"><div>' + newDate + '</div></div>');
-                    settings.resize.count = settings.resize.count - 0.5;
-                    $element.css('width', original_width - move + 'px');
-                    settings.resize.origin = e.pageX;
-                }
+                moveTaskResize(e);
             }
         });
 
