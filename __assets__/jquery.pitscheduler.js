@@ -2095,7 +2095,7 @@
                         settings.onChange(settings);
                     }
                 }
-                delete settings.undo[uniqueId];
+                settings.undo = [];
             },settings.notificationDuration);
         };
 
@@ -2512,6 +2512,11 @@
             }
         });
 
+        $(window).bind('beforeunload', function(){
+            if ($('.alert').length > 0)
+                return 'Ongoing process, please wait a few seconds and retry';
+        });
+
 
         /********* callback functions *********/
 
@@ -2565,6 +2570,6 @@
             };
         };
 
-        return $scheduler;
+                return $scheduler;
     };
 }(jQuery));
