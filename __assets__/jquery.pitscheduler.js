@@ -396,10 +396,6 @@
                     });
                     if (mustBeShowed) {
                         generateGroupTab(e, i);
-                        settings.groups.added.push({
-                            name: e,
-                            id: 'user-group-' + i
-                        });
                     }
                 }
             });
@@ -1312,6 +1308,12 @@
         var generateGroupTab = function (group, index) {
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
 
+            settings.groups.added.push({
+                name: group,
+                id: 'user-group-' + settings.groups.added.length
+            });
+
+            var index = settings.groups.added.length - 1;
             var $groupHeaderContent =   ['<div id="user-group-' + index + '" class="pts-line-group-container">',
                 '<div class="pts-group-header">',
                 '<i class="glyphicon glyphicon-remove pull-left close-group-panel" data-group="' + index + '" data-toggle="opened"></i>',
