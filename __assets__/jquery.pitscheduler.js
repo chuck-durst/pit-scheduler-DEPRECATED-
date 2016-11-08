@@ -2116,13 +2116,11 @@
                 resizeTask();
             }
         });
-
         $(document).on('mousemove', function (e) {
             if (settings.resize.timeout > 0 && (e.pageX > settings.resize.origin + 60 || e.pageX < settings.resize.origin - 60)) {
                 moveTaskResize(e);
             }
         });
-
         $(window).bind('beforeunload', function(){
             if ($('.alert').length > 0)
                 return 'Ongoing process, please wait a few seconds and retry';
@@ -2131,15 +2129,12 @@
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
         });
-
         $('.pts-btn-month-view').click( function () {
             updateDisplay('months');
         });
-
         $('.pts-btn-list-view').click( function () {
             updateDisplay('list');
         });
-
         $('.pts-btn-next').click(function () {
 
             spinner().show();
@@ -2149,7 +2144,6 @@
                 spinner().hide();
             }, 0);
         });
-
         $('.pts-btn-previous').click(function () {
             spinner().show();
             setTimeout(function () {
@@ -2158,7 +2152,6 @@
                 spinner().hide();
             }, 0);
         });
-
         $('#header-datetimepicker').on('dp.change', function (e) {
             if (e.date === settings.date.selected) return;
             settings.date.selected = e.date;
@@ -2167,14 +2160,14 @@
             generateGroupMainContent();
             generateUsersList();
         });
-
         $('.pts-scheduler-container').scroll(function () {
             $('.pts-line-title-container div').scrollTop($(this).scrollTop());
             $('.pts-column-title-container ').scrollLeft($(this).scrollLeft());
             setTaskLabelPosition();
         });
 
-        $('#pit-scheduler').on('click', '.close-group-panel', function () {
+        $scheduler
+            .on('click', '.close-group-panel', function () {
             var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
             var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
             if ($(this).attr('data-toggle') === 'opened') {
@@ -2188,134 +2181,82 @@
                 $(this).attr('data-toggle', 'opened');
                 $(this).removeClass('closed-btn');
             }
-        });
-
-        $('#pit-scheduler').on('change', '#hide-user-btn', function () {
-            settings.hideEmptyLines = $(this).is(':checked');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
-        });
-
-        $('#pit-scheduler').on('change', '#disable-labels-mov', function () {
-            settings.disableLabelsMovement = $(this).is(':checked');
-            generateTableLines();
-            generateGroupMainContent();
-            generateUsersList();
-        });
-
-        $('#pit-scheduler').on('click', '.pts-column-element[data-date]', function () {
+        })
+            .on('click', '.pts-column-element[data-date]', function () {
             settings.date.selected = moment($(this).attr('data-date'));
             updateDisplay('days');
             generateTableLines();
             generateGroupMainContent();
-        });
-
-        $('#pit-scheduler').on('mousedown', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
-            openInfoBox($(this).attr('data-task'), null, 'task');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-close-info-box', function () {
+        })
+            .on('click', '.pts-close-info-box', function () {
             if ($(this).data('update') == true) {
                 updateDisplay(settings.currentDisplay);
             } else {
                 closeInfoBox();
             }
-        });
-
-        $('#pit-scheduler').on('click', ' .pts-show-user[data-user]', function () {
-            openInfoBox(null, $(this).data('user'), 'user');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-info-box-task-header[data-task]', function () {
-            openInfoBox($(this).data('task'), null, 'task');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-info-box-user-header[data-user]', function () {
-            openInfoBox(null, $(this).data('user'), 'user');
-        });
-
-        $('#pit-scheduler').on('click', '#pts-list-task-select-all', function () {
-            $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
-            switchListRange(settings.list.display);
-        });
-
-        $('#pit-scheduler').on('click', '.pts-list-task-enabler-input',  function () {
-            var checked = true;
-            $('.pts-list-task-enabler-input').each(function () {
-                if ($(this).prop('checked') == false) {
-                    checked = false;
+        })
+            .on('click', ' .pts-show-user[data-user]', function () {
+                openInfoBox(null, $(this).data('user'), 'user');
+            })
+            .on('click', '.pts-info-box-task-header[data-task]', function () {
+                openInfoBox($(this).data('task'), null, 'task');
+            })
+            .on('click', '.pts-info-box-user-header[data-user]', function () {
+                openInfoBox(null, $(this).data('user'), 'user');
+            })
+            .on('click', '#pts-list-task-select-all', function () {
+                $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
+                switchListRange(settings.list.display);
+            })
+            .on('click', '.pts-list-task-enabler-input',  function () {
+                var checked = true;
+                $('.pts-list-task-enabler-input').each(function () {
+                    if ($(this).prop('checked') == false) {
+                        checked = false;
+                    }
+                });
+                if (checked == false) {
+                    $('#pts-list-task-select-all').prop('checked', false);
+                } else  {
+                    $('#pts-list-task-select-all').prop('checked', true);
                 }
-            });
-            if (checked == false) {
-                $('#pts-list-task-select-all').prop('checked', false);
-            } else  {
-                $('#pts-list-task-select-all').prop('checked', true);
-            }
-            switchListRange(settings.list.display);
-        });
-
-        $('#pit-scheduler').on('click', '.pts-list-range-btn[data-value]', function () {
-            var range = $(this).data('value');
-            settings.list.display = range;
-            $('.pts-list-personalized-inputs-container').empty();
-            $('.pts-list-range-btn').removeClass('selected');
-            $(this).addClass('selected');
-            if (range !== 'personalized') {
-                switchListRange(range);
-            } else {
-                generateRangePicker();
-            }
-        });
-
-        $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start', function (e) {
-            $('.pts-datetimepicker-end').data('DateTimePicker').date(e.date).minDate(e.date);
-        });
-
-        $('#pit-scheduler').on('dp.change', '.pts-datetimepicker-start, .pts-datetimepicker-end', function (e) {
-            $('.pts-datetimepicker-end').data('DateTimePicker').hide();
-            $('.pts-datetimepicker-start').data('DateTimePicker').hide();
-        });
-
-        $('#pit-scheduler').on('click', '.pts-list-range-submit', function () {
+                switchListRange(settings.list.display);
+            })
+            .on('click', '.pts-list-range-btn[data-value]', function () {
+                var range = $(this).data('value');
+                settings.list.display = range;
+                $('.pts-list-personalized-inputs-container').empty();
+                $('.pts-list-range-btn').removeClass('selected');
+                $(this).addClass('selected');
+                if (range !== 'personalized') {
+                    switchListRange(range);
+                } else {
+                    generateRangePicker();
+                }
+            })
+            .on('click', '.pts-list-range-submit', function () {
             settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
             settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
             $('.pts-list-personalized-inputs-container').empty();
             $('.pts-list-range-btn').css('display', 'block');
             if (!settings.list.start_date || ! settings.list.end_date) return $('.pts-list-range-btn').removeClass('selected');
             switchListRange('personalized');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-list-range-dismiss', function () {
+        })
+            .on('click', '.pts-list-range-dismiss', function () {
             $('.pts-list-personalized-inputs-container').empty();
             $('.pts-list-range-btn').css('display', 'block');
             $('.pts-list-range-btn').removeClass('selected');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-list-user-name[data-user]', function () {
+        })
+            .on('click', '.pts-list-user-name[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'user');
-        });
-
-        $('#pit-scheduler').on('keyup', '.pts-list-search-task', function () {
-            var searchString = $(this).val().toLowerCase();
-            $('.pts-list-row-task').each(function () {
-                if ($(this).children('label').text().toLowerCase().indexOf(searchString) >= 0) {
-                    $(this).css('display', 'block');
-                } else {
-                    $(this).css('display', 'none');
-                }
-            });
-        });
-
-        $('#pit-scheduler').on('click', '.pts-add-new-task', function () {
+        })
+            .on('click', '.pts-add-new-task', function () {
             openInfoBox(null, null, "createTask");
-        });
-
-        $('#pit-scheduler').on('click', '.pts-add-new-user', function () {
+        })
+            .on('click', '.pts-add-new-user', function () {
             openInfoBox(null, null, "createUser");
-        });
-
-        $('#pit-scheduler').on('click', '.pts-create-task-btn', function () {
+        })
+            .on('click', '.pts-create-task-btn', function () {
             var name = $('#pts-add-task-input-name').val(),
                 id = $('#pts-add-task-input-id').val(),
                 description = $('#pts-add-task-input-description').val(),
@@ -2340,18 +2281,16 @@
             if (name.length < 1) return;
             closeInfoBox();
             createNewTask(name, id, description, color, tag, $(this).data('assign'));
-        });
-
-        $('#pit-scheduler').on('click', '.pts-create-user-btn', function () {
+        })
+            .on('click', '.pts-create-user-btn', function () {
             var name = $('#pts-add-user-input-name').val(),
                 group = $('#pts-add-user-input-group').val();
             $('#pts-add-user-err-name').html('');
             if (name.length < 1) return $('#pts-add-user-err-name').html(settings.i18n.requiredField);
             closeInfoBox();
             createNewUser(name, group, $(this).data('assign'));
-        });
-
-        $('#pit-scheduler').on('click', '.pts-delete-task-btn[data-task]', function () {
+        })
+            .on('click', '.pts-delete-task-btn[data-task]', function () {
             var $button = $(this);
 
             if ($button.attr('data-confirm') == 'false') {
@@ -2364,13 +2303,11 @@
                 return;
             }
             removeTask($button.data('task'));
-        });
-
-        $('#pit-scheduler').on('click', '.pts-assign-task-btn', function () {
+        })
+            .on('click', '.pts-assign-task-btn', function () {
             openInfoBox($(this).data('task'), null, 'assignTask');
-        });
-
-        $('#pit-scheduler').on('click', '#pts-task-assign-btn[data-task]', function () {
+        })
+            .on('click', '#pts-task-assign-btn[data-task]', function () {
             var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
                 end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
                 users = $('.pts-task-assign-users-list').val(),
@@ -2380,9 +2317,8 @@
             } else {
                 $('#pts-assign-task-err').text(settings.i18n.allInputRequired);
             }
-        });
-
-        $('#pit-scheduler').on('click', '#pts-user-assign-btn[data-user]', function () {
+        })
+            .on('click', '#pts-user-assign-btn[data-user]', function () {
             var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
                 end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
                 tasks = $('.pts-user-assign-tasks-list').val(),
@@ -2395,18 +2331,16 @@
             } else {
                 $('#pts-assign-user-err').text(settings.i18n.allInputRequired);
             }
-        });
-
-        $('#pit-scheduler').on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
+        })
+            .on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
             if (e.target !== this || $('#pts-info-box-container[data-toggle=opened]').length <= 0) return;
             if ($('.pts-close-info-box').data('update') == true) {
                 updateDisplay(settings.currentDisplay);
             } else {
                 closeInfoBox();
             }
-        });
-
-        $('#pit-scheduler').on('click', '.pts-task-assign-delete-user[data-user][data-task][data-task-index]', function () {
+        })
+            .on('click', '.pts-task-assign-delete-user[data-user][data-task][data-task-index]', function () {
             var userIndex = $(this).data('user'),
                 task = getTaskById($(this).data('task')),
                 taskIndex = $(this).data('task-index');
@@ -2416,13 +2350,11 @@
                 $(this).parent('td').remove();
             }
 
-        });
-
-        $('#pit-scheduler').on('click', '.pts-edit-task-btn[data-task]', function () {
+        })
+            .on('click', '.pts-edit-task-btn[data-task]', function () {
             openInfoBox($(this).data('task'), null, 'editTask');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-edit-task-confirm-btn[data-task]', function () {
+        })
+            .on('click', '.pts-edit-task-confirm-btn[data-task]', function () {
             var task = getTaskById($(this).data('task')),
                 newData = {};
 
@@ -2432,21 +2364,11 @@
             newData.tag = $('#pts-edit-task-input-tag').val();
             newData.tagColor = $('#pts-edit-task-input-tagColor').val();
             editTask(task, newData);
-        });
-
-        $('#pit-scheduler').on('click', '.pts-info-box-back-btn[data-target]', function () {
+        })
+            .on('click', '.pts-info-box-back-btn[data-target]', function () {
             openInfoBox($(this).data('task'), $(this).data('user'), $(this).data('target'));
-        });
-
-        $('#pit-scheduler').on('change', '#pts-add-user-select-group', function () {
-            $('#pts-add-user-input-group').val($(this).val());
-        });
-
-        $('#pit-scheduler').on('change', '#pts-edit-user-select-group', function () {
-            $('#pts-edit-user-input-group').val($(this).val());
-        });
-
-        $('#pit-scheduler').on('click', '.pts-delete-user-btn[data-user]', function () {
+        })
+            .on('click', '.pts-delete-user-btn[data-user]', function () {
             var $button = $(this),
                 user = settings.users[$button.data('user')];
 
@@ -2462,31 +2384,26 @@
             if (user) {
                 removeUser(user);
             }
-        });
-
-        $('#pit-scheduler').on('click', '.pts-edit-user-btn[data-user]', function () {
+        })
+            .on('click', '.pts-edit-user-btn[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'editUser');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-assign-user-btn[data-user]', function () {
+        })
+            .on('click', '.pts-assign-user-btn[data-user]', function () {
             openInfoBox(null, $(this).data('user'), 'assignUser');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
+        })
+            .on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
             var newData = {};
 
             newData.name = $('#pts-edit-user-input-name').val();
             newData.group = $('#pts-edit-user-input-group').val();
             if (newData.name.length <= 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
             editUser($(this).data('user'), newData);
-        });
-
-        $('#pit-scheduler').on('click', '.pts-button-see-all', function (e) {
+        })
+            .on('click', '.pts-button-see-all', function (e) {
             e.stopPropagation();
             openInfoBox(null, null, 'seeAll');
-        });
-
-        $('#pit-scheduler').on('click', '.pts-notif-undo-btn[data-notification]', function (e) {
+        })
+            .on('click', '.pts-notif-undo-btn[data-notification]', function (e) {
             e.stopPropagation();
             var notifId = $(this).data('notification'),
                 undo = settings.undo[notifId];
@@ -2500,9 +2417,46 @@
                 updateDisplay(settings.currentDisplay);
                 $('.alert[data-id=' + notifId + ']').remove();
             }
-        });
-
-        $('#pit-scheduler').on('mousedown', '.pts-task-resizer[data-task][data-user][data-end]', function (e) {
+        })
+            .on('change', '#hide-user-btn', function () {
+                settings.hideEmptyLines = $(this).is(':checked');
+                generateTableLines();
+                generateGroupMainContent();
+                generateUsersList();
+            })
+            .on('change', '#disable-labels-mov', function () {
+                settings.disableLabelsMovement = $(this).is(':checked');
+                generateTableLines();
+                generateGroupMainContent();
+                generateUsersList();
+            })
+            .on('change', '#pts-add-user-select-group', function () {
+                $('#pts-add-user-input-group').val($(this).val());
+            })
+            .on('change', '#pts-edit-user-select-group', function () {
+                $('#pts-edit-user-input-group').val($(this).val());
+            })
+            .on('dp.change', '.pts-datetimepicker-start', function (e) {
+                $('.pts-datetimepicker-end').data('DateTimePicker').date(e.date).minDate(e.date);
+            })
+            .on('dp.change', '.pts-datetimepicker-start, .pts-datetimepicker-end', function (e) {
+                $('.pts-datetimepicker-end').data('DateTimePicker').hide();
+                $('.pts-datetimepicker-start').data('DateTimePicker').hide();
+            })
+            .on('mousedown', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
+                openInfoBox($(this).attr('data-task'), null, 'task');
+            })
+            .on('keyup', '.pts-list-search-task', function () {
+                var searchString = $(this).val().toLowerCase();
+                $('.pts-list-row-task').each(function () {
+                    if ($(this).children('label').text().toLowerCase().indexOf(searchString) >= 0) {
+                        $(this).css('display', 'block');
+                    } else {
+                        $(this).css('display', 'none');
+                    }
+                });
+            })
+            .on('mousedown', '.pts-task-resizer[data-task][data-user][data-end]', function (e) {
             e.stopPropagation();
             settings.resize = {
                 origin:  $(this).offset().left,
@@ -2516,8 +2470,7 @@
                 }, 200)
             };
         });
-
-
+        
         /********* callback functions *********/
 
         $.fn.pitScheduler.default = function () {
