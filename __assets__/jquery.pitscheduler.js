@@ -2110,6 +2110,24 @@
 
         /********* Events *********/
 
+        $(document).on('mouseup', function(){
+            if (settings.resize.count) {
+                $('.pts-task-tooltip').remove();
+                resizeTask();
+            }
+        });
+
+        $(document).on('mousemove', function (e) {
+            if (settings.resize.timeout > 0 && (e.pageX > settings.resize.origin + 60 || e.pageX < settings.resize.origin - 60)) {
+                moveTaskResize(e);
+            }
+        });
+
+        $(window).bind('beforeunload', function(){
+            if ($('.alert').length > 0)
+                return 'Ongoing process, please wait a few seconds and retry';
+        });
+
         $('.pts-btn-day-view').click( function () {
             updateDisplay('days');
         });
@@ -2497,24 +2515,6 @@
                     $(document).css('cursor', 'e-resize');
                 }, 200)
             };
-        });
-
-        $(document).on('mouseup', function(){
-            if (settings.resize.count) {
-                $('.pts-task-tooltip').remove();
-                resizeTask();
-            }
-        });
-
-        $(document).on('mousemove', function (e) {
-            if (settings.resize.timeout > 0 && (e.pageX > settings.resize.origin + 60 || e.pageX < settings.resize.origin - 60)) {
-                moveTaskResize(e);
-            }
-        });
-
-        $(window).bind('beforeunload', function(){
-            if ($('.alert').length > 0)
-                return 'Ongoing process, please wait a few seconds and retry';
         });
 
 
