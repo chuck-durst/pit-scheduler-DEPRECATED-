@@ -1214,13 +1214,13 @@
                 original_width = parseInt($element.css('width'));
             if (e.pageX > settings.resize.origin + 60 && !overlapse) {
                 var newDate = (settings.resize.count + 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.day : settings.i18n.hour) + (settings.resize.count + 0.5 > 1 || settings.resize.count - 0.5 < -1 ? 's' : '');
-                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left) + 'px"><div>' + (settings.resize.count + 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
+                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left) + 'px;top:' + ($taskMarker.position().top - 30) + 'px"><div>' + (settings.resize.count + 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
                 settings.resize.count = settings.resize.count + 0.5;
                 $element.css('width', original_width - move + 'px');
                 settings.resize.origin = e.pageX;
             } else if (e.pageX < settings.resize.origin - 60) {
                 var newDate = (settings.resize.count - 0.5) + ' ' + (settings.currentDisplay == 'months' ? settings.i18n.day : settings.i18n.hour) + (settings.resize.count - 0.5 > 1 || settings.resize.count - 0.5 < -1 ? 's' : '');
-                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left - 120) + 'px"><div>' + (settings.resize.count - 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
+                $taskMarker.before('<div class="pts-task-tooltip" style="left:' + ($taskMarker.width() + $taskMarker.position().left - 120) + 'px;top:' + ($taskMarker.position().top - 30) + 'px""><div>' + (settings.resize.count - 0.5 > 0 ? '+' : '') + newDate + '</div></div>');
                 settings.resize.count = settings.resize.count - 0.5;
                 $element.css('width', original_width - move + 'px');
                 settings.resize.origin = e.pageX;

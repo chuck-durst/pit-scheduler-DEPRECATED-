@@ -392,7 +392,7 @@
 
 .pts-task-tooltip {
     position: relative;
-    bottom: 23px;
+    //bottom: 23px;
     display: inline-block;
     background-color: #000;
     padding: 3px 5px 3px 5px;
