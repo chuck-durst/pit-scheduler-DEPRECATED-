@@ -1468,7 +1468,6 @@
          */
         var generateGroupTab = function (group, index) {
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
-            if (getFiltersResponse('group', group)) return;
             settings.groups.added.push({
                 name: group,
                 id: 'user-group-' + settings.groups.added.length
