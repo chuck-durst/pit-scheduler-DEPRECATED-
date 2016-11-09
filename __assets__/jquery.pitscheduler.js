@@ -1695,6 +1695,7 @@
                     sortedTasks[e.id] = [];
                 }
                 sortedTasks[e.id].push('<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
+                    '<i class="glyphicon glyphicon-pencil pts-user-edit-task" data-user="' + user.index + '" data-task="' + e.id + '" data-task-index="' + i + '"></i>' +
                     '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
