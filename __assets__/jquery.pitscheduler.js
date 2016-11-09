@@ -1325,6 +1325,24 @@
             }
         };
 
+        /**
+         * Return true if the filters allow the defined element
+         * @param {String} type
+         * @param  {String} value
+         * @returns {boolean}
+         */
+        var getFiltersResponse = function(type, value) {
+            var response = true;
+            settings.filters.forEach(function (filter) {
+                if (filter.target == type) {
+                    if (filter.type == 'out' && value.indexOf(filter.value) != -1 || filter.type == 'in' && value.indexOf(filter.value) == -1) {
+                        response = false;
+                    }
+                }
+            });
+            return response;
+        };
+
 
         /********* Generation *********/
 
