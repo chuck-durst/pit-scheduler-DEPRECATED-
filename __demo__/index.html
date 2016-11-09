@@ -36,8 +36,7 @@
             <small class="extrasmall">(But also with time, nerves, hard working, a lot of coffee and tea, my remaining fingers, some help from internet, a few frameworks and libraries, passion, singleness and obviously with Javascript that is probably the best language ever contrary to what some Java lovers may say... You know, they are like old men who believe that their 4l is better than the last Tesla just because they grew up with it and won't ever recognize that the past must belong to the past. Using Java to build a website is like using a nuclear plant to grow carrots. Whatever, Javascript is like Doctor Who: It's magic, and you probably have to know it before loving it.)</small>
         </div>
         <div class="col-lg-12">
-            <div id="pit-scheduler">
-            </div>
+            <div class="pit-scheduler"></div>
         </div>
     </div>
 </div>
@@ -49,7 +48,7 @@
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>-->
 <script>
     $(document).ready(function () {
-        $("#pit-scheduler").pitScheduler({
+        $(".pit-scheduler").pitScheduler({
             locale: 'fr', //default: en
             defaultDisplay: 'months', //default: months
             hideEmptyLines: true, //default: true

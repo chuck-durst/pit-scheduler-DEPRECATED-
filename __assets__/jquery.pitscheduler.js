@@ -78,7 +78,14 @@
             allocations: 'assignations',
             allocation: 'assignation',
             tag: 'Etiquette',
+            tags: 'Etiquettes',
+            groups: 'Groupes',
             tagColor: 'Couleur de l\'étiquette',
+            filters: 'Filtres',
+            deleteAll: 'Tout supprimer',
+            addFilter: 'Créer un filtre',
+            contains: 'Contient',
+            notContains: 'Ne contient pas',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
@@ -94,7 +101,11 @@
                 userHasNoTask: 'n\'est assigned à aucune tâche',
                 userEdited: 'L\'utilisateur a correctement été modifié',
                 userAssignedTo: 'a été assigné à',
-                userTaskModified: 'La tâche prendra maintenant fin le'
+                userTaskModified: 'La tâche prendra maintenant fin le',
+                filterAdded: 'Le filtre a correctement été ajouté',
+                filterEdited: 'Le filtre a correctement été modifié',
+                filterRemoved: 'Le filtre a correctement été supprimé',
+                allFiltersRemoved: 'Tous les filtres ont été supprimés'
             }
 
         },
@@ -154,6 +165,7 @@
             selectTasksToAssign: 'Select the tasks to assign',
             editTask: 'Edit a task',
             group: 'Group',
+            groups: 'Groups',
             selectGroup: 'Select an existing group',
             createNewGroup: 'Create a new group',
             or: 'or',
@@ -161,7 +173,13 @@
             allocations: 'allocations',
             allocation: 'allocation',
             tag: 'Tag',
+            tags: 'Tags',
             tagColor: 'Tag color',
+            filters: 'Filters',
+            deleteAll: 'Delete all',
+            addFilter: 'Create filter',
+            contains: 'Contains',
+            notContains: 'Does not contains',
             notif: {
                 taskCreated: 'The task has been successfully created',
                 userCreated: 'The user has been successfully created',
@@ -177,7 +195,11 @@
                 userHasNoTask: 'is not assigned to any task',
                 userEdited: 'The user has been successfully edited',
                 userAssignedTo: 'has been assigned to',
-                userTaskModified: 'The task will now end the'
+                userTaskModified: 'The task will now end the',
+                filterAdded: 'The filter has been added',
+                filterEdited: 'The filter has been edited',
+                filterRemoved: 'The filter has been removed',
+                allFiltersRemoved: 'All fiters has been removed'
             }
         }
     };
@@ -205,7 +227,8 @@
             notificationDuration: options.notificationDuration || 4000,
             hideEmptyLines: options.hideEmptyLines || true,
             undo: [],
-            resize: {}
+            resize: {},
+            filters: []
         }, options);
 
         moment.locale(settings.locale);
@@ -750,6 +773,10 @@
                     generateInfoBoxContentSeeAll();
                     $infoBox.attr('data-toggle', 'opened');
                     break;
+                case 'filters':
+                    generateInfoBoxContentFilters();
+                    $infoBox.attr('data-toggle', 'opened');
+                    break;
                 default:
                     return;
             }
@@ -1233,9 +1260,9 @@
 
         /**
          * Apply the task assignation edition
-         * @param user
-         * @param task
-         * @param taskIndex
+         * @param {Object} user
+         * @param {Object} task
+         * @param {String} taskIndex
          */
         var editTaskAssignation = function (user, task, taskIndex) {
             var overflow = false,
@@ -1257,6 +1284,44 @@
                 settings.users[user.index].tasks[taskIndex].end_date = new_dates.end_date;
                 updateDisplay(settings.currentDisplay);
                 generateNotification('success', settings.i18n.notif.userEdited, undo, settings.onUserEdition);
+            }
+        };
+
+        /**
+         * Create or edit a filter
+         * @param {Object} filter
+         */
+        var addNewFilter = function (filter) {
+            var exist = false;
+            settings.filters.forEach(function (_filter) {
+                if (_filter.id == filter.id) {
+                    _filter = filter;
+                    exist = true;
+                    generateNotification('success', settings.i18n.notif.filterEdited);
+                }
+            });
+            if (!exist) {
+                settings.filters.push(filter);
+                generateNotification('success', settings.i18n.notif.filterAdded);
+            }
+        };
+
+        /**
+         * Delete a defined filter
+         * @param {String} filterId
+         */
+        var removeFilter = function (filterId) {
+            var toRemove = null;
+            settings.filters.forEach(function (filter, i) {
+                if (filter.id == filterId) {
+                    toRemove = i;
+                }
+            });
+            if (toRemove !== null) {
+                delete settings.filters[toRemove];
+                generateNotification('success', settings.i18n.notif.filterRemoved);
+                settings.filters.length--;
+                $('.pts-filter-container[data-filter=' + filterId + ']').remove();
             }
         };
 
@@ -1358,8 +1423,10 @@
                 '<li><a href="#" class="pts-add-new-task">' + settings.i18n.addNewTask + '</a></li>',
                 '<li><a href="#" class="pts-add-new-user">' + settings.i18n.addNewUser + '</a></li>',
                 '</ul></div><div class="dropdown">',
+                '<button class="btn ' + (settings.filters.length > 0 ? 'btn-success' : 'btn-default') + ' pts-open-filters-menu dropdown-toggle" type="button">',
+                '<i class="glyphicon glyphicon-filter"></i></button>',
                 '<button class="btn btn-default dropdown-toggle" type="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
-                settings.i18n.settings + ' <span class="caret"></span></button>',
+                '<i class="glyphicon glyphicon-cog"></i> <span class="caret"></span></button>',
                 '<ul class="dropdown-menu" aria-labelledby="settingsDropdown">',
                 '<li><label class="checkbox-inline"><input id="hide-user-btn" type="checkbox" value="" ' + (settings.hideEmptyLines ? 'checked' : '') + '>'+ settings.i18n.hideEmptyLine +'</label></li>',
                 '<li><label class="checkbox-inline"><input id="disable-labels-mov" type="checkbox" value="" ' + (settings.disableLabelsMovement ? 'checked' : '') + '>'+ settings.i18n.disableLabelsMovement +'</label></li>',
@@ -2099,6 +2166,55 @@
         };
 
         /**
+         * Generates the filters structure of the info box
+         */
+        var generateInfoBoxContentFilters = function () {
+            var $content =  [
+                '<div class="panel-body">',
+                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.filters,
+                '<button class="btn btn-danger btn-xs pts-filters-delete-all">' + settings.i18n.deleteAll + '</button>',
+                '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
+                '<button class="btn pts-check-color pts-create-filter" style="background-color:' + settings.defaultColor + ';margin-bottom:20px">',
+                '<i class="glyphicon glyphicon-plus"></i> ' + settings.i18n.addFilter + '</button>',
+                '<div class="pts-info-box-filters-list"></div></div>'].join('\n');
+
+            $('#pts-info-box-container').append($content);
+            settings.filters.forEach(function (filter) {
+                generateNewFilter(filter);
+            });
+        };
+
+        /**
+         * Generate a new filter container
+         * @param {Object} filter: optional object to create a filter from an existing model
+         */
+        var generateNewFilter = function (filter) {
+            var filterId = (filter? filter.id : generateRandomId());
+
+            var $content = [
+                '<div class="pts-filter-container row" data-filter="' + filterId + '"><div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
+                '<option value="task" ' + (filter && filter.target == 'task' ? 'selected="selected"' : '') + '>' + settings.i18n.tasks + '</option>',
+                '<option value="user" ' + (filter && filter.target == 'user' ? 'selected="selected"' : '') + '>' + settings.i18n.users + '</option>',
+                '<option value="tag" ' + (filter && filter.target == 'tag' ? 'selected="selected"' : '') + '>' + settings.i18n.tags + '</option>',
+                '<option value="group" ' + (filter && filter.target == 'group' ? 'selected="selected"' : '') + '>' + settings.i18n.groups + '</option>',
+                '</select></div><div class="col-lg-12">',
+                '<div class="input-group" data-filter="' + filterId + '"><div class="input-group-btn">',
+                '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="position:relative;bottom:2px;">',
+                (filter && filter.type == 'out' ? settings.i18n.notContains : settings.i18n.contains) + ' <span class="caret"></span></button>',
+                '<ul class="dropdown-menu"><li><a class="pts-filter-switch" data-target="in" href="#">' + settings.i18n.contains + '</a></li>',
+                '<li><a class="pts-filter-switch" data-target="out" href="#">' + settings.i18n.notContains + '</a></li></ul></div>',
+                '<input type="text" class="form-control pts-filter-value" data-contains="' + (filter && filter.type == 'out' ? 'out' : 'in') + '" value="' + (filter ? filter.value : '') + '"></div>',
+                '<div class="pts-filter-err" style="color:red"></div></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-delete-filter-btn btn btn-danger" data-filter="' + filterId + '">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-submit-filter-btn pts-check-color" style="background-color:' + settings.defaultColor + '" data-filter="' + filterId + '">',
+                settings.i18n.confirm + '</button></div></div>'
+            ].join('\n');
+            $('.pts-info-box-filters-list').prepend($content);
+            getContrastedColor();
+        };
+
+        /**
          * Generates a notification and call a callback function if the process is not broken
          * @param {String} origin: The notification type (danger, success, info, warning)
          * @param [String} message: The content of the notification
@@ -2181,6 +2297,7 @@
                 .defaultDate(moment(task.start_date))
                 .keepOpen(false);
         };
+
 
         /********* Initialization *********/
         console.groupCollapsed('Initialization');
@@ -2520,6 +2637,45 @@
             .on('click', '.pts-edit-assignation-dismiss', function (e) {
                 $('td').css('display', 'table-cell');
                 $('.pts-edit-assignation-box').remove();
+            })
+            .on('click', '.pts-open-filters-menu', function (e) {
+                openInfoBox(null, null, 'filters');
+            })
+            .on('click', '.pts-create-filter', function (e) {
+               generateNewFilter();
+            })
+            .on('click', '.pts-filter-switch[data-target]', function (e) {
+               var target = $(this).data('target'),
+                   $parent = $(this).closest('.input-group-btn'),
+                   $input = $parent.parent().children('input.pts-filter-value'),
+                   $button = $parent.children('button.dropdown-toggle');
+                $button.html((target == 'in' ? settings.i18n.contains : settings.i18n.notContains) + ' <span class="caret"></span>');
+                $input.data('contains', target);
+
+            })
+            .on('click', '.pts-submit-filter-btn[data-filter]', function () {
+                var $parent = $('.input-group[data-filter=' + $(this).data('filter') + ']'),
+                    filter = {
+                        id: $(this).data('filter'),
+                        target: $('.pts-filter-target[data-filter=' + $(this).data('filter') + ']').val(),
+                        value: $parent.children('input.pts-filter-value').val(),
+                        type: $parent.children('input.pts-filter-value').data('contains')
+                };
+                if (!filter.value) {
+                    return $parent.parent().children('.pts-filter-err').html(settings.i18n.allInputRequired);
+                } else {
+                    $parent.parent().children('.pts-filter-err').html('');
+                    addNewFilter(filter);
+                }
+            })
+            .on('click', '.pts-delete-filter-btn[data-filter]', function () {
+                removeFilter($(this).data('filter'));
+            })
+            .on('click', '.pts-filters-delete-all', function () {
+                settings.filters = [];
+                $('.pts-filter-container').remove();
+                generateNotification('success', settings.i18n.notif.allFiltersRemoved);
+
             })
             .on('change', '#hide-user-btn', function () {
                 settings.hideEmptyLines = $(this).is(':checked');
