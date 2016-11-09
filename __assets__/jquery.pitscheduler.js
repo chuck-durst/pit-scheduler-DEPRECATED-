@@ -659,6 +659,8 @@
          */
         var userLineIsShowed = function (user) {
             log.log('CALL FUNCTION: userLineIsShowed: user: ' + user.name);
+            if (getFiltersResponse('group', user.group)) return false;
+            if (getFiltersResponse('user', user.name)) return false;
             var response = 0,
                 originDates = {
                     start_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).startOf('day') : moment(settings.date.selected).startOf('month')),
@@ -1293,17 +1295,20 @@
          */
         var addNewFilter = function (filter) {
             var exist = false;
-            settings.filters.forEach(function (_filter) {
+            settings.filters.forEach(function (_filter, i) {
                 if (_filter.id == filter.id) {
-                    _filter = filter;
-                    exist = true;
-                    generateNotification('success', settings.i18n.notif.filterEdited);
+                    console.log('EXISTING FILTER');
+                    exist = i;
                 }
             });
-            if (!exist) {
+            if (exist === false) {
                 settings.filters.push(filter);
                 generateNotification('success', settings.i18n.notif.filterAdded);
+            } else {
+                settings.filters[exist] = filter;
+                generateNotification('success', settings.i18n.notif.filterEdited);
             }
+            console.log(settings.filters);
         };
 
         /**
@@ -1332,14 +1337,18 @@
          * @returns {boolean}
          */
         var getFiltersResponse = function(type, value) {
-            var response = true;
+            var response = false;
             settings.filters.forEach(function (filter) {
                 if (filter.target == type) {
+                    console.log('Find target: ' + type);
+                    console.log('Look if ' + value +  (filter.type == 'in' ? ' contains ' : ' not containing ') + filter.value);
                     if (filter.type == 'out' && value.indexOf(filter.value) != -1 || filter.type == 'in' && value.indexOf(filter.value) == -1) {
-                        response = false;
-                    }
+                        console.log('answer: Yes');
+                        response = true;
+                    } else console.log('answer: No');
                 }
             });
+            console.log('RESPONSE: ' + response);
             return response;
         };
 
@@ -1459,7 +1468,7 @@
          */
         var generateGroupTab = function (group, index) {
             log.log('CALL FUNCTION: generateGroupTab: group: ' + group);
-
+            if (getFiltersResponse('group', group)) return;
             settings.groups.added.push({
                 name: group,
                 id: 'user-group-' + settings.groups.added.length
@@ -2208,7 +2217,6 @@
          */
         var generateNewFilter = function (filter) {
             var filterId = (filter? filter.id : generateRandomId());
-
             var $content = [
                 '<div class="pts-filter-container row" data-filter="' + filterId + '"><div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
                 '<option value="task" ' + (filter && filter.target == 'task' ? 'selected="selected"' : '') + '>' + settings.i18n.tasks + '</option>',
