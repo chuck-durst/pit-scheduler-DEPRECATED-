@@ -491,6 +491,18 @@ div.pts-info-box-user-list, div.pts-info-box-task-list {
     bottom: 5px;
 }
 
+.pts-user-edit-task {
+    cursor: pointer;
+    margin-right: 1px;
+}
+
+.pts-edit-assignation-box {
+    border: 1px solid #000;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 /************ List view ************/
 
 .pts-list-range-btn.selected {

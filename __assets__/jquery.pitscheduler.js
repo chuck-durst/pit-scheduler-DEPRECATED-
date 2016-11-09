@@ -83,7 +83,7 @@
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
                 taskRemoved: 'La tâche a correctement été supprimée',
-                userRemoved: 'L\'utilisateur a correctement été supprimée',
+                userRemoved: 'L\'utilisateur a correctement été supprimé',
                 usersAssigned: 'utilisateurs ont été assignés à la tâche',
                 userAssigned: 'utilisateur a été assigné à la tâche',
                 userUnassigned: 'a correctement été désassigné',
@@ -1197,6 +1197,10 @@
             settings.resize = {};
         };
 
+        /**
+         *  apply the task resizing
+         * @param e: the action event
+         */
         var moveTaskResize = function (e) {
             var $taskMarker = settings.resize.element;
             $('.pts-task-tooltip').remove();
@@ -1224,6 +1228,35 @@
                 settings.resize.count = settings.resize.count - 0.5;
                 $element.css('width', original_width - move + 'px');
                 settings.resize.origin = e.pageX;
+            }
+        };
+
+        /**
+         * Apply the task assignation edition
+         * @param user
+         * @param task
+         * @param taskIndex
+         */
+        var editTaskAssignation = function (user, task, taskIndex) {
+            var overflow = false,
+                new_dates = {
+                    start_date: moment($('#pts-list-datetimepicker-start').data('DateTimePicker').date()),
+                    end_date: moment($('#pts-list-datetimepicker-end').data('DateTimePicker').date())
+                };
+            if (!task) return;
+
+            user.tasks.forEach(function (_task, i) {
+                if (taskIndex != i && _task.id == task.id && (isDateInDate(new_dates, _task) || isDateInDate(_task, new_dates))) {
+                    overflow = true;
+                    $('.pts-edit-assignation-err').html(user.name + ' ' + settings.i18n.userIsAlreadyAssigned);
+                }
+            });
+            if (overflow == false) {
+                var undo = getUndo();
+                settings.users[user.index].tasks[taskIndex].start_date = new_dates.start_date;
+                settings.users[user.index].tasks[taskIndex].end_date = new_dates.end_date;
+                updateDisplay(settings.currentDisplay);
+                generateNotification('success', settings.i18n.notif.userEdited, undo, settings.onUserEdition);
             }
         };
 
@@ -1444,32 +1477,34 @@
             if (!user.tasks) return;
             user.tasks.forEach(function (e, i) {
                 var task = $.extend(getTaskById(e.id), e);
-                if (task === undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
-                task.index = i;
-                task.superposed = '';
-                if (task === undefined) return log.warn('CALL FUNCTION: Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
-                if (task.start_date > task.end_date) return log.warn('CALL FUNCTION: Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
-                if (settings.currentDisplay === 'months') {
-                    task = hideTaskSuperposition(i, task, user);
-                    if (task.end_date) {
-                        if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
-                            && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
-                            topDistance += generateTaskLineMonth(user, task, topDistance);
+                if (task === undefined || getTaskById(e.id) == undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
+                else {
+                    task.index = i;
+                    task.superposed = '';
+                    if (task === undefined) return log.warn('CALL FUNCTION: Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
+                    if (task.start_date > task.end_date) return log.warn('CALL FUNCTION: Warning: end_date must be later than start_date for user ' + user.name + 'in task ' + e.id);
+                    if (settings.currentDisplay === 'months') {
+                        task = hideTaskSuperposition(i, task, user);
+                        if (task.end_date) {
+                            if (moment(settings.date.selected).format('YYYYMM') >= moment(task.start_date).format('YYYYMM')
+                                && moment(settings.date.selected).format('YYYYMM') <= moment(task.end_date).format('YYYYMM')) {
+                                topDistance += generateTaskLineMonth(user, task, topDistance);
+                            }
                         }
                     }
-                }
-                else if (settings.currentDisplay === 'days') {
-                    if (task.end_date) {
-                        if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
-                            && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
-                            topDistance += generateTaskLineDay(user, task, topDistance);
+                    else if (settings.currentDisplay === 'days') {
+                        if (task.end_date) {
+                            if (moment(settings.date.selected).format('YYYYMMDD') >= moment(task.start_date).format('YYYYMMDD')
+                                && moment(settings.date.selected).format('YYYYMMDD') <= moment(task.end_date).format('YYYYMMDD')) {
+                                topDistance += generateTaskLineDay(user, task, topDistance);
+                            }
                         }
                     }
+                    delete task.superposed;
+                    delete task.index;
+                    delete task.start_date;
+                    delete task.end_date;
                 }
-                delete task.superposed;
-                delete task.index;
-                delete task.start_date;
-                delete task.end_date;
             });
         };
 
@@ -1635,8 +1670,10 @@
                 $('#pts-info-box-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
-                        var $userLine = ['<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
-                        '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
+                        var $userLine = [
+                            '<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
+                            '<i class="glyphicon glyphicon-pencil pts-user-edit-task" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
+                            '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
                                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
                         $('.pts-info-box-user-list[data-head=' + i + ']').append($userLine);
                     }
@@ -2099,6 +2136,51 @@
             },settings.notificationDuration);
         };
 
+        /**
+         * Generate the box that allows to edit a task assignation
+         * @param $elem: the element from where the event is called
+         * @param user
+         * @param task
+         * @param taskIndex
+         */
+        var generateTaskAssignationEdition = function ($elem, user, task, taskIndex) {
+            var $inputBox = [
+                '<div class="col-sm-10 row"><div class="col-sm-12" style="display:inline-flex"><label for="pts-list-datetimepicker-start" style="right:10px;position: relative;">' + settings.i18n.from + '</label>',
+                '<div class="input-group date pts-datetimepicker-start" id="pts-list-datetimepicker-start" data-update="no" style="margin-bottom:6px">',
+                '<input type="text" class="form-control"/>',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div></div>',
+                '<div class="col-sm-12" style="display:inline-flex"><label for="pts-list-datetimepicker-end" style="right:10px;position: relative;">' + settings.i18n.to + '</label>',
+                '<div class="input-group date pts-datetimepicker-end" id="pts-list-datetimepicker-end">',
+                '<input type="text" class="form-control" />',
+                '<span class="input-group-addon">',
+                '<span class="glyphicon glyphicon-calendar"></span>',
+                '</span></div></div>' +
+                '<div class="pts-edit-assignation-err" style="color:red"></div></div>',
+                '<div class="col-sm-2"><button class="btn btn-success pts-edit-assignation-submit btn-icon" ' +
+                'data-task="' + task.id + '" data-user="' + user.index + '" data-task-index="' + taskIndex + '">',
+                '<i class="glyphicon glyphicon-ok"></i></button>',
+                '<button class="btn pts-edit-assignation-dismiss btn-danger btn-icon"><i class="glyphicon glyphicon-remove"></i></button></div>'].join('\n');
+
+            $elem.parent().parent().after('<tr><td><div class="pts-edit-assignation-box row">' + $inputBox + '</div></td></tr>');
+            $('.pts-datetimepicker-end').datetimepicker().data('DateTimePicker')
+                .locale(settings.locale)
+                .widgetPositioning({horizontal: 'right', vertical: 'bottom'})
+                .date(moment(task.end_date))
+                .viewDate(moment(task.end_date))
+                .defaultDate(moment(task.end_date))
+                .minDate(moment(task.start_date))
+                .keepOpen(false);
+            $('.pts-datetimepicker-start').datetimepicker().data('DateTimePicker')
+                .locale(settings.locale)
+                .widgetPositioning({horizontal: 'left', vertical: 'bottom'})
+                .date(moment(task.start_date))
+                .viewDate(moment(task.start_date))
+                .defaultDate(moment(task.start_date))
+                .keepOpen(false);
+        };
+
         /********* Initialization *********/
         console.groupCollapsed('Initialization');
 
@@ -2418,6 +2500,26 @@
                 $('.alert[data-id=' + notifId + ']').remove();
             }
         })
+            .on('click', '.pts-user-edit-task[data-task][data-user]', function (e) {
+                $('td').css('display', 'table-cell');
+                $(this).parent().css('display', 'none');
+                $('.pts-edit-assignation-box').remove();
+
+                var user = settings.users[$(this).data('user')],
+                    task = user.tasks[$(this).data('task-index')];
+                if (!task || task.id !== $(this).data('task')) return;
+                generateTaskAssignationEdition($(this), user, task, $(this).data('task-index'));
+            })
+            .on('click', '.pts-edit-assignation-submit[data-task][data-user][data-task-index]', function (e) {
+                var user = settings.users[$(this).data('user')],
+                    task = user.tasks[$(this).data('task-index')],
+                    taskIndex = $(this).data('task-index');
+                editTaskAssignation(user, task, taskIndex);
+            })
+            .on('click', '.pts-edit-assignation-dismiss', function (e) {
+                $('td').css('display', 'table-cell');
+                $('.pts-edit-assignation-box').remove();
+            })
             .on('change', '#hide-user-btn', function () {
                 settings.hideEmptyLines = $(this).is(':checked');
                 generateTableLines();
@@ -2437,11 +2539,16 @@
                 $('#pts-edit-user-input-group').val($(this).val());
             })
             .on('dp.change', '.pts-datetimepicker-start', function (e) {
+                if ($(this).data('update') == 'no') return;
                 $('.pts-datetimepicker-end').data('DateTimePicker').date(e.date).minDate(e.date);
             })
             .on('dp.change', '.pts-datetimepicker-start, .pts-datetimepicker-end', function (e) {
-                $('.pts-datetimepicker-end').data('DateTimePicker').hide();
-                $('.pts-datetimepicker-start').data('DateTimePicker').hide();
+                var $start = $('.pts-datetimepicker-start'),
+                    $end = $('.pts-datetimepicker-end');
+                if ($start.data('DateTimePicker') && $end.data('DateTimePicker')) {
+                    $start.data('DateTimePicker').hide();
+                    $end.data('DateTimePicker').hide();
+                }
             })
             .on('mousedown', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
                 openInfoBox($(this).attr('data-task'), null, 'task');
