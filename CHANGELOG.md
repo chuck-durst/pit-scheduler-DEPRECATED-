@@ -1,7 +1,7 @@
 Changelog
 =========
 
-#VERSION 2.0
+# VERSION 2.0
 * Release Nov 2016
 
 ## Features
