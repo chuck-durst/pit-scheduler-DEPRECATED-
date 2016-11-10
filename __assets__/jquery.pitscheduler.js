@@ -86,6 +86,8 @@
             addFilter: 'Créer un filtre',
             contains: 'Contient',
             notContains: 'Ne contient pas',
+            active: 'Actif',
+            inactive: 'Inactif',
             notif: {
                 taskCreated: 'La tâche a été créée avec succès',
                 userCreated: 'L\'utilisateur a été créé avec succès',
@@ -180,6 +182,9 @@
             addFilter: 'Create filter',
             contains: 'Contains',
             notContains: 'Does not contains',
+            added: 'Added',
+            active: 'Active',
+            inactive: 'Inactive',
             notif: {
                 taskCreated: 'The task has been successfully created',
                 userCreated: 'The user has been successfully created',
@@ -643,10 +648,13 @@
                 end_date: (settings.currentDisplay == 'days' ? moment(settings.date.selected).endOf('day') : moment(settings.date.selected).endOf('month'))
             };
             user.tasks.forEach(function (task) {
-                if (settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && isDateInDate(originDates, task) == true) {
-                    tasks.push(task.id);
-                } else if (!settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && lineIsHidden == true) {
-                    tasks.push(task.id);
+                var original = getTaskById(task.id);
+                if (getFiltersResponse('task', original.name) == false && getFiltersResponse('tag', original.tag) == false) {
+                    if (settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && isDateInDate(originDates, task) == true) {
+                        tasks.push(task.id);
+                    } else if (!settings.hideEmptyLines && tasks.indexOf(task.id) < 0 && lineIsHidden == true) {
+                        tasks.push(task.id);
+                    }
                 }
             });
             return tasks.length * 40;
@@ -668,7 +676,8 @@
                 };
             if (!user.tasks) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.userHasNoTask);
             user.tasks.forEach(function (task) {
-                if (isDateInDate(originDates, task)) response++;
+                var original = getTaskById(task.id)
+                if (isDateInDate(originDates, task) && getFiltersResponse('task', original.name) == false && getFiltersResponse('tag', original.tag) == false) response++;
             });
             return ((response > 0) || settings.hideEmptyLines === false);
         };
@@ -1323,10 +1332,11 @@
                 }
             });
             if (toRemove !== null) {
-                delete settings.filters[toRemove];
+                console.log('REMOVE FILTER ' + filterId + ' with index ' + toRemove);
+                settings.filters.splice(toRemove, 1);
                 generateNotification('success', settings.i18n.notif.filterRemoved);
-                settings.filters.length--;
                 $('.pts-filter-container[data-filter=' + filterId + ']').remove();
+                console.log(settings.filters);
             }
         };
 
@@ -1340,15 +1350,19 @@
             var response = false;
             settings.filters.forEach(function (filter) {
                 if (filter.target == type) {
+                    console.log(settings.filters);
                     console.log('Find target: ' + type);
                     console.log('Look if ' + value +  (filter.type == 'in' ? ' contains ' : ' not containing ') + filter.value);
-                    if (filter.type == 'out' && value.indexOf(filter.value) != -1 || filter.type == 'in' && value.indexOf(filter.value) == -1) {
+                    if (value === undefined ) {
+                        if (filter.type == 'in')
+                        response = true;
+                    }
+                    else if (filter.type == 'out' && value.indexOf(filter.value) != -1 || (filter.type == 'in' && value && value.indexOf(filter.value) == -1)) {
                         console.log('answer: Yes');
                         response = true;
                     } else console.log('answer: No');
                 }
             });
-            console.log('RESPONSE: ' + response);
             return response;
         };
 
@@ -1571,7 +1585,7 @@
             user.tasks.forEach(function (e, i) {
                 var task = $.extend(getTaskById(e.id), e);
                 if (task === undefined || getTaskById(e.id) == undefined) return generateNotification('warning', '<b>' + user.name + '</b> ' + settings.i18n.notif.taskNotExist);
-                else {
+                else if (getFiltersResponse('task', task.name) == false && getFiltersResponse('tag', task.tag) == false) {
                     task.index = i;
                     task.superposed = '';
                     if (task === undefined) return log.warn('CALL FUNCTION: Warning: Task ' + e.id + ' has not be found in tasks array for user ' + user.name);
@@ -2215,13 +2229,15 @@
          * @param {Object} filter: optional object to create a filter from an existing model
          */
         var generateNewFilter = function (filter) {
-            var filterId = (filter? filter.id : generateRandomId());
-            var $content = [
-                '<div class="pts-filter-container row" data-filter="' + filterId + '"><div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
+            var filterId = (filter ? filter.id : generateRandomId()),
+                $active = (filter ? '<b style="color:green"><i class="glyphicon glyphicon-ok"></i> ' + settings.i18n.active + '</b>' :
+                '<b style="color:red"><i class="glyphicon glyphicon-remove"></i> ' + settings.i18n.inactive + '</b>'),
+                $content = [
+                '<div class="pts-filter-container row" data-filter="' + filterId + '"><p>' + $active + '</p>',
+                '<div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
                 '<option value="task" ' + (filter && filter.target == 'task' ? 'selected="selected"' : '') + '>' + settings.i18n.tasks + '</option>',
                 '<option value="user" ' + (filter && filter.target == 'user' ? 'selected="selected"' : '') + '>' + settings.i18n.users + '</option>',
                 '<option value="tag" ' + (filter && filter.target == 'tag' ? 'selected="selected"' : '') + '>' + settings.i18n.tags + '</option>',
-                '<option value="group" ' + (filter && filter.target == 'group' ? 'selected="selected"' : '') + '>' + settings.i18n.groups + '</option>',
                 '</select></div><div class="col-lg-12">',
                 '<div class="input-group" data-filter="' + filterId + '"><div class="input-group-btn">',
                 '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="position:relative;bottom:2px;">',
@@ -2690,6 +2706,7 @@
                     return $parent.parent().children('.pts-filter-err').html(settings.i18n.allInputRequired);
                 } else {
                     $parent.parent().children('.pts-filter-err').html('');
+                    $('.pts-filter-container[data-filter=' + filter.id + ']').children('p').html('<b style="color:green"><i class="glyphicon glyphicon-ok"></i> ' + settings.i18n.active + '</b>');
                     addNewFilter(filter);
                 }
             })
