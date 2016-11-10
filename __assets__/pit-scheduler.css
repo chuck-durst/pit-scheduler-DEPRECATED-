@@ -400,9 +400,9 @@
     border-radius: 7px;
 }
 
-/************ Infos box view ************/
+/************ toolbox view ************/
 
-#pts-info-box-container {
+#pts-toolbox-container {
     background-color: #fff;
     width: 0px;
     right: 0px;
@@ -418,10 +418,10 @@
     overflow-x: hidden;
 }
 
-#pts-info-box-container > .panel-body {
+#pts-toolbox-container > .panel-body {
     width: 450px;
 }
-.pts-info-box-close-btn {
+.pts-toolbox-close-btn {
     position: relative;
     top: 3px;
     color: #b2b2b2;
@@ -435,18 +435,18 @@
     background-color: #dbdbdb;
 }
 
-div.pts-info-box-user-list, div.pts-info-box-task-list {
+div.pts-toolbox-user-list, div.pts-toolbox-task-list {
     position: relative;
     right: 30px
 }
 
-.pts-info-box-title i.glyphicon-remove {
+.pts-toolbox-title i.glyphicon-remove {
     position: relative;
     right: 13%;
     font-size: 16px;
     top: 2px;
 }
-.pts-info-box-title {
+.pts-toolbox-title {
     width: 120%;
     color: #fff;
     margin-bottom: 15px;
@@ -458,7 +458,7 @@ div.pts-info-box-user-list, div.pts-info-box-task-list {
     height: 40px;
 }
 
-.pts-info-box-task-header, .pts-info-box-user-header {
+.pts-toolbox-task-header, .pts-toolbox-user-header {
     position: relative;
     left: 5px;
     padding: 5px 20px 5px 20px;
@@ -473,7 +473,7 @@ div.pts-info-box-user-list, div.pts-info-box-task-list {
     width: 25px;
 }
 
-.pts-info-box-back-btn {
+.pts-toolbox-back-btn {
     position: relative;
     top: -1px;
     padding-right: 4px;

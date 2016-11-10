@@ -13,7 +13,7 @@ Changelog
 *  [feature] Notifications system added to let you know what appends
 *  [feature] Undo most actions from a button added to the notifications
 *  [feature] You can now access to a complete list of all the users and tasks
-*  [feature] Some defaults functions has been added to give you more opportunities of interactions with the scheduler
+*  [feature] Some default functions has been added to give you more opportunities of interactions with the scheduler
 *  [feature] You can henceforth tag the tasks to set them status or optional information
 *  [feature] You can now edit and remove users assignations right from the toolbox
 

@@ -304,7 +304,7 @@
          */
         var updateDisplayReset = function () {
             log.info('CALL FUNCTION: updateDisplayReset');
-            closeInfoBox();
+            closeToolbox();
             $('.pts-main-content').empty();
             $('.pts-column-title-container > div').empty();
             $('.pts-line-title-container').empty();
@@ -521,7 +521,7 @@
             console.groupCollapsed('goForward');
             log.info('CALL FUNCTION: goForward');
 
-            closeInfoBox();
+            closeToolbox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(1, 'months');
             } else {
@@ -543,7 +543,7 @@
             console.groupCollapsed('goBackward');
             log.info('CALL FUNCTION: goBackward');
 
-            closeInfoBox();
+            closeToolbox();
             if (settings.currentDisplay == 'months') {
                 settings.date.selected = moment(settings.date.selected).add(-1, 'months');
             } else {
@@ -723,23 +723,23 @@
         };
 
         /**
-         * Opens the info-box panel
+         * Opens the toolbox panel
          * @param {String} taskId
          * @param {Number} userIndex
          * @param {String} viewType
          */
-        var openInfoBox = function (taskId, userIndex, viewType) {
-            log.info('CALL FUNCTION: openInfoBox: taskId: ' + taskId + ': userIndex: ' + userIndex + ': viewType: ' + viewType);
+        var openToolbox = function (taskId, userIndex, viewType) {
+            log.info('CALL FUNCTION: openToolbox: taskId: ' + taskId + ': userIndex: ' + userIndex + ': viewType: ' + viewType);
 
-            var $infoBox = $('#pts-info-box-container');
-            $infoBox.empty();
-            $infoBox.scrollTop();
+            var $toolbox = $('#pts-toolbox-container');
+            $toolbox.empty();
+            $toolbox.scrollTop();
 
             switch (viewType) {
                 case 'task':
                     var task = getTaskById(taskId),
                         $markers = $('.pts-line-marker');
-                    generateInfoBoxContentTask(task, settings.users[userIndex]);
+                    generateToolboxContentTask(task, settings.users[userIndex]);
                     $.each($markers, function () {
                         $(this).css('background-color', getTaskById($(this).attr('data-task')).color);
                         if ($(this).attr('data-task') !== taskId) {
@@ -747,77 +747,77 @@
                         }
                     });
                     $('.pts-main-group-column').css('background-color', '#eee');
-                    $infoBox.attr('data-toggle', 'opened');
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'user':
                     var user = settings.users[userIndex];
-                    generateInfoBoxContentUser(user);
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentUser(user);
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'createTask':
-                    generateInfoBoxContentCreateTask();
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentCreateTask();
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'assignTask':
-                    generateInfoBoxContentAssignTask(taskId);
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentAssignTask(taskId);
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'editTask':
-                    generateInfoBoxContentEditTask(taskId);
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentEditTask(taskId);
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'createUser':
-                    generateInfoBoxContentCreateUser();
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentCreateUser();
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'editUser':
                     var user = settings.users[userIndex];
-                    generateInfoBoxContentEditUser(user);
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentEditUser(user);
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'assignUser':
                     var user = settings.users[userIndex];
-                    generateInfoBoxContentAssignUser(user);
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentAssignUser(user);
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'seeAll':
-                    generateInfoBoxContentSeeAll();
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentSeeAll();
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 case 'filters':
-                    generateInfoBoxContentFilters();
-                    $infoBox.attr('data-toggle', 'opened');
+                    generateToolboxContentFilters();
+                    $toolbox.attr('data-toggle', 'opened');
                     break;
                 default:
                     return;
             }
 
-            $infoBox.animate({
+            $toolbox.animate({
                 width: '460px'
             }, 300);
             getContrastedColor();
         };
 
         /**
-         * Closes the info-box panel
+         * Closes the toolbox panel
          */
-        var closeInfoBox = function () {
-            log.info('CALL FUNCTION: closeInfoBox');
+        var closeToolbox = function () {
+            log.info('CALL FUNCTION: closeToolbox');
 
-            var $infoBox = $('#pts-info-box-container'),
+            var $toolbox = $('#pts-toolbox-container'),
                 $markers = $('.pts-line-marker');
-            if ($infoBox.attr('data-toggle') === 'closed') return;
+            if ($toolbox.attr('data-toggle') === 'closed') return;
             $.each($markers, function () {
                 var task = getTaskById($(this).attr('data-task'));
                 $(this).css('background-color', (task ? task.color : settings.defaultColor));
             });
 
             $('.pts-main-group-column').css('background-color', '#fff');
-            $infoBox.animate({
+            $toolbox.animate({
                 width: '0%'
             }, 300);
-            $infoBox.attr('data-toggle', 'closed');
-            $infoBox.empty();
+            $toolbox.attr('data-toggle', 'closed');
+            $toolbox.empty();
             getContrastedColor();
         };
 
@@ -950,7 +950,7 @@
             settings.tasks.push(newTask);
             updateDisplay(settings.currentDisplay);
             generateNotification('success', settings.i18n.notif.taskCreated + ' : <b>' + newTask.name + '</b>', undo, settings.onTaskCreation);
-            if (assign == true) return openInfoBox(newTask.id, null, 'assignTask');
+            if (assign == true) return openToolbox(newTask.id, null, 'assignTask');
         };
 
         /**
@@ -1030,17 +1030,17 @@
                     end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
                 });
                 generateTaskInTask(task);
-                if ($('.pts-info-box-user[data-user=' + user.index + ']').length == 0) {
-                    var $head = '<hr><div class="pts-info-box-user animated fadeIn" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
-                        '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>';
-                    $('#pts-info-box-container > .panel-body').append($head);
+                if ($('.pts-toolbox-user[data-user=' + user.index + ']').length == 0) {
+                    var $head = '<hr><div class="pts-toolbox-user animated fadeIn" data-user="' + user.index + '"><h4 class=" text-semibold heading-divided">' + user.name + '</h4>' +
+                        '<table><tbody class="pts-toolbox-user-list" data-head="' + user.index + '"></tbody></table></div>';
+                    $('#pts-toolbox-container > .panel-body').append($head);
                 }
                 var $userTasks =    ['<tr class="animated fadeIn"><td>',
                     '<i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + (user.tasks.length - 1) + '"></i>',
                     '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('llll'),
                     ' <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
-                $('.pts-info-box-user-list[data-head=' + user.index + ']').append($userTasks);
-                $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
+                $('.pts-toolbox-user-list[data-head=' + user.index + ']').append($userTasks);
+                $('#pts-toolbox-container').scrollTop($('#pts-toolbox-container')[0].scrollHeight);
             });
             generateNotification('success', '<b>' + users.length + '</b> ' + ( users.length > 1 ? settings.i18n.notif.usersAssigned: settings.i18n.notif.userAssigned) + ' <b>' + task.name + '</b>',
                 undo, settings.onTaskAssignation);
@@ -1082,16 +1082,16 @@
                     end_date: moment(end_date).format('YYYY-MM-DD HH:mm')
                 });
                 generateTaskInTask(task);
-                if ($('.pts-info-box-task-header[data-task=' + task.id + ']').length == 0) {
-                    var $head = ['<p class="animated fadeIn pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '" data-user="' + user.index + '"><b>',
-                        task.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + task.id + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                if ($('.pts-toolbox-task-header[data-task=' + task.id + ']').length == 0) {
+                    var $head = ['<p class="animated fadeIn pts-check-color progress-bar-striped pts-toolbox-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '" data-user="' + user.index + '"><b>',
+                        task.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + task.id + '" class="pts-toolbox-user-list" data-head="' + user.index + '">',
                         '</tbody></table>'].join('\n');
-                    $('.pts-info-box-user-list').append($head);
+                    $('.pts-toolbox-user-list').append($head);
                 }
                 var $line = '<tr><td><i class="animated fadeIn glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + task.index + '"></i>' +
                     '<b>' + settings.i18n.from + '</b> ' + moment(start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(end_date).locale(settings.locale).format('lll') + '</td></tr>';
                 $('.pts-user-sorted-task[data-task=' + task.id + ']').append($line);
-                $('#pts-info-box-container').scrollTop($('#pts-info-box-container')[0].scrollHeight);
+                $('#pts-toolbox-container').scrollTop($('#pts-toolbox-container')[0].scrollHeight);
             });
 
             generateNotification('success', '<b>' + user.name + '</b> ' + settings.i18n.notif.userAssignedTo + ' <b>' + tasks.length + '</b> ' + (tasks.length > 1 ? settings.i18n.tasks : settings.i18n.task),
@@ -1159,7 +1159,7 @@
 
             initUser(settings.users[userIndex], settings.users.length - 1);
             generateNotification('success', settings.i18n.notif.userCreated + ' : <b>' + name + '</b>', undo, settings.onUserCreation);
-            if (assign == true) return openInfoBox(null, userIndex, 'assignUser');
+            if (assign == true) return openToolbox(null, userIndex, 'assignUser');
             updateDisplay(settings.currentDisplay);
         };
 
@@ -1410,7 +1410,7 @@
             var $mainContainer =    ['<div class="pts-main-container row">',
                 '<div id="pts-spinner-container">',
                 '<ul class="pts-spinner"><li></li><li></li><li></li><li></li></ul></div>',
-                '<div id="pts-info-box-container" data-toggle="closed"></div>',
+                '<div id="pts-toolbox-container" data-toggle="closed"></div>',
                 '<div class="pts-corner-mask"></div>',
                 '<div class="pts-column-title-container">',
                 '<div></div></div>',
@@ -1754,12 +1754,12 @@
          * Generates the task structure of the info box
          * @param {Object} task
          */
-        var generateInfoBoxContentTask = function (task) {
-            log.info('CALL FUNCTION: generateInfoBoxContentTask: task: ' + task.name);
+        var generateToolboxContentTask = function (task) {
+            log.info('CALL FUNCTION: generateToolboxContentTask: task: ' + task.name);
 
             var $tag = (task.tag ? '<span class="label label-default pts-check-color" style="background-color:' + task.tagColor  + '">' + task.tag + '</span><br>' : '');
             var $content =  ['<div class="panel-body">',
-                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '">' + task.name,
+                '<h4 class="pts-check-color text-semibold pts-toolbox-title progress-bar-striped pts-close-toolbox" style="background-color:' + task.color + '">' + task.name,
                 '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>' + $tag,
                 '<p><b>' + settings.i18n.description + ' : </b><br>' + (task.description ? task.description : settings.i18n.notSpecified) + '</p>',
@@ -1768,13 +1768,13 @@
                 '<button type="button" class="btn pts-assign-task-btn" style="background-color:#00BCD4;color:#fff" data-task="' + task.id + '">' + settings.i18n.assign + '</button>',
                 '<button type="button" class="btn pts-edit-task-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div><br>',
                 '<br><div class="divider"></div></div>'].join('\n');
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
 
             $.each(task.users, function (i) {
                 var user = settings.users[i];
-                var $head = ['<div class="pts-info-box-user"><h4 class=" text-semibold heading-divided pts-show-user" data-user="' + user.index + '">' + user.name + '</h4>',
-                            '<table><tbody class="pts-info-box-user-list" data-head="' + i + '"></tbody></table></div>'].join('\n');
-                $('#pts-info-box-container > .panel-body').append($head);
+                var $head = ['<div class="pts-toolbox-user"><h4 class=" text-semibold heading-divided pts-show-user" data-user="' + user.index + '">' + user.name + '</h4>',
+                            '<table><tbody class="pts-toolbox-user-list" data-head="' + i + '"></tbody></table></div>'].join('\n');
+                $('#pts-toolbox-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
                         var $userLine = [
@@ -1782,7 +1782,7 @@
                             '<i class="glyphicon glyphicon-pencil pts-user-edit-task" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
                             '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
                                         ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
-                        $('.pts-info-box-user-list[data-head=' + i + ']').append($userLine);
+                        $('.pts-toolbox-user-list[data-head=' + i + ']').append($userLine);
                     }
                 });
             });
@@ -1793,8 +1793,8 @@
          * Generates the users structure of the info box
          * @param {Object} user
          */
-        var generateInfoBoxContentUser = function (user) {
-            log.info('CALL FUNCTION: generateInfoBoxContentUser: user: ' + user.name);
+        var generateToolboxContentUser = function (user) {
+            log.info('CALL FUNCTION: generateToolboxContentUser: user: ' + user.name);
 
             var sortedTasks = {};
             user.tasks.forEach(function (e, i) {
@@ -1806,7 +1806,7 @@
                     '<b>' + settings.i18n.from + '</b> ' + moment(e.start_date).locale(settings.locale).format('lll') + '  <b>' + settings.i18n.to + '</b> ' + moment(e.end_date).locale(settings.locale).format('lll'));
             });
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">',
                 user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<button class="btn btn-xs pts-button-see-all">' + settings.i18n.seeAll + '</button>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
@@ -1814,15 +1814,15 @@
                 '<button type="button" class="pts-delete-user-btn btn btn-danger" data-user="' + user.index + '" data-confirm="false">' + settings.i18n.remove + '</button>',
                 '<button type="button" class="btn pts-assign-user-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.assign + '</button>',
                 '<button type="button" class="btn pts-edit-user-btn" style="background-color:#0097A7;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button></div><br>',
-                '<div class="pts-info-box-user-list"></div></div>'].join('\n');
+                '<div class="pts-toolbox-user-list"></div></div>'].join('\n');
 
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             $.each(sortedTasks, function (i, _task) {
                 var originalTask = getTaskById(i);
-                var $line = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
-                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                var $line = ['<p class="pts-check-color progress-bar-striped pts-toolbox-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
+                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-toolbox-user-list" data-head="' + user.index + '">',
                     '</tbody></table>'].join('\n');
-                $('.pts-info-box-user-list').append($line);
+                $('.pts-toolbox-user-list').append($line);
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<tr><td>' + _line + '</td></tr>');
                 });
@@ -1833,11 +1833,11 @@
         /**
          * Generates the task creation structure of the info box
          */
-        var generateInfoBoxContentCreateTask = function () {
-            log.info('CALL FUNCTION: generateInfoBoxContentCreateTask');
+        var generateToolboxContentCreateTask = function () {
+            log.info('CALL FUNCTION: generateToolboxContentCreateTask');
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewTask,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label><input id="pts-add-task-input-name" type="text" class="form-control" maxlength="50">',
@@ -1848,28 +1848,28 @@
                 '<div class="form-group"><label>' + settings.i18n.tag + ' :</label><input id="pts-add-task-input-tag" type="text" class="form-control" maxlength="15"></div>',
                 '<div class="form-group"><label>' + settings.i18n.tagColor + ' :</label><input id="pts-add-task-input-tagColor" type="color" class="form-control" value="#777777"></div>',
                 '<div class="btn-group">',
-                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="pts-close-toolbox btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-create-task-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
                 '<button type="button" class="btn pts-create-task-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
                 '</fieldset>',
                 '</div>'].join('\n');
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
         };
 
         /**
          * Generates the task edition structure of the info box
          * @param {String} taskId
          */
-        var generateInfoBoxContentEditTask = function (taskId) {
-            log.info('CALL FUNCTION: generateInfoBoxContentEditTask');
+        var generateToolboxContentEditTask = function (taskId) {
+            log.info('CALL FUNCTION: generateToolboxContentEditTask');
 
             var task = getTaskById(taskId);
             if (!task) return;
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color progress-bar-striped" style="background-color:' + task.color + '">' + task.name,
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color progress-bar-striped" style="background-color:' + task.color + '">' + task.name,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.editTask + '</h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-toolbox-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.editTask + '</h4>',
                 '<fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :',
                 '</label><input id="pts-edit-task-input-name" type="text" class="form-control" maxlength="50" value="' + task.name + '">',
@@ -1881,25 +1881,25 @@
                 '<div class="form-group"><label>' + settings.i18n.tag + ' :</label><input id="pts-edit-task-input-tag" type="text" class="form-control" maxlength="15" value="' + (task.tag || '') + '"></div>',
                 '<div class="form-group"><label>' + settings.i18n.tagColor + ' :</label><input id="pts-edit-task-input-tagColor" type="color" class="form-control" value="' + (task.tagColor || '#777777') + '"></div>',
                 '<div class="btn-group">',
-                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="pts-close-toolbox btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-edit-task-confirm-btn" style="background-color:#0097A7;color:#fff" data-task="' + task.id + '">' + settings.i18n.edit + '</button></div>',
                 '</fieldset>',
                 '</div>'].join('\n');
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
         };
 
         /**
          * Generates the task assignation structure of the info box
          * @param {String} taskId
          */
-        var generateInfoBoxContentAssignTask = function (taskId) {
-            log.info('CALL FUNCTION: generateInfoBoxContentAssignTask');
+        var generateToolboxContentAssignTask = function (taskId) {
+            log.info('CALL FUNCTION: generateToolboxContentAssignTask');
             var task = getTaskById(taskId);
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="pts-check-color text-semibold pts-info-box-title progress-bar-striped pts-close-info-box" style="background-color:' + task.color + '" data-update="true">' + task.name,
+                '<h4 class="pts-check-color text-semibold pts-toolbox-title progress-bar-striped pts-close-toolbox" style="background-color:' + task.color + '" data-update="true">' + task.name,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.assignTaskTitle + '</h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-toolbox-back-btn" data-target="task" data-task="' + task.id + '"></i>' + settings.i18n.assignTaskTitle + '</h4>',
                 '<div class="form-group"><label for="sel42">' + settings.i18n.selectUsersToAssign + ' : </label>',
                 '<select multiple="" class="form-control pts-task-assign-users-list" id="sel42"></select></div>',
                 '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-task-assign-datepicker-start">',
@@ -1915,7 +1915,7 @@
                 '<button id="pts-task-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-task="' + taskId + '">' + settings.i18n.assign + '</button></div>',
                 '<br></div>'].join('\n');
 
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             $('#pts-task-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
             $('#pts-task-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
 
@@ -1925,16 +1925,16 @@
 
             $.each(task.users, function (i) {
                 var user = settings.users[i];
-                var $head = ['<hr><div class="pts-info-box-user" data-user="' + user.index + '">',
+                var $head = ['<hr><div class="pts-toolbox-user" data-user="' + user.index + '">',
                     '<h4 class=" text-semibold heading-divided">' + user.name + '</h4>',
-                    '<table><tbody class="pts-info-box-user-list" data-head="' + user.index + '"></tbody></table></div>'].join('\n');
-                $('#pts-info-box-container > .panel-body').append($head);
+                    '<table><tbody class="pts-toolbox-user-list" data-head="' + user.index + '"></tbody></table></div>'].join('\n');
+                $('#pts-toolbox-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
                         var $userTasks =    ['<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + _task.id + '" data-task-index="' + taskIndex + '"></i>',
                             '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
                             ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
-                        $('.pts-info-box-user-list[data-head=' + user.index + ']').append($userTasks);
+                        $('.pts-toolbox-user-list[data-head=' + user.index + ']').append($userTasks);
                     }
                 });
             });
@@ -1944,11 +1944,11 @@
         /**
          * Generates the user creation structure of the info box
          */
-        var generateInfoBoxContentCreateUser = function () {
-            log.info('CALL FUNCTION: generateInfoBoxContentCreateUser');
+        var generateToolboxContentCreateUser = function () {
+            log.info('CALL FUNCTION: generateToolboxContentCreateUser');
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewUser,
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '">' + settings.i18n.addNewUser,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
@@ -1959,12 +1959,12 @@
                 '<span>' + settings.i18n.or + '</span><select id="pts-add-user-select-group" type="select" class="form-control" maxlength="60">',
                 '<option disabled selected>' + settings.i18n.selectGroup + '</option></select></div>',
                 '<div class="btn-group">',
-                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="pts-close-toolbox btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-create-user-btn" style="background-color:#00BCD4;color:#fff" data-assign="true">' + settings.i18n.createAndAssign + '</button>',
                 '<button type="button" class="btn pts-create-user-btn" style="background-color:#0097A7;color:#fff" data-assign="false">' + settings.i18n.create + '</button></div>',
                 '</fieldset>',
                 '</div>'].join('\n');
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             settings.groups.forEach(function (e) {
                 $('#pts-add-user-select-group').append('<option value="' + e + '">' + e + '</option>');
             });
@@ -1974,14 +1974,14 @@
          * Generates the user edition structure of the info box
          * @param {Object} user
          */
-        var generateInfoBoxContentEditUser = function (user) {
-            log.info('CALL FUNCTION: generateInfoBoxContentEditUser');
+        var generateToolboxContentEditUser = function (user) {
+            log.info('CALL FUNCTION: generateToolboxContentEditUser');
 
             if (!user) return;
             var $content = ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '">' + user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.editUser + '</h4><fieldset>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-toolbox-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.editUser + '</h4><fieldset>',
                 '<div class="form-group"><label>' + settings.i18n.name + ' <small>(' + settings.i18n.required + ')</small> :</label>',
                 '<input id="pts-edit-user-input-name" type="text" class="form-control" maxlength="40" value="' + user.name + '">',
                 '<div id="pts-edit-user-err-name" style="color:red"></div></div>',
@@ -1990,11 +1990,11 @@
                 '<span>' + settings.i18n.or + '</span><select id="pts-edit-user-select-group" type="select" class="form-control" maxlength="60">',
                 '<option disabled selected>' + settings.i18n.selectGroup + '</option></select></div>',
                 '<div class="btn-group">',
-                '<button type="button" class="pts-close-info-box btn btn-danger">' + settings.i18n.cancel + '</button>',
+                '<button type="button" class="pts-close-toolbox btn btn-danger">' + settings.i18n.cancel + '</button>',
                 '<button type="button" class="btn pts-edit-user-confirm-btn" style="background-color:#00BCD4;color:#fff" data-user="' + user.index + '">' + settings.i18n.edit + '</button>',
                 '</fieldset>',
                 '</div>'].join('\n');
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             settings.groups.forEach(function (e) {
                 $('#pts-edit-user-select-group').append('<option value="' + e + '">' + e + '</option>');
             });
@@ -2004,14 +2004,14 @@
          * Generates the user assignation structure of the info box
          * @param {Object} user
          */
-        var generateInfoBoxContentAssignUser = function (user) {
-            log.info('CALL FUNCTION: generateInfoBoxContentAssignUser');
+        var generateToolboxContentAssignUser = function (user) {
+            log.info('CALL FUNCTION: generateToolboxContentAssignUser');
 
             var $content = ['<div class="panel-body">',
-                '<h4 class="pts-check-color text-semibold pts-info-box-title pts-close-info-box" style="background-color:' + settings.defaultColor + '" data-update="true">',
+                '<h4 class="pts-check-color text-semibold pts-toolbox-title pts-close-toolbox" style="background-color:' + settings.defaultColor + '" data-update="true">',
                 user.name + ' - <small style="color:#fff">' + user.group + '</small>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-info-box-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.assignUserTitle + '</h4>',
+                '<h4><i class="glyphicon glyphicon-chevron-left pull-left pts-toolbox-back-btn" data-target="user" data-user="' + user.index + '"></i>' + settings.i18n.assignUserTitle + '</h4>',
                 '<div class="form-group"><label for="sel42">' + settings.i18n.selectTasksToAssign + ' : </label>',
                 '<select multiple="" class="form-control pts-user-assign-tasks-list" id="sel42"></select></div>',
                 '<b>' + settings.i18n.from + '</b><div class="input-group date pts-datetimepicker-start" id="pts-user-assign-datepicker-start">',
@@ -2025,9 +2025,9 @@
                 '<span class="glyphicon glyphicon-calendar"></span>',
                 '</span></div><div id="pts-assign-user-err" style="color:red"></div><br><div class="pull-right">',
                 '<button id="pts-user-assign-btn" class="btn pts-check-color" style="background-color:#00BCD4" data-user="' + user.index + '">' + settings.i18n.assign + '</button></div>',
-                '<br><br><div class="pts-info-box-user-list"></div></div>'].join('\n');
+                '<br><br><div class="pts-toolbox-user-list"></div></div>'].join('\n');
 
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             $('#pts-user-assign-datepicker-start').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
             $('#pts-user-assign-datepicker-end').datetimepicker().data('DateTimePicker').locale(settings.locale).widgetPositioning({horizontal: 'left', vertical: 'bottom'}).keepOpen(false);
 
@@ -2046,10 +2046,10 @@
 
             $.each(sortedTasks, function (i, _task) {
                 var originalTask = getTaskById(i);
-                var $line = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
-                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-info-box-user-list" data-head="' + user.index + '">',
+                var $line = ['<p class="pts-check-color progress-bar-striped pts-toolbox-task-header" style="background-color:' +originalTask.color + ';margin-top:10px" data-task="' + i + '" data-user="' + user.index + '"><b>',
+                    originalTask.name + '</b></p><table style="position: relative;left:30px;"><tbody class="pts-user-sorted-task" data-task="' + i + '" class="pts-toolbox-user-list" data-head="' + user.index + '">',
                     '</tbody></table>'].join('\n');
-                $('.pts-info-box-user-list').append($line);
+                $('.pts-toolbox-user-list').append($line);
                 _task.forEach(function (_line) {
                     $('.pts-user-sorted-task[data-task=' + i + ']').append('<tr><td>' + _line + '</td></tr>');
                 });
@@ -2062,29 +2062,29 @@
         /**
          * Generates the see all structure of the info box
          */
-        var generateInfoBoxContentSeeAll = function () {
-            log.info('CALL FUNCTION: generateInfoBoxContentSeeAll');
+        var generateToolboxContentSeeAll = function () {
+            log.info('CALL FUNCTION: generateToolboxContentSeeAll');
 
             var $content =  ['<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.seeAll,
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.seeAll,
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
-                '<h4>' + settings.i18n.users + ' (' + settings.users.length + ')</h4><div class="pts-info-box-user-list"></div>',
-                '<h4>' + settings.i18n.tasks  + ' (' + settings.tasks.length + ')</h4><div class="pts-info-box-task-list"></div></div>'].join('\n');
+                '<h4>' + settings.i18n.users + ' (' + settings.users.length + ')</h4><div class="pts-toolbox-user-list"></div>',
+                '<h4>' + settings.i18n.tasks  + ' (' + settings.tasks.length + ')</h4><div class="pts-toolbox-task-list"></div></div>'].join('\n');
 
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
 
             settings.tasks.forEach(function (task) {
                 var length = getLength(task.users);
-                var $taskLine = ['<p class="pts-check-color progress-bar-striped pts-info-box-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '"><b>',
+                var $taskLine = ['<p class="pts-check-color progress-bar-striped pts-toolbox-task-header" style="background-color:' + task.color + ';margin-top:10px" data-task="' + task.id + '"><b>',
                     task.name + '</b> - ' + length + ' ' + (length> 1 ? settings.i18n.assignedUsers : settings.i18n.assignedUser) + '</p>'].join('\n');
-                $('.pts-info-box-task-list').append($taskLine);
+                $('.pts-toolbox-task-list').append($taskLine);
             });
 
             settings.users.forEach(function (user) {
                 var length = user.tasks.length;
-                var $taskLine = ['<p class="pts-check-color pts-info-box-user-header" style="background-color:' + settings.defaultColor + ';margin-top:10px" data-user="' + user.index + '"><b>',
+                var $taskLine = ['<p class="pts-check-color pts-toolbox-user-header" style="background-color:' + settings.defaultColor + ';margin-top:10px" data-user="' + user.index + '"><b>',
                     user.name + '</b> - ' + user.tasks.length + ' ' + (length > 1 ? settings.i18n.allocations : settings.i18n.allocation) + '</p>'].join('\n');
-                $('.pts-info-box-user-list').append($taskLine);
+                $('.pts-toolbox-user-list').append($taskLine);
             });
 
             getContrastedColor();
@@ -2208,17 +2208,17 @@
         /**
          * Generates the filters structure of the info box
          */
-        var generateInfoBoxContentFilters = function () {
+        var generateToolboxContentFilters = function () {
             var $content =  [
                 '<div class="panel-body">',
-                '<h4 class="text-semibold pts-info-box-title pts-close-info-box pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.filters,
+                '<h4 class="text-semibold pts-toolbox-title pts-close-toolbox pts-check-color" style="background-color:' + settings.defaultColor + '" data-update="true">' + settings.i18n.filters,
                 '<button class="btn btn-danger btn-xs pts-filters-delete-all">' + settings.i18n.deleteAll + '</button>',
                 '<i class="glyphicon glyphicon-remove pull-right"></i></h4>',
                 '<button class="btn pts-check-color pts-create-filter" style="background-color:' + settings.defaultColor + ';margin-bottom:20px">',
                 '<i class="glyphicon glyphicon-plus"></i> ' + settings.i18n.addFilter + '</button>',
-                '<div class="pts-info-box-filters-list"></div></div>'].join('\n');
+                '<div class="pts-toolbox-filters-list"></div></div>'].join('\n');
 
-            $('#pts-info-box-container').append($content);
+            $('#pts-toolbox-container').append($content);
             settings.filters.forEach(function (filter) {
                 generateNewFilter(filter);
             });
@@ -2251,7 +2251,7 @@
                 '<button type="button" class="btn pts-submit-filter-btn pts-check-color" style="background-color:' + settings.defaultColor + '" data-filter="' + filterId + '">',
                 settings.i18n.confirm + '</button></div></div>'
             ].join('\n');
-            $('.pts-info-box-filters-list').prepend($content);
+            $('.pts-toolbox-filters-list').prepend($content);
             getContrastedColor();
         };
 
@@ -2429,21 +2429,21 @@
             generateTableLines();
             generateGroupMainContent();
         })
-            .on('click', '.pts-close-info-box', function () {
+            .on('click', '.pts-close-toolbox', function () {
             if ($(this).data('update') == true) {
                 updateDisplay(settings.currentDisplay);
             } else {
-                closeInfoBox();
+                closeToolbox();
             }
         })
             .on('click', ' .pts-show-user[data-user]', function () {
-                openInfoBox(null, $(this).data('user'), 'user');
+                openToolbox(null, $(this).data('user'), 'user');
             })
-            .on('click', '.pts-info-box-task-header[data-task]', function () {
-                openInfoBox($(this).data('task'), null, 'task');
+            .on('click', '.pts-toolbox-task-header[data-task]', function () {
+                openToolbox($(this).data('task'), null, 'task');
             })
-            .on('click', '.pts-info-box-user-header[data-user]', function () {
-                openInfoBox(null, $(this).data('user'), 'user');
+            .on('click', '.pts-toolbox-user-header[data-user]', function () {
+                openToolbox(null, $(this).data('user'), 'user');
             })
             .on('click', '#pts-list-task-select-all', function () {
                 $('.pts-list-task-enabler-input').prop('checked', $(this).context.checked);
@@ -2489,13 +2489,13 @@
             $('.pts-list-range-btn').removeClass('selected');
         })
             .on('click', '.pts-list-user-name[data-user]', function () {
-            openInfoBox(null, $(this).data('user'), 'user');
+            openToolbox(null, $(this).data('user'), 'user');
         })
             .on('click', '.pts-add-new-task', function () {
-            openInfoBox(null, null, "createTask");
+            openToolbox(null, null, "createTask");
         })
             .on('click', '.pts-add-new-user', function () {
-            openInfoBox(null, null, "createUser");
+            openToolbox(null, null, "createUser");
         })
             .on('click', '.pts-create-task-btn', function () {
             var name = $('#pts-add-task-input-name').val(),
@@ -2520,7 +2520,7 @@
                 }
             });
             if (name.length < 1) return;
-            closeInfoBox();
+            closeToolbox();
             createNewTask(name, id, description, color, tag, $(this).data('assign'));
         })
             .on('click', '.pts-create-user-btn', function () {
@@ -2528,7 +2528,7 @@
                 group = $('#pts-add-user-input-group').val();
             $('#pts-add-user-err-name').html('');
             if (name.length < 1) return $('#pts-add-user-err-name').html(settings.i18n.requiredField);
-            closeInfoBox();
+            closeToolbox();
             createNewUser(name, group, $(this).data('assign'));
         })
             .on('click', '.pts-delete-task-btn[data-task]', function () {
@@ -2546,7 +2546,7 @@
             removeTask($button.data('task'));
         })
             .on('click', '.pts-assign-task-btn', function () {
-            openInfoBox($(this).data('task'), null, 'assignTask');
+            openToolbox($(this).data('task'), null, 'assignTask');
         })
             .on('click', '#pts-task-assign-btn[data-task]', function () {
             var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
@@ -2574,11 +2574,11 @@
             }
         })
             .on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
-            if (e.target !== this || $('#pts-info-box-container[data-toggle=opened]').length <= 0) return;
-            if ($('.pts-close-info-box').data('update') == true) {
+            if (e.target !== this || $('#pts-toolbox-container[data-toggle=opened]').length <= 0) return;
+            if ($('.pts-close-toolbox').data('update') == true) {
                 updateDisplay(settings.currentDisplay);
             } else {
-                closeInfoBox();
+                closeToolbox();
             }
         })
             .on('click', '.pts-task-assign-delete-user[data-user][data-task][data-task-index]', function () {
@@ -2593,7 +2593,7 @@
 
         })
             .on('click', '.pts-edit-task-btn[data-task]', function () {
-            openInfoBox($(this).data('task'), null, 'editTask');
+            openToolbox($(this).data('task'), null, 'editTask');
         })
             .on('click', '.pts-edit-task-confirm-btn[data-task]', function () {
             var task = getTaskById($(this).data('task')),
@@ -2606,8 +2606,8 @@
             newData.tagColor = $('#pts-edit-task-input-tagColor').val();
             editTask(task, newData);
         })
-            .on('click', '.pts-info-box-back-btn[data-target]', function () {
-            openInfoBox($(this).data('task'), $(this).data('user'), $(this).data('target'));
+            .on('click', '.pts-toolbox-back-btn[data-target]', function () {
+            openToolbox($(this).data('task'), $(this).data('user'), $(this).data('target'));
         })
             .on('click', '.pts-delete-user-btn[data-user]', function () {
             var $button = $(this),
@@ -2627,10 +2627,10 @@
             }
         })
             .on('click', '.pts-edit-user-btn[data-user]', function () {
-            openInfoBox(null, $(this).data('user'), 'editUser');
+            openToolbox(null, $(this).data('user'), 'editUser');
         })
             .on('click', '.pts-assign-user-btn[data-user]', function () {
-            openInfoBox(null, $(this).data('user'), 'assignUser');
+            openToolbox(null, $(this).data('user'), 'assignUser');
         })
             .on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
             var newData = {};
@@ -2642,7 +2642,7 @@
         })
             .on('click', '.pts-button-see-all', function (e) {
             e.stopPropagation();
-            openInfoBox(null, null, 'seeAll');
+            openToolbox(null, null, 'seeAll');
         })
             .on('click', '.pts-notif-undo-btn[data-notification]', function (e) {
             e.stopPropagation();
@@ -2680,7 +2680,7 @@
                 $('.pts-edit-assignation-box').remove();
             })
             .on('click', '.pts-open-filters-menu', function (e) {
-                openInfoBox(null, null, 'filters');
+                openToolbox(null, null, 'filters');
             })
             .on('click', '.pts-create-filter', function (e) {
                generateNewFilter();
@@ -2750,7 +2750,7 @@
                 }
             })
             .on('mousedown', '.pts-line-marker[data-task], .pts-list-task-header[data-task]', function () {
-                openInfoBox($(this).attr('data-task'), null, 'task');
+                openToolbox($(this).attr('data-task'), null, 'task');
             })
             .on('keyup', '.pts-list-search-task', function () {
                 var searchString = $(this).val().toLowerCase();
