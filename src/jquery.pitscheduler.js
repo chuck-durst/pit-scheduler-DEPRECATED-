@@ -6,214 +6,213 @@
  * Released under the MIT license
  */
 
+var i18n = {
+    allowed: [
+        'en',
+        'fr'
+    ],
+    fr: {
+        day: 'Jour',
+        days: 'Jours',
+        months: 'Mois',
+        list: 'Liste',
+        tasks: 'Tâches',
+        task: 'Tâche',
+        hour: 'Heure',
+        hours: 'Heures',
+        users: 'Utilisateurs',
+        unlisted: 'Non répertorié',
+        settings: 'Options',
+        hideEmptyLine: 'Masquer les lignes sans tâche',
+        description: 'Description',
+        assignedUsers: 'utilisateurs assignés',
+        assignedUser: 'utilisateur assigné',
+        from: 'Du',
+        to: 'au',
+        notSpecified: 'Non spécifiée',
+        disableLabelsMovement: 'Désactiver le mouvement des labels',
+        today: 'Aujourd\'hui',
+        thisWeek: 'Cette semaine',
+        thisMonth: 'Ce mois-ci',
+        thisYear: 'Cette année',
+        personalized: 'Personnalisé',
+        selectAll: 'Tout sélectionner',
+        always: 'toujours',
+        total: 'Total',
+        usersWhose: 'utilisateur(s) dont',
+        cycleWhose: 'cycle(s) dont',
+        inSelectedPeriod: 'dans la période sélectionnée',
+        all: 'Tout',
+        search: 'Recherche',
+        addNewTask: 'Créer une tâche',
+        addNewUser: 'Créer un utilisateur',
+        editUser: 'Modifier un utilisateur',
+        name: 'Nom',
+        required: 'Obligatoire',
+        color: 'Couleur',
+        cancel: 'Annuler',
+        create: 'Créer',
+        createAndAssign: 'Créer et assigner',
+        nameAlreadyTaken: 'Ce nom est déjà utilisé',
+        idAlreadyTaken: 'Cet ID est déjà utilisé',
+        remove: 'Supprimer',
+        assign: 'Assigner',
+        edit: 'Modifier',
+        confirm: 'Confirmer',
+        assignTaskTitle: 'Assigner des utilisateurs',
+        assignUserTitle: 'Assigner à une tâche',
+        allInputRequired: 'Tous les champs sont obligatoires',
+        requiredField: 'Ce champ est obligatoire',
+        userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
+        selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
+        selectTasksToAssign: 'Sélectionnez les tâches à assigner',
+        editTask: 'Modifier la tâche',
+        group: 'Groupe',
+        selectGroup: 'Sélectionnez un groupe existant',
+        createNewGroup: 'Créez un nouveau groupe',
+        or: 'ou',
+        seeAll: 'Tout voir',
+        allocations: 'assignations',
+        allocation: 'assignation',
+        tag: 'Etiquette',
+        tags: 'Etiquettes',
+        groups: 'Groupes',
+        tagColor: 'Couleur de l\'étiquette',
+        filters: 'Filtres',
+        deleteAll: 'Tout supprimer',
+        addFilter: 'Créer un filtre',
+        contains: 'Contient',
+        notContains: 'Ne contient pas',
+        active: 'Actif',
+        inactive: 'Inactif',
+        notif: {
+            taskCreated: 'La tâche a été créée avec succès',
+            userCreated: 'L\'utilisateur a été créé avec succès',
+            taskRemoved: 'La tâche a correctement été supprimée',
+            userRemoved: 'L\'utilisateur a correctement été supprimé',
+            usersAssigned: 'utilisateurs ont été assignés à la tâche',
+            userAssigned: 'utilisateur a été assigné à la tâche',
+            userUnassigned: 'a correctement été désassigné',
+            noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
+            noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
+            taskNotExist: 'est assigné à une tâche qui n\'existe pas',
+            taskInformationsUpdated: 'La tâche a été modifiée',
+            userHasNoTask: 'n\'est assigned à aucune tâche',
+            userEdited: 'L\'utilisateur a correctement été modifié',
+            userAssignedTo: 'a été assigné à',
+            userTaskModified: 'La tâche prendra maintenant fin le',
+            filterAdded: 'Le filtre a correctement été ajouté',
+            filterEdited: 'Le filtre a correctement été modifié',
+            filterRemoved: 'Le filtre a correctement été supprimé',
+            allFiltersRemoved: 'Tous les filtres ont été supprimés'
+        }
+
+    },
+    en: {
+        day: 'Day',
+        days: 'Days',
+        months: 'Months',
+        list: 'List',
+        tasks: 'Tasks',
+        task: 'Task',
+        hour: 'Hour',
+        hours: 'Hours',
+        users: 'Users',
+        unlisted: 'Unlisted',
+        settings: 'Settings',
+        hideEmptyLine: 'Hide lines with no task',
+        description: 'Description',
+        assignedUsers: 'assigned users',
+        assignedUser: 'assigned user',
+        from: 'From',
+        to: 'to',
+        notSpecified: 'Not specified',
+        disableLabelsMovement: 'Disable labels mouvement',
+        today: 'Today',
+        thisWeek: 'This week',
+        thisMonth: 'This month',
+        thisYear: 'This year',
+        personalized: 'Personalized',
+        selectAll: 'Select all',
+        always: 'always',
+        total: 'Total',
+        usersWhose: 'user(s) with',
+        cycleWhose: 'cycle(s) with',
+        inSelectedPeriod: 'in the selected period',
+        all: 'All',
+        search: 'Search',
+        addNewTask: 'Create a new task',
+        addNewUser: 'Create a new user',
+        editUser: 'Edit the user',
+        name: 'Name',
+        required: 'Required',
+        color: 'Color',
+        cancel: 'Cancel',
+        create: 'Create',
+        createAndAssign: 'Create and assign',
+        idAlreadyTaken: 'This ID is already taken',
+        remove: 'Remove',
+        assign: 'Assign',
+        edit: 'Edit',
+        confirm: 'Confirm',
+        assignTaskTitle: 'Assign users',
+        assignUserTitle: 'Assign to a task',
+        allInputRequired: 'All fields are required',
+        requiredField: 'That field is required',
+        userIsAlreadyAssigned: 'is already assigned to this task for this period',
+        selectUsersToAssign: 'Select the users to assign',
+        selectTasksToAssign: 'Select the tasks to assign',
+        editTask: 'Edit a task',
+        group: 'Group',
+        groups: 'Groups',
+        selectGroup: 'Select an existing group',
+        createNewGroup: 'Create a new group',
+        or: 'or',
+        seeAll: 'See all',
+        allocations: 'allocations',
+        allocation: 'allocation',
+        tag: 'Tag',
+        tags: 'Tags',
+        tagColor: 'Tag color',
+        filters: 'Filters',
+        deleteAll: 'Delete all',
+        addFilter: 'Create filter',
+        contains: 'Contains',
+        notContains: 'Does not contains',
+        added: 'Added',
+        active: 'Active',
+        inactive: 'Inactive',
+        notif: {
+            taskCreated: 'The task has been successfully created',
+            userCreated: 'The user has been successfully created',
+            taskRemoved: 'The task has been successfully removed',
+            userRemoved: 'The user has been successfully removed',
+            usersAssigned: 'users has been assigned to the task',
+            userAssigned: 'user has been assigned to the task',
+            userUnassigned: 'has correctly been unassigned',
+            noUser: '<b>Warning : </b>No user has been set',
+            noTask: '<b>Warning : </b>No task has been set',
+            taskNotExist: 'is assigned to an inexistent task',
+            taskInformationsUpdated: 'The task has been edited',
+            userHasNoTask: 'is not assigned to any task',
+            userEdited: 'The user has been successfully edited',
+            userAssignedTo: 'has been assigned to',
+            userTaskModified: 'The task will now end the',
+            filterAdded: 'The filter has been added',
+            filterEdited: 'The filter has been edited',
+            filterRemoved: 'The filter has been removed',
+            allFiltersRemoved: 'All fiters has been removed'
+        }
+    }
+};
+
 (function ($) {
     'use strict';
-
-    var i18n = {
-        allowed: [
-            'en',
-            'fr'
-        ],
-        fr: {
-            day: 'Jour',
-            days: 'Jours',
-            months: 'Mois',
-            list: 'Liste',
-            tasks: 'Tâches',
-            task: 'Tâche',
-            hour: 'Heure',
-            hours: 'Heures',
-            users: 'Utilisateurs',
-            unlisted: 'Non répertorié',
-            settings: 'Options',
-            hideEmptyLine: 'Masquer les lignes sans tâche',
-            description: 'Description',
-            assignedUsers: 'utilisateurs assignés',
-            assignedUser: 'utilisateur assigné',
-            from: 'Du',
-            to: 'au',
-            notSpecified: 'Non spécifiée',
-            disableLabelsMovement: 'Désactiver le mouvement des labels',
-            today: 'Aujourd\'hui',
-            thisWeek: 'Cette semaine',
-            thisMonth: 'Ce mois-ci',
-            thisYear: 'Cette année',
-            personalized: 'Personnalisé',
-            selectAll: 'Tout sélectionner',
-            always: 'toujours',
-            total: 'Total',
-            usersWhose: 'utilisateur(s) dont',
-            cycleWhose: 'cycle(s) dont',
-            inSelectedPeriod: 'dans la période sélectionnée',
-            all: 'Tout',
-            search: 'Recherche',
-            addNewTask: 'Créer une tâche',
-            addNewUser: 'Créer un utilisateur',
-            editUser: 'Modifier un utilisateur',
-            name: 'Nom',
-            required: 'Obligatoire',
-            color: 'Couleur',
-            cancel: 'Annuler',
-            create: 'Créer',
-            createAndAssign: 'Créer et assigner',
-            nameAlreadyTaken: 'Ce nom est déjà utilisé',
-            idAlreadyTaken: 'Cet ID est déjà utilisé',
-            remove: 'Supprimer',
-            assign: 'Assigner',
-            edit: 'Modifier',
-            confirm: 'Confirmer',
-            assignTaskTitle: 'Assigner des utilisateurs',
-            assignUserTitle: 'Assigner à une tâche',
-            allInputRequired: 'Tous les champs sont obligatoires',
-            requiredField: 'Ce champ est obligatoire',
-            userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
-            selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
-            selectTasksToAssign: 'Sélectionnez les tâches à assigner',
-            editTask: 'Modifier la tâche',
-            group: 'Groupe',
-            selectGroup: 'Sélectionnez un groupe existant',
-            createNewGroup: 'Créez un nouveau groupe',
-            or: 'ou',
-            seeAll: 'Tout voir',
-            allocations: 'assignations',
-            allocation: 'assignation',
-            tag: 'Etiquette',
-            tags: 'Etiquettes',
-            groups: 'Groupes',
-            tagColor: 'Couleur de l\'étiquette',
-            filters: 'Filtres',
-            deleteAll: 'Tout supprimer',
-            addFilter: 'Créer un filtre',
-            contains: 'Contient',
-            notContains: 'Ne contient pas',
-            active: 'Actif',
-            inactive: 'Inactif',
-            notif: {
-                taskCreated: 'La tâche a été créée avec succès',
-                userCreated: 'L\'utilisateur a été créé avec succès',
-                taskRemoved: 'La tâche a correctement été supprimée',
-                userRemoved: 'L\'utilisateur a correctement été supprimé',
-                usersAssigned: 'utilisateurs ont été assignés à la tâche',
-                userAssigned: 'utilisateur a été assigné à la tâche',
-                userUnassigned: 'a correctement été désassigné',
-                noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
-                noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
-                taskNotExist: 'est assigné à une tâche qui n\'existe pas',
-                taskInformationsUpdated: 'La tâche a été modifiée',
-                userHasNoTask: 'n\'est assigned à aucune tâche',
-                userEdited: 'L\'utilisateur a correctement été modifié',
-                userAssignedTo: 'a été assigné à',
-                userTaskModified: 'La tâche prendra maintenant fin le',
-                filterAdded: 'Le filtre a correctement été ajouté',
-                filterEdited: 'Le filtre a correctement été modifié',
-                filterRemoved: 'Le filtre a correctement été supprimé',
-                allFiltersRemoved: 'Tous les filtres ont été supprimés'
-            }
-
-        },
-        en: {
-            day: 'Day',
-            days: 'Days',
-            months: 'Months',
-            list: 'List',
-            tasks: 'Tasks',
-            task: 'Task',
-            hour: 'Hour',
-            hours: 'Hours',
-            users: 'Users',
-            unlisted: 'Unlisted',
-            settings: 'Settings',
-            hideEmptyLine: 'Hide lines with no task',
-            description: 'Description',
-            assignedUsers: 'assigned users',
-            assignedUser: 'assigned user',
-            from: 'From',
-            to: 'to',
-            notSpecified: 'Not specified',
-            disableLabelsMovement: 'Disable labels mouvement',
-            today: 'Today',
-            thisWeek: 'This week',
-            thisMonth: 'This month',
-            thisYear: 'This year',
-            personalized: 'Personalized',
-            selectAll: 'Select all',
-            always: 'always',
-            total: 'Total',
-            usersWhose: 'user(s) with',
-            cycleWhose: 'cycle(s) with',
-            inSelectedPeriod: 'in the selected period',
-            all: 'All',
-            search: 'Search',
-            addNewTask: 'Create a new task',
-            addNewUser: 'Create a new user',
-            editUser: 'Edit the user',
-            name: 'Name',
-            required: 'Required',
-            color: 'Color',
-            cancel: 'Cancel',
-            create: 'Create',
-            createAndAssign: 'Create and assign',
-            idAlreadyTaken: 'This ID is already taken',
-            remove: 'Remove',
-            assign: 'Assign',
-            edit: 'Edit',
-            confirm: 'Confirm',
-            assignTaskTitle: 'Assign users',
-            assignUserTitle: 'Assign to a task',
-            allInputRequired: 'All fields are required',
-            requiredField: 'That field is required',
-            userIsAlreadyAssigned: 'is already assigned to this task for this period',
-            selectUsersToAssign: 'Select the users to assign',
-            selectTasksToAssign: 'Select the tasks to assign',
-            editTask: 'Edit a task',
-            group: 'Group',
-            groups: 'Groups',
-            selectGroup: 'Select an existing group',
-            createNewGroup: 'Create a new group',
-            or: 'or',
-            seeAll: 'See all',
-            allocations: 'allocations',
-            allocation: 'allocation',
-            tag: 'Tag',
-            tags: 'Tags',
-            tagColor: 'Tag color',
-            filters: 'Filters',
-            deleteAll: 'Delete all',
-            addFilter: 'Create filter',
-            contains: 'Contains',
-            notContains: 'Does not contains',
-            added: 'Added',
-            active: 'Active',
-            inactive: 'Inactive',
-            notif: {
-                taskCreated: 'The task has been successfully created',
-                userCreated: 'The user has been successfully created',
-                taskRemoved: 'The task has been successfully removed',
-                userRemoved: 'The user has been successfully removed',
-                usersAssigned: 'users has been assigned to the task',
-                userAssigned: 'user has been assigned to the task',
-                userUnassigned: 'has correctly been unassigned',
-                noUser: '<b>Warning : </b>No user has been set',
-                noTask: '<b>Warning : </b>No task has been set',
-                taskNotExist: 'is assigned to an inexistent task',
-                taskInformationsUpdated: 'The task has been edited',
-                userHasNoTask: 'is not assigned to any task',
-                userEdited: 'The user has been successfully edited',
-                userAssignedTo: 'has been assigned to',
-                userTaskModified: 'The task will now end the',
-                filterAdded: 'The filter has been added',
-                filterEdited: 'The filter has been edited',
-                filterRemoved: 'The filter has been removed',
-                allFiltersRemoved: 'All fiters has been removed'
-            }
-        }
-    };
-
+    
     $.fn.pitScheduler = function (options) {
 
         var $scheduler = $(this);
-
-
+        
         /********* Settings initialization *********/
 
         options = options || {};
@@ -237,7 +236,7 @@
         }, options);
 
         moment.locale(settings.locale);
-        settings.i18n = i18n[settings.locale];
+        settings.i18n = (i18n.allowed.indexOf(settings.locale) == -1 ? i18n.en : i18n[settings.locale]);
 
         /* Debug tool */
         var log =  {
@@ -296,7 +295,6 @@
                     switchListRange('today');
                     break;
             }
-            console.log(settings);
         };
 
         /**
@@ -1220,16 +1218,13 @@
                     } else {
                         task.end_date = (settings.currentDisplay == 'months' ? moment(task.end_date).hours(12).minutes(0) : moment(task.end_date).minutes(30));
                     }
-                    console.log(task.end_date);
                     task.end_date = moment(task.end_date).format('YYYY-MM-DD HH:mm');
-                    console.log(task.end_date);
                     if (parseInt(moment(task.start_date).format('YYYYMMDDHHmm')) >= parseInt(moment(task.end_date).format('YYYYMMDDHHmm'))) {
                         deleteTaskFromUser(settings.users[settings.resize.user], task, taskIndex, undo);
                     } else {
                         generateNotification('success', settings.i18n.notif.userTaskModified + ': <b>' + moment(task.end_date).locale(settings.locale).format('LLLL') + '</b>', undo, settings.onUserEdition);
                     }
                     updateDisplay(settings.currentDisplay);
-                    console.log(task);
                 }
             });
             settings.resize = {};
@@ -1306,7 +1301,6 @@
             var exist = false;
             settings.filters.forEach(function (_filter, i) {
                 if (_filter.id == filter.id) {
-                    console.log('EXISTING FILTER');
                     exist = i;
                 }
             });
@@ -1317,7 +1311,6 @@
                 settings.filters[exist] = filter;
                 generateNotification('success', settings.i18n.notif.filterEdited);
             }
-            console.log(settings.filters);
         };
 
         /**
@@ -1332,11 +1325,9 @@
                 }
             });
             if (toRemove !== null) {
-                console.log('REMOVE FILTER ' + filterId + ' with index ' + toRemove);
                 settings.filters.splice(toRemove, 1);
                 generateNotification('success', settings.i18n.notif.filterRemoved);
                 $('.pts-filter-container[data-filter=' + filterId + ']').remove();
-                console.log(settings.filters);
             }
         };
 
@@ -1350,17 +1341,13 @@
             var response = false;
             settings.filters.forEach(function (filter) {
                 if (filter.target == type) {
-                    console.log(settings.filters);
-                    console.log('Find target: ' + type);
-                    console.log('Look if ' + value +  (filter.type == 'in' ? ' contains ' : ' not containing ') + filter.value);
                     if (value === undefined ) {
                         if (filter.type == 'in')
                         response = true;
                     }
                     else if (filter.type == 'out' && value.indexOf(filter.value) != -1 || (filter.type == 'in' && value && value.indexOf(filter.value) == -1)) {
-                        console.log('answer: Yes');
                         response = true;
-                    } else console.log('answer: No');
+                    }
                 }
             });
             return response;
@@ -2564,9 +2551,7 @@
                 end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
                 tasks = $('.pts-user-assign-tasks-list').val(),
                 user = settings.users[$(this).data('user')];
-            console.log(user);
-            console.log($(this).data('user'));
-            console.log(settings.users);
+
             if (user && tasks && start_date && end_date) {
                 assignTasksToUser(user, tasks, start_date, end_date);
             } else {
@@ -2825,6 +2810,17 @@
                         console.error('Error: the specified view mode do not exist');
                     }
                     return settings.currentDisplay;
+                },
+
+                go: function (direction) {
+                    switch (direction) {
+                        case 'backward':
+                            goBackward();
+                            break;
+                        default:
+                            goForward();
+                            break;
+                    }
                 }
             };
         };

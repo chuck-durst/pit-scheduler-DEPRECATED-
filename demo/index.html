@@ -13,7 +13,7 @@
 
     <link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link  rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
-    <link  rel="stylesheet" type="text/css" href="../__assets__/pit-scheduler.css">
+    <link  rel="stylesheet" type="text/css" href="../src/pit-scheduler.css">
 
     <style>
         body {
@@ -44,12 +44,12 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/moment-with-locales.min.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
-<script src="../__assets__/jquery.pitscheduler.js"></script>
+<script src="../src/jquery.pitscheduler.js"></script>
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>-->
 <script>
     $(document).ready(function () {
         $(".pit-scheduler").pitScheduler({
-            locale: 'fr', //default: en
+            locale: 'en', //default: en
             defaultDisplay: 'months', //default: months
             hideEmptyLines: true, //default: true
             disableLabelsMovement: false, //default: false
