@@ -1,0 +1,41 @@
+body {
+    padding-top: 70px;
+}
+.extrasmall {
+    font-size:10px;
+}
+
+.bs-sidebar li.active a, .bs-sidebar li.main a {
+    font-weight: 600;
+}
+
+.bs-sidebar li.sub {
+    margin-left: 30px;
+}
+
+.bs-sidebar {
+    max-height: 50%;
+    overflow-y: scroll;
+}
+
+.sidebar-container {
+    display: flex;
+    justify-content: center;
+}
+
+.blank-footer {
+    position: relative;
+    height:200px;
+}
+
+.demo-container {
+    margin:50px;
+}
+
+section {
+    padding-top: 40px;
+}
+
+section section {
+    margin-left: 30px;
+}

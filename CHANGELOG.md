@@ -16,6 +16,7 @@ Changelog
 *  [feature] Some default functions has been added to give you more opportunities of interactions with the scheduler
 *  [feature] You can henceforth tag the tasks to set them status or optional information
 *  [feature] You can now edit and remove users assignations right from the toolbox
+*  [feature] Since we are living in the 21st century, the project can now be downloaded from npm!
 
 ## Bugfixes
 * [bugfix] Best support on Firefox and latest IE

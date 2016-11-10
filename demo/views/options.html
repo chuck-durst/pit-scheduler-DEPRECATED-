@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="chuck-durst">
+
+    <title>pit-scheduler</title>
+
+    <link  rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link  rel="stylesheet" type="text/css" href="../css/demo.css">
+
+</head>
+
+<body data-spy="scroll" data-target=".bs-sidebar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">pit-scheduler</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../index.html">Pit-scheduler</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="installing.html">Installing</a></li>
+                <li class="active"><a href="options.html">Options</a></li>
+                <li><a href="functions.html">Functions</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="changelog.html">Changelog</a></li>
+                <li><a href="faq.html">FAQs</a></li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="https://github.com/chuck-durst/pit-scheduler">
+                            <img width="20" src="http://www.uidownload.com/files/236/359/742/code-coding-development-github-program-programming-icon.png" alt="github"> Github
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="main-container container-fluid row">
+    <div class="sidebar-container col-sm-3 hidden-xs">
+        <div class="bs-sidebar hidden-print affix well" role="complementary">
+            <ul class="nav bs-sidenav">
+                <li class="active"><a href="#locale">locale</a></li>
+                <li class=""><a href="#defaultDisplay">defaultDisplay</a></li>
+                <li class=""><a href="#hideEmptyLines">hideEmptyLines</a></li>
+                <li class=""><a href="#disableLabelsMovement">disableLabelsMovement</a></li>
+                <li class=""><a href="#defaultGroupName">defaultGroupName</a></li>
+                <li class=""><a href="#defaultDate">defaultDate</a></li>
+                <li class=""><a href="#defaultColor">defaultColor</a></li>
+                <li class=""><a href="#disableNotifications">disableNotifications</a></li>
+                <li class=""><a href="#notificationDuration">notificationDuration</a></li>
+                <li class=""><a href="#hideSpinner">hideSpinner</a></li>
+                <li class=""><a href="#disableUndo">disableUndo</a></li>
+                <li class=""><a href="#tasks">tasks</a></li>
+                <li class="sub"><a href="#tasks_id">id</a></li>
+                <li class="sub"><a href="#tasks_name">name</a></li>
+                <li class="sub"><a href="#tasks_description">description</a></li>
+                <li class="sub"><a href="#tasks_color">color</a></li>
+                <li class="sub"><a href="#tasks_tag">tag</a></li>
+                <li class="sub"><a href="#tasks_tag_color">tagColor</a></li>
+                <li class=""><a href="#users">users</a></li>
+                <li class="sub"><a href="#users_name">name</a></li>
+                <li class="sub"><a href="#users_group">group</a></li>
+                <li class="sub"><a href="#users_tasks">tasks</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-9 col-xs-12">
+        <h1>Options</h1>
+        <section id="locale">
+            <h2>locale</h2>
+            <pre>Default: 'en'<br>Accepts: 'en', 'fr'</pre>
+            Set the default locale to use. Actually you can only choose between 'en' and 'fr'.<br>
+            See <a href="https://github.com/moment/moment/tree/develop/locale">momentjs</a> for valid locales.<br>
+            <div class="alert alert-warning" role="alert"><b>Note:</b> the momentjs file must contain the locale you want to use.</div>
+        </section>
+        <section id="defaultDisplay">
+            <h2>defaultDisplay</h2>
+            <pre>Default: 'months'<br>Accepts: 'months', 'days', 'list'</pre>
+            Defines which display mode must be used on initialization.<br>
+        </section>
+        <section id="hideEmptyLines">
+            <h2>hideEmptyLines</h2>
+            <pre>Default: true</pre>
+            With this option activated, the lines with no tasks will automatically be hidden.<br>
+        </section>
+        <section id="disableLabelsMovement">
+            <h2>disableLabelsMovement</h2>
+            <pre>Default: false</pre>
+           By default, the tasks label will move on scroll to stay on the screen. You can use this option to disable this feature.<br>
+        </section>
+        <section id="defaultGroupName">
+            <h2>defaultGroupName</h2>
+            <pre>Default: 'unlisted'</pre>
+           Defines a default group name. Note that the default value will be translated depending on you current locale.<br>
+        </section>
+        <section id="defaultDate">
+            <h2>defaultDate</h2>
+            <pre>Default: The current date</pre>
+           Sets the starting date.<br>
+        </section>
+        <section id="defaultColor">
+            <h2>defaultColor</h2>
+            <pre>Default: #00BCD4</pre>
+           Defines a default color for the tasks and some UI elements.<br>
+        </section>
+        <section id="disableNotifications">
+            <h2>disableNotifications</h2>
+            <pre>Default: false</pre>
+           Put this option on if you do not want to get notifications on modifications.<br>
+        </section>
+        <section id="notificationDuration">
+            <h2>notificationDuration</h2>
+            <pre>Default: 4000</pre>
+           Sets the notifications duration (in ms).<br>
+        </section>
+        <section id="hideSpinner">
+            <h2>hideSpinner</h2>
+            <pre>Default: true</pre>
+           Hide the preloader.<br>
+            <div class="alert alert-warning" role="alert"><b>Note:</b> The preloader will appears on each page change. You may only use it if you have to work with a lot of data or using Ajax requests.</div>
+        </section>
+        <section id="disableUndo">
+            <h2>disableUndo</h2>
+            <pre>Default: false</pre>
+            The undo option is a little bit particular: On each modification, you'll get be notified with a link that allows you to revert what you have done. <br>
+            Be careful if you are using events options (see <a href="events.html">the events page</a>). The callback functions <b>will only be called after the notification disappearance</b> to let you have a few seconds of hesitation.
+            <div class="alert alert-warning" role="alert"><b>Note:</b> this option requires the notifications to be enabled!</div>
+        </section>
+        <section id="resizeTask">
+            <h2>resizeTask</h2>
+            <pre>Default: false</pre>
+            You can turn off the tasks resizing with this option.
+        </section>
+        <section id="tasks">
+            <h2>tasks</h2>
+            <pre>Default: Array of Objects</pre>
+            Use this option to define tasks that will be displayed into the scheduler.<br>
+            Take a look at the options bellow. Each task is an object.<br>
+            <div class="alert alert-success" role="alert"><b>Note:</b> What about setting a function as argument to this option and get the tasks using ajax? <b>Yes</b>! You can!</div>
+            <section id="tasks_id">
+                <h3>task: id<span style="color:red">*</span></h3>
+                <pre>Requires: String</pre>
+                Each defined tasks <b>must be</b> set with a <b>unique</b> ID.<br>
+            </section>
+            <section id="tasks_name">
+                <h3>task: name<span style="color:red">*</span></h3>
+                <pre>Requires: String</pre>
+                Each defined tasks <b>must be</b> set with a <b>unique</b> name.<br>
+            </section>
+            <section id="tasks_description">
+                <h3>task: description</h3>
+                <pre>Accepts: String</pre>
+                You can set descriptions for each task using this option. However, this is not required.<br>
+            </section>
+            <section id="tasks_color">
+                <h3>task: color</h3>
+                <pre>Accepts: All colors definition types</pre>
+                If you don't set this option, the task will either use the defaultColor option, either the <span style="background-color:#00BCD4;color:#fff">#00BCD4</span> color (if the defaultColor option is not defined).<br>
+            </section>
+            <section id="tasks_tag">
+                <h3>task: tag</h3>
+                <pre>Accepts: String</pre>
+                Defines a tag for the task<br>
+                <div class="alert alert-warning" role="alert"><b>Note:</b> Tags are meant to be used with short sentences of one or two words max.</div>
+            </section>
+            <section id="tasks_tag_color">
+                <h3>task: tagColor</h3>
+                <pre>Accepts: All colors definition types</pre>
+                Defines a background-color for the task tag.<br>
+            </section>
+        </section>
+        <section id="users">
+            <h2>users</h2>
+            <pre>Accepts: Array of objects</pre>
+            You can add users using this option. <br>
+            Take a look at the options below to learn more about the required options. <br>
+            <section id="users_name">
+                <h2>user: name<span style="color:red">*</span></h2>
+                <pre>Requires: String</pre>
+                Defines the user name. This option is required.<br>
+            </section>
+            <section id="users_group">
+                <h2>user: group</h2>
+                <pre>Accepts: String</pre>
+                Defines the user group name.<br>
+                <div class="alert alert-info" role="alert"><b>Note:</b> All the users with a matching group name will be sorted together.</div>
+            </section>
+            <section id="users_tasks">
+                <h2>user: tasks</h2>
+                <pre>Accepts: Array of objects</pre>
+                Defines the user tasks. Each task must be composed of the following elements:<br>
+                <ul>
+                    <li>an <code>id</code>: (String) refers to the task it is about (defined in the tasks options)</li>
+                    <li>a <code>start_date</code>: (valid Date) The beginning of the task</li>
+                    <li>a <code>end_date</code>: (valid Date) The end of the task</li>
+                </ul>
+                Example: <br>
+                <pre><code>/* ... */<br>tasks: [<br>    {<br>     id: 'dlaJ-S76-sk2',<br>     start_date: '2016-08-07 13:45',<br>     end_date: '2016-08-15 18:00'<br>    }<br>]<br>/* ... */</code></pre>
+            </section>
+        </section>
+        <div class="blank-footer"></div>
+    </div>
+</div>
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>
