@@ -9,6 +9,6 @@
 
 ## License
 
-Feel free to do what you wan't with this project!
+Feel free to do what you want with this project!
 
 This plugin is available under the MIT license.

@@ -65,16 +65,16 @@
     </div>
     <div class="col-sm-8 col-xs-12">
         <h1>Events</h1>
-        <h4>The event functions is one of the most important features. These are callback functions that let you do stuff after each modification.</h4>
-        <h5>For example, you can call a function on each user update that will synchronize the changes with your database using an Ajax call!</h5>
+        <h4>The event functions is one of the most important features. those are callback functions that let you do stuff after each modification.</h4>
+        <h5>For example, you can call a function on each user update which will synchronize the changes with your database using an Ajax call!</h5>
         <br> All that functions are considered as options and must be declared <b>at the same time</b> than the other options:
         <pre><code>$("#pit-scheduler").pitScheduler({ /** Options and events **/});</code></pre>
-        <div class="alert alert-success" role="alert"><b>Note:</b> All the event functions first argument is the <b>'settings' variable</b> of the scheduler. This object allows you to access all the needed data to do whatever you want!</div>
+        <div class="alert alert-success" role="alert"><b>Note:</b> All the event functions first argument is the <b>'settings'</b> variable of the scheduler. This object allows you to access all the needed data and do whatever you want!</div>
         <section id="onChange">
             <h2>onChange()</h2>
             <pre><code>/** ... **/<br>onChange: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
-            This is the <b>most important</b> event function. It is called after <b>EVERY</b> data update that can append inside the <code>scheduler</code>. <br>
-            This also means that this function will be called <b>at the same time</b> than any other event function! <br>
+            This is the <b>most important</b> event function. It is called after <b>EVERY</b> data updates that can append inside the <code>scheduler</code>. <br>
+            It also means that this function will be called <b>at the same time</b> than any other event function! <br>
         </section>
         <section id="onTaskCreation">
             <h2>onTaskCreation()</h2>

@@ -1,6 +1,6 @@
 {
   "name": "pit-scheduler",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A complet scheduler build with jQuery and Boostrap",
   "main": "__assets__/jquery.pitscheduler.js",
   "dependencies": {
