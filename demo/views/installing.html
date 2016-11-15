@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="chuck-durst">
+
+    <title>pit-scheduler</title>
+
+    <link  rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link  rel="stylesheet" type="text/css" href="../css/demo.css">
+
+</head>
+
+<body data-spy="scroll" data-target=".bs-sidebar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">pit-scheduler</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../index.html">Pit-scheduler</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="installing.html">Installing</a></li>
+                <li><a href="options.html">Options</a></li>
+                <li><a href="functions.html">Functions</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="changelog.html">Changelog</a></li>
+                <li><a href="faq.html">FAQs</a></li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="https://github.com/chuck-durst/pit-scheduler">
+                            <img width="20" src="http://www.uidownload.com/files/236/359/742/code-coding-development-github-program-programming-icon.png" alt="github"> Github
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="main-container container-fluid row">
+    <div class="sidebar-container col-sm-3 hidden-xs">
+        <div class="bs-sidebar hidden-print affix well" role="complementary">
+            <ul class="nav bs-sidenav">
+                <li class="active"><a href="#minimal_requirements">Minimal Requirements</a></li>
+                <li class=""><a href="#installation">Installation Guides</a></li>
+                <li class="sub"><a href="#installation_npm">NPM</a></li>
+                <li class="sub"><a href="#installation_manual">Manual</a></li>
+                <li class=""><a href="#usage">Usage</a></li>
+                <li class=""><a href="#locales">Locales</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-8 col-xs-12">
+        <h1>Installing</h1>
+        <section id="minimal_requirements">
+            <h2>Minimal Requirements</h2>
+            <ul>
+                <li>jQuery</li>
+                <li>Moment.js</li>
+                <li>Bootstrap.js</li>
+                <li><a href="http://eonasdan.github.io/bootstrap-datetimepicker/Installing/">Bootstrap Datetimepicker</a></li>
+                <li>Bootstrap DatetimePicker CSS</li>
+                <li>Bootstrap CSS</li>
+            </ul>
+        </section>
+        <section id="installation">
+            <h2>Installation Guide</h2>
+            <section id="installation_npm">
+                <h3>NPM</h3>
+                Run the following command:
+                <pre><code>npm i pit-scheduler --save</code></pre>
+                Include necessary scripts and styles:
+                <pre>
+<code class="html">&lt;head&gt;
+    &lt;!-- ... --&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/node_modules/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker.less"&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/node_modules/pit-scheduler/src/css/pitscheduler.min.css"&gt;
+
+    &lt;script src="/node_modules/jquery/dist/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/node_modules/momentjs/build/moment.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/node_modules/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"&gt;&lt;/script&gt;
+    &lt;script src="/node_modules/pit-scheduler/dist/js/pitscheduler.min.css"&gt;&lt;/script&gt;
+    &lt;!-- ... --&gt;
+&lt;/head&gt;</code>
+                </pre>
+            </section>
+            <section id="installation_manual">
+                <h3>Manual installation</h3>
+                Run the following command to clone the repository:
+                <pre><code>git clone https://github.com/chuck-durst/pit-scheduler</code></pre>
+                <b>You can also download the .zip file <a href="https://github.com/chuck-durst/pit-scheduler/archive/master.zip">Here</a></b>
+                <br><br>
+                Include necessary scripts and styles:
+                <pre>
+<code class="html">&lt;head&gt;
+    &lt;!-- ... --&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/path/to/bootstrap.min.css"&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/path/to/bootstrap-datetimepicker.less"&gt;
+    &lt;link  rel="stylesheet" type="text/css" href="/path/to/pitscheduler.min.css"&gt;
+
+    &lt;script src="/path/to/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/path/to/bootstrap.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/path/to/moment.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/path/to/bootstrap-datetimepicker.js"&gt;&lt;/script&gt;
+    &lt;script src="/path/to/pitscheduler.min.css"&gt;&lt;/script&gt;
+    &lt;!-- ... --&gt;
+&lt;/head&gt;</code>
+                </pre>
+            </section>
+        </section>
+        <section id="usage">
+            <h2>Usage</h2>
+            Now you are ready to go! To display the scheduler, simply use Javascript to create a new instance of the module:
+            <pre>
+<code class="javascript">$(document).ready(function () {
+    $("#pit-scheduler").pitScheduler(/* options */);
+});</code></pre>
+            and then put the element wherever you want in the page:
+            <pre><code class="html">&lt;div id="pit-scheduler"&gt;&lt;/div&gt;</code></pre>
+            <div class="alert alert-warning" role="alert"><b>Note:</b> You can only use <b>one instance</b> of the scheduler per page!</div>
+        </section>
+        <section id="locales">
+            <h2>Locales</h2>
+            By default, all the scheduler files work with the english language. <br>
+            If you want to use the scheduler with other languages, it's quite simple. In fact, there is <b>two ways</b>:
+            <ul>
+                <li>Add the <code>pitscheduler-with-locales.min.js</code> file, which will load all the locales</li>
+                <li>Use the default scheduler Js file and add the needed locale file separately from dist/js/locales/</li>
+            </ul>
+            The second solution will be the most appropriate in most usages. <br>
+            <div class="alert alert-success" role="alert"><b>Note:</b> If your language is not available, you can easily create your own locale file. Just follow the existing pattern! In this case, do not forget to share your translation with use!</div>
+        </section>
+        <div class="blank-footer"></div>
+    </div>
+</div>
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>
