@@ -11,7 +11,7 @@
 
     <link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link  rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
-    <link  rel="stylesheet" type="text/css" href="../dist/css/pit-scheduler.css">
+    <link  rel="stylesheet" type="text/css" href="../dist/css/pitscheduler.min.css">
     <link  rel="stylesheet" type="text/css" href="css/demo.css">
 
 </head>
@@ -60,35 +60,36 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/moment-with-locales.min.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
-<script src="../dist/js/pitscheduler.js"></script>
+<script src="../dist/js/pitscheduler.min.js"></script>
 <script>
+
     $(document).ready(function () {
         $("#pit-scheduler").pitScheduler({
-            locale: 'en', //default: en
-            defaultDisplay: 'months', //default: months
-            hideEmptyLines: true, //default: true
-            disableLabelsMovement: false, //default: false
+            locale: 'en',
+            defaultDisplay: 'months',
+            hideEmptyLines: true,
+            disableLabelsMovement: false,
             defaultGroupName: 'Default group',
             defaultDate: '2016-09-01 16:30',
-            disableNotifications: false, //default: false
-            notificationDuration: 4000, //default: 4000
-            hideSpinner: true, //default: true
-            onChange: '', // Function called on every changes
-            onTaskCreation: '', // Function called on task creation
-            onUserCreation: '', // Function called on user creation
-            onTaskRemoval: '', // Function called on task removal
-            onUserRemoval: '', // Function called on user removal
-            onUserEdition: '', // Function called on user edition
-            onTaskAssignation: '', // Function called on task assignation,
-            onUserTaskDeletion: '', // Function called when a task is removed from a user
-            onTaskEdition: '', // Function called when a task is edited
-            disableUndo: false, //default: false
-            resizeTask: true, //default: false
+            disableNotifications: false,
+            notificationDuration: 4000,
+            hideSpinner: true,
+            onChange: '',
+            onTaskCreation: '',
+            onUserCreation: '',
+            onTaskRemoval: '',
+            onUserRemoval: '',
+            onUserEdition: '',
+            onTaskAssignation: '',
+            onUserTaskDeletion: '',
+            onTaskEdition: '',
+            disableUndo: false,
+            resizeTask: true,
             tasks:  [
                 {
                     id: 'djJ3d7sjk928S0',
                     name: 'Jacuzzi access',
-                    description: 'Allow user to access to the jacuzzi',
+                    description: 'Allows users to access to the jacuzzi',
                     color: '#fcd720',
                     tag: 'limited places',
                     tagColor: '#50d371'
@@ -96,18 +97,21 @@
                 {
                     id: 'fJD67Bd4jh7',
                     name: 'SPA access',
-                    description: 'Allow the user to access to the SPA',
+                    description: 'Allows usesr to access to the SPA',
                     color: '#E91E63'
                 },
                 {
                     id: 'dj8aA9nL0Su7',
                     name: 'Internet access',
+                    description: 'Allows users to access to internet',
                     color: '#536DFE'
                 },
                 {
                     id: 'fLKd67zPkj',
-                    name: 'Allow user to access to internet',
-                    color: '#50d371'
+                    name: 'VIP services',
+                    color: '#50d371',
+                    tag: 'Only VIPs',
+                    tagColor: '#d200a5'
                 }
             ],
             users: [

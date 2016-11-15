@@ -8,8 +8,106 @@
 
 var i18n = {
     allowed: [
-        'en'
+        'en',
+        'fr'
     ],
+    fr: {
+        day: 'Jour',
+        days: 'Jours',
+        months: 'Mois',
+        list: 'Liste',
+        tasks: 'Tâches',
+        task: 'Tâche',
+        hour: 'Heure',
+        hours: 'Heures',
+        users: 'Utilisateurs',
+        unlisted: 'Non répertorié',
+        settings: 'Options',
+        hideEmptyLine: 'Masquer les lignes sans tâche',
+        description: 'Description',
+        assignedUsers: 'utilisateurs assignés',
+        assignedUser: 'utilisateur assigné',
+        from: 'Du',
+        to: 'au',
+        notSpecified: 'Non spécifiée',
+        disableLabelsMovement: 'Désactiver le mouvement des labels',
+        today: 'Aujourd\'hui',
+        thisWeek: 'Cette semaine',
+        thisMonth: 'Ce mois-ci',
+        thisYear: 'Cette année',
+        personalized: 'Personnalisé',
+        selectAll: 'Tout sélectionner',
+        always: 'toujours',
+        total: 'Total',
+        usersWhose: 'utilisateur(s) dont',
+        cycleWhose: 'cycle(s) dont',
+        inSelectedPeriod: 'dans la période sélectionnée',
+        all: 'Tout',
+        search: 'Recherche',
+        addNewTask: 'Créer une tâche',
+        addNewUser: 'Créer un utilisateur',
+        editUser: 'Modifier un utilisateur',
+        name: 'Nom',
+        required: 'Obligatoire',
+        color: 'Couleur',
+        cancel: 'Annuler',
+        create: 'Créer',
+        createAndAssign: 'Créer et assigner',
+        nameAlreadyTaken: 'Ce nom est déjà utilisé',
+        idAlreadyTaken: 'Cet ID est déjà utilisé',
+        remove: 'Supprimer',
+        assign: 'Assigner',
+        edit: 'Modifier',
+        confirm: 'Confirmer',
+        assignTaskTitle: 'Assigner des utilisateurs',
+        assignUserTitle: 'Assigner à une tâche',
+        allInputRequired: 'Tous les champs sont obligatoires',
+        requiredField: 'Ce champ est obligatoire',
+        userIsAlreadyAssigned: 'est déjà assigné à cette tâche pour cette période',
+        selectUsersToAssign: 'Sélectionnez les utilisateurs à assigner',
+        selectTasksToAssign: 'Sélectionnez les tâches à assigner',
+        editTask: 'Modifier la tâche',
+        group: 'Groupe',
+        selectGroup: 'Sélectionnez un groupe existant',
+        createNewGroup: 'Créez un nouveau groupe',
+        or: 'ou',
+        seeAll: 'Tout voir',
+        allocations: 'assignations',
+        allocation: 'assignation',
+        tag: 'Etiquette',
+        tags: 'Etiquettes',
+        groups: 'Groupes',
+        tagColor: 'Couleur de l\'étiquette',
+        filters: 'Filtres',
+        deleteAll: 'Tout supprimer',
+        addFilter: 'Créer un filtre',
+        contains: 'Contient',
+        notContains: 'Ne contient pas',
+        active: 'Actif',
+        inactive: 'Inactif',
+        notif: {
+            taskCreated: 'La tâche a été créée avec succès',
+            userCreated: 'L\'utilisateur a été créé avec succès',
+            taskRemoved: 'La tâche a correctement été supprimée',
+            userRemoved: 'L\'utilisateur a correctement été supprimé',
+            usersAssigned: 'utilisateurs ont été assignés à la tâche',
+            userAssigned: 'utilisateur a été assigné à la tâche',
+            userUnassigned: 'a correctement été désassigné',
+            noUser: '<b>Attention : </b>Aucun utilisateur n\'a été défini',
+            noTask: '<b>Attention : </b>Aucune tâche n\'a été définie',
+            taskNotExist: 'est assigné à une tâche qui n\'existe pas',
+            taskInformationsUpdated: 'La tâche a été modifiée',
+            userHasNoTask: 'n\'est assigned à aucune tâche',
+            userEdited: 'L\'utilisateur a correctement été modifié',
+            userAssignedTo: 'a été assigné à',
+            userTaskModified: 'La tâche prendra maintenant fin le',
+            filterAdded: 'Le filtre a correctement été ajouté',
+            filterEdited: 'Le filtre a correctement été modifié',
+            filterRemoved: 'Le filtre a correctement été supprimé',
+            allFiltersRemoved: 'Tous les filtres ont été supprimés'
+        }
+
+    },
     en: {
         day: 'Day',
         days: 'Days',
@@ -110,11 +208,11 @@ var i18n = {
 
 (function ($) {
     'use strict';
-
+    
     $.fn.pitScheduler = function (options) {
 
         var $scheduler = $(this);
-
+        
         /********* Settings initialization *********/
 
         options = options || {};
@@ -1239,7 +1337,7 @@ var i18n = {
                 if (filter.target == type) {
                     if (value === undefined ) {
                         if (filter.type == 'in')
-                            response = true;
+                        response = true;
                     }
                     else if (filter.type == 'out' && value.indexOf(filter.value) != -1 || (filter.type == 'in' && value && value.indexOf(filter.value) == -1)) {
                         response = true;
@@ -1534,9 +1632,9 @@ var i18n = {
                 topDistance = parseInt(topDistance);
                 leftDistance = parseInt(leftDistance);
                 var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker '+ (label_end ? 'complete' : 'start') +
-                '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px;' + task.superposed + '" data-task="' + task.id + '" data-user="' + userIndex + '">',
-                    '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + ' - ' + (task.tag || '') + '">' + task.name + $tag + '</p>',
-                    $resizer + '</div>'].join('\n');
+                            '" style="top:'+topDistance+'px;left:'+ leftDistance +'px;background-color:' + task.color + ';width:'+labelWidth+'px;' + task.superposed + '" data-task="' + task.id + '" data-user="' + userIndex + '">',
+                            '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + ' - ' + (task.tag || '') + '">' + task.name + $tag + '</p>',
+                            $resizer + '</div>'].join('\n');
                 $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
             }
 
@@ -1549,8 +1647,8 @@ var i18n = {
 
                     topDistance = parseInt(topDistance);
                     var $task = ['<div class="pts-check-color progress-bar-striped pts-line-marker end" style="top:' + topDistance + 'px;left:0px;background-color:' + task.color + ';width:'+labelWidth+'px" data-task="' + task.id + '" data-user="' + userIndex + '">',
-                        '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p>',
-                        $resizer + '</div>'].join('\n');
+                                '<p class="pts-line-marker-label text-no-select" data-toggle="tooltip" title="' + task.name + '">' + task.name + $tag + '</p>',
+                                $resizer + '</div>'].join('\n');
                     $('#content-user-' + userIndex + ' > .pts-line-marker-group-' + task.index).append($task);
                 }
             }
@@ -1656,7 +1754,7 @@ var i18n = {
             $.each(task.users, function (i) {
                 var user = settings.users[i];
                 var $head = ['<div class="pts-toolbox-user"><h4 class=" text-semibold heading-divided pts-show-user" data-user="' + user.index + '">' + user.name + '</h4>',
-                    '<table><tbody class="pts-toolbox-user-list" data-head="' + i + '"></tbody></table></div>'].join('\n');
+                            '<table><tbody class="pts-toolbox-user-list" data-head="' + i + '"></tbody></table></div>'].join('\n');
                 $('#pts-toolbox-container > .panel-body').append($head);
                 user.tasks.forEach(function (_task, taskIndex) {
                     if (_task.id === task.id) {
@@ -1664,7 +1762,7 @@ var i18n = {
                             '<tr><td><i class="glyphicon glyphicon-trash pts-task-assign-delete-user" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
                             '<i class="glyphicon glyphicon-pencil pts-user-edit-task" data-user="' + user.index + '" data-task="' + task.id + '" data-task-index="' + taskIndex + '"></i>',
                             '<b>' + settings.i18n.from + '</b> ' + moment(_task.start_date).locale(settings.locale).format('llll'),
-                            ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
+                                        ' <b>' + settings.i18n.to + '</b> ' + moment(_task.end_date).locale(settings.locale).format('llll') + '</td></tr>'].join('\n');
                         $('.pts-toolbox-user-list[data-head=' + i + ']').append($userLine);
                     }
                 });
@@ -2116,24 +2214,24 @@ var i18n = {
                 $active = (filter ? '<b style="color:green"><i class="glyphicon glyphicon-ok"></i> ' + settings.i18n.active + '</b>' :
                 '<b style="color:red"><i class="glyphicon glyphicon-remove"></i> ' + settings.i18n.inactive + '</b>'),
                 $content = [
-                    '<div class="pts-filter-container row" data-filter="' + filterId + '"><p>' + $active + '</p>',
-                    '<div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
-                    '<option value="task" ' + (filter && filter.target == 'task' ? 'selected="selected"' : '') + '>' + settings.i18n.tasks + '</option>',
-                    '<option value="user" ' + (filter && filter.target == 'user' ? 'selected="selected"' : '') + '>' + settings.i18n.users + '</option>',
-                    '<option value="tag" ' + (filter && filter.target == 'tag' ? 'selected="selected"' : '') + '>' + settings.i18n.tags + '</option>',
-                    '</select></div><div class="col-lg-12">',
-                    '<div class="input-group" data-filter="' + filterId + '"><div class="input-group-btn">',
-                    '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="position:relative;bottom:2px;">',
-                    (filter && filter.type == 'out' ? settings.i18n.notContains : settings.i18n.contains) + ' <span class="caret"></span></button>',
-                    '<ul class="dropdown-menu"><li><a class="pts-filter-switch" data-target="in" href="#">' + settings.i18n.contains + '</a></li>',
-                    '<li><a class="pts-filter-switch" data-target="out" href="#">' + settings.i18n.notContains + '</a></li></ul></div>',
-                    '<input type="text" class="form-control pts-filter-value" data-contains="' + (filter && filter.type == 'out' ? 'out' : 'in') + '" value="' + (filter ? filter.value : '') + '"></div>',
-                    '<div class="pts-filter-err" style="color:red"></div></div>',
-                    '<div class="btn-group">',
-                    '<button type="button" class="pts-delete-filter-btn btn btn-danger" data-filter="' + filterId + '">' + settings.i18n.remove + '</button>',
-                    '<button type="button" class="btn pts-submit-filter-btn pts-check-color" style="background-color:' + settings.defaultColor + '" data-filter="' + filterId + '">',
-                    settings.i18n.confirm + '</button></div></div>'
-                ].join('\n');
+                '<div class="pts-filter-container row" data-filter="' + filterId + '"><p>' + $active + '</p>',
+                '<div class="col-lg-12" style="margin-bottom: 10px"><select class="form-control pts-filter-target" data-filter="' + filterId + '">',
+                '<option value="task" ' + (filter && filter.target == 'task' ? 'selected="selected"' : '') + '>' + settings.i18n.tasks + '</option>',
+                '<option value="user" ' + (filter && filter.target == 'user' ? 'selected="selected"' : '') + '>' + settings.i18n.users + '</option>',
+                '<option value="tag" ' + (filter && filter.target == 'tag' ? 'selected="selected"' : '') + '>' + settings.i18n.tags + '</option>',
+                '</select></div><div class="col-lg-12">',
+                '<div class="input-group" data-filter="' + filterId + '"><div class="input-group-btn">',
+                '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="position:relative;bottom:2px;">',
+                (filter && filter.type == 'out' ? settings.i18n.notContains : settings.i18n.contains) + ' <span class="caret"></span></button>',
+                '<ul class="dropdown-menu"><li><a class="pts-filter-switch" data-target="in" href="#">' + settings.i18n.contains + '</a></li>',
+                '<li><a class="pts-filter-switch" data-target="out" href="#">' + settings.i18n.notContains + '</a></li></ul></div>',
+                '<input type="text" class="form-control pts-filter-value" data-contains="' + (filter && filter.type == 'out' ? 'out' : 'in') + '" value="' + (filter ? filter.value : '') + '"></div>',
+                '<div class="pts-filter-err" style="color:red"></div></div>',
+                '<div class="btn-group">',
+                '<button type="button" class="pts-delete-filter-btn btn btn-danger" data-filter="' + filterId + '">' + settings.i18n.remove + '</button>',
+                '<button type="button" class="btn pts-submit-filter-btn pts-check-color" style="background-color:' + settings.defaultColor + '" data-filter="' + filterId + '">',
+                settings.i18n.confirm + '</button></div></div>'
+            ].join('\n');
             $('.pts-toolbox-filters-list').prepend($content);
             getContrastedColor();
         };
@@ -2289,33 +2387,33 @@ var i18n = {
 
         $scheduler
             .on('click', '.close-group-panel', function () {
-                var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
-                var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
-                if ($(this).attr('data-toggle') === 'opened') {
-                    $usersPanel.children('.pts-main-group-user').css('display', 'none');
-                    $groupPanel.children('.pts-group-content').css('display', 'none');
-                    $(this).attr('data-toggle', 'closed');
-                    $(this).addClass('closed-btn');
-                } else {
-                    $usersPanel.children('.pts-main-group-user').css('display', 'block');
-                    $groupPanel.children('.pts-group-content').css('display', 'block');
-                    $(this).attr('data-toggle', 'opened');
-                    $(this).removeClass('closed-btn');
-                }
-            })
+            var $usersPanel = $('#group-container-' + $(this).attr('data-group'));
+            var $groupPanel = $('#user-group-' + $(this).attr('data-group'));
+            if ($(this).attr('data-toggle') === 'opened') {
+                $usersPanel.children('.pts-main-group-user').css('display', 'none');
+                $groupPanel.children('.pts-group-content').css('display', 'none');
+                $(this).attr('data-toggle', 'closed');
+                $(this).addClass('closed-btn');
+            } else {
+                $usersPanel.children('.pts-main-group-user').css('display', 'block');
+                $groupPanel.children('.pts-group-content').css('display', 'block');
+                $(this).attr('data-toggle', 'opened');
+                $(this).removeClass('closed-btn');
+            }
+        })
             .on('click', '.pts-column-element[data-date]', function () {
-                settings.date.selected = moment($(this).attr('data-date'));
-                updateDisplay('days');
-                generateTableLines();
-                generateGroupMainContent();
-            })
+            settings.date.selected = moment($(this).attr('data-date'));
+            updateDisplay('days');
+            generateTableLines();
+            generateGroupMainContent();
+        })
             .on('click', '.pts-close-toolbox', function () {
-                if ($(this).data('update') == true) {
-                    updateDisplay(settings.currentDisplay);
-                } else {
-                    closeToolbox();
-                }
-            })
+            if ($(this).data('update') == true) {
+                updateDisplay(settings.currentDisplay);
+            } else {
+                closeToolbox();
+            }
+        })
             .on('click', ' .pts-show-user[data-user]', function () {
                 openToolbox(null, $(this).data('user'), 'user');
             })
@@ -2356,187 +2454,187 @@ var i18n = {
                 }
             })
             .on('click', '.pts-list-range-submit', function () {
-                settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
-                settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
-                $('.pts-list-personalized-inputs-container').empty();
-                $('.pts-list-range-btn').css('display', 'block');
-                if (!settings.list.start_date || ! settings.list.end_date) return $('.pts-list-range-btn').removeClass('selected');
-                switchListRange('personalized');
-            })
+            settings.list.start_date = $('#pts-list-datetimepicker-start').data('DateTimePicker').date();
+            settings.list.end_date = $('#pts-list-datetimepicker-end').data('DateTimePicker').date();
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            if (!settings.list.start_date || ! settings.list.end_date) return $('.pts-list-range-btn').removeClass('selected');
+            switchListRange('personalized');
+        })
             .on('click', '.pts-list-range-dismiss', function () {
-                $('.pts-list-personalized-inputs-container').empty();
-                $('.pts-list-range-btn').css('display', 'block');
-                $('.pts-list-range-btn').removeClass('selected');
-            })
+            $('.pts-list-personalized-inputs-container').empty();
+            $('.pts-list-range-btn').css('display', 'block');
+            $('.pts-list-range-btn').removeClass('selected');
+        })
             .on('click', '.pts-list-user-name[data-user]', function () {
-                openToolbox(null, $(this).data('user'), 'user');
-            })
+            openToolbox(null, $(this).data('user'), 'user');
+        })
             .on('click', '.pts-add-new-task', function () {
-                openToolbox(null, null, "createTask");
-            })
+            openToolbox(null, null, "createTask");
+        })
             .on('click', '.pts-add-new-user', function () {
-                openToolbox(null, null, "createUser");
-            })
+            openToolbox(null, null, "createUser");
+        })
             .on('click', '.pts-create-task-btn', function () {
-                var name = $('#pts-add-task-input-name').val(),
-                    id = $('#pts-add-task-input-id').val(),
-                    description = $('#pts-add-task-input-description').val(),
-                    color = $('#pts-add-task-input-color').val(),
-                    tag = {
-                        name: $('#pts-add-task-input-tag').val(),
-                        color: $('#pts-add-task-input-tagColor').val()
-                    };
+            var name = $('#pts-add-task-input-name').val(),
+                id = $('#pts-add-task-input-id').val(),
+                description = $('#pts-add-task-input-description').val(),
+                color = $('#pts-add-task-input-color').val(),
+                tag = {
+                    name: $('#pts-add-task-input-tag').val(),
+                    color: $('#pts-add-task-input-tagColor').val()
+                };
 
-                $('#pts-add-task-err-name').html('');
-                $('#pts-add-task-err-id').html('');
-                $.each(settings.tasks, function (i, e) {
-                    if (e.name == name) {
-                        $('#pts-add-task-err-name').html(settings.i18n.nameAlreadyTaken);
-                        name = '';
-                    }
-                    if (e.id == id) {
-                        $('#pts-add-task-err-id').html(settings.i18n.idAlreadyTaken);
-                        name = '';
-                    }
-                });
-                if (name.length < 1) return;
-                closeToolbox();
-                createNewTask(name, id, description, color, tag, $(this).data('assign'));
-            })
+            $('#pts-add-task-err-name').html('');
+            $('#pts-add-task-err-id').html('');
+            $.each(settings.tasks, function (i, e) {
+                if (e.name == name) {
+                    $('#pts-add-task-err-name').html(settings.i18n.nameAlreadyTaken);
+                    name = '';
+                }
+                if (e.id == id) {
+                    $('#pts-add-task-err-id').html(settings.i18n.idAlreadyTaken);
+                    name = '';
+                }
+            });
+            if (name.length < 1) return;
+            closeToolbox();
+            createNewTask(name, id, description, color, tag, $(this).data('assign'));
+        })
             .on('click', '.pts-create-user-btn', function () {
-                var name = $('#pts-add-user-input-name').val(),
-                    group = $('#pts-add-user-input-group').val();
-                $('#pts-add-user-err-name').html('');
-                if (name.length < 1) return $('#pts-add-user-err-name').html(settings.i18n.requiredField);
-                closeToolbox();
-                createNewUser(name, group, $(this).data('assign'));
-            })
+            var name = $('#pts-add-user-input-name').val(),
+                group = $('#pts-add-user-input-group').val();
+            $('#pts-add-user-err-name').html('');
+            if (name.length < 1) return $('#pts-add-user-err-name').html(settings.i18n.requiredField);
+            closeToolbox();
+            createNewUser(name, group, $(this).data('assign'));
+        })
             .on('click', '.pts-delete-task-btn[data-task]', function () {
-                var $button = $(this);
+            var $button = $(this);
 
-                if ($button.attr('data-confirm') == 'false') {
-                    $button.text(settings.i18n.confirm);
-                    $button.attr('data-confirm', true);
-                    setTimeout(function () {
-                        $button.text(settings.i18n.remove);
-                        $button.attr('data-confirm', false);
-                    }, 2000);
-                    return;
-                }
-                removeTask($button.data('task'));
-            })
+            if ($button.attr('data-confirm') == 'false') {
+                $button.text(settings.i18n.confirm);
+                $button.attr('data-confirm', true);
+                setTimeout(function () {
+                    $button.text(settings.i18n.remove);
+                    $button.attr('data-confirm', false);
+                }, 2000);
+                return;
+            }
+            removeTask($button.data('task'));
+        })
             .on('click', '.pts-assign-task-btn', function () {
-                openToolbox($(this).data('task'), null, 'assignTask');
-            })
+            openToolbox($(this).data('task'), null, 'assignTask');
+        })
             .on('click', '#pts-task-assign-btn[data-task]', function () {
-                var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
-                    end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
-                    users = $('.pts-task-assign-users-list').val(),
-                    task = getTaskById($(this).data('task'));
-                if (users && start_date && end_date) {
-                    assignUsersToTask(users, task, start_date, end_date);
-                } else {
-                    $('#pts-assign-task-err').text(settings.i18n.allInputRequired);
-                }
-            })
+            var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
+                end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
+                users = $('.pts-task-assign-users-list').val(),
+                task = getTaskById($(this).data('task'));
+            if (users && start_date && end_date) {
+                assignUsersToTask(users, task, start_date, end_date);
+            } else {
+                $('#pts-assign-task-err').text(settings.i18n.allInputRequired);
+            }
+        })
             .on('click', '#pts-user-assign-btn[data-user]', function () {
-                var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
-                    end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
-                    tasks = $('.pts-user-assign-tasks-list').val(),
-                    user = settings.users[$(this).data('user')];
+            var start_date = $('.pts-datetimepicker-start').data('DateTimePicker').date(),
+                end_date = $('.pts-datetimepicker-end').data('DateTimePicker').date(),
+                tasks = $('.pts-user-assign-tasks-list').val(),
+                user = settings.users[$(this).data('user')];
 
-                if (user && tasks && start_date && end_date) {
-                    assignTasksToUser(user, tasks, start_date, end_date);
-                } else {
-                    $('#pts-assign-user-err').text(settings.i18n.allInputRequired);
-                }
-            })
+            if (user && tasks && start_date && end_date) {
+                assignTasksToUser(user, tasks, start_date, end_date);
+            } else {
+                $('#pts-assign-user-err').text(settings.i18n.allInputRequired);
+            }
+        })
             .on('click', '.pts-main-group-user, .pts-scheduler-container', function (e) {
-                if (e.target !== this || $('#pts-toolbox-container[data-toggle=opened]').length <= 0) return;
-                if ($('.pts-close-toolbox').data('update') == true) {
-                    updateDisplay(settings.currentDisplay);
-                } else {
-                    closeToolbox();
-                }
-            })
+            if (e.target !== this || $('#pts-toolbox-container[data-toggle=opened]').length <= 0) return;
+            if ($('.pts-close-toolbox').data('update') == true) {
+                updateDisplay(settings.currentDisplay);
+            } else {
+                closeToolbox();
+            }
+        })
             .on('click', '.pts-task-assign-delete-user[data-user][data-task][data-task-index]', function () {
-                var userIndex = $(this).data('user'),
-                    task = getTaskById($(this).data('task')),
-                    taskIndex = $(this).data('task-index');
+            var userIndex = $(this).data('user'),
+                task = getTaskById($(this).data('task')),
+                taskIndex = $(this).data('task-index');
 
-                if (settings.users[userIndex].tasks[taskIndex].id == task.id) {
-                    deleteTaskFromUser(settings.users[userIndex], task, taskIndex);
-                    $(this).parent('td').remove();
-                }
+            if (settings.users[userIndex].tasks[taskIndex].id == task.id) {
+                deleteTaskFromUser(settings.users[userIndex], task, taskIndex);
+                $(this).parent('td').remove();
+            }
 
-            })
+        })
             .on('click', '.pts-edit-task-btn[data-task]', function () {
-                openToolbox($(this).data('task'), null, 'editTask');
-            })
+            openToolbox($(this).data('task'), null, 'editTask');
+        })
             .on('click', '.pts-edit-task-confirm-btn[data-task]', function () {
-                var task = getTaskById($(this).data('task')),
-                    newData = {};
+            var task = getTaskById($(this).data('task')),
+                newData = {};
 
-                newData.name = $('#pts-edit-task-input-name').val();
-                newData.color = $('#pts-edit-task-input-color').val();
-                newData.description = $('#pts-edit-task-input-description').val();
-                newData.tag = $('#pts-edit-task-input-tag').val();
-                newData.tagColor = $('#pts-edit-task-input-tagColor').val();
-                editTask(task, newData);
-            })
+            newData.name = $('#pts-edit-task-input-name').val();
+            newData.color = $('#pts-edit-task-input-color').val();
+            newData.description = $('#pts-edit-task-input-description').val();
+            newData.tag = $('#pts-edit-task-input-tag').val();
+            newData.tagColor = $('#pts-edit-task-input-tagColor').val();
+            editTask(task, newData);
+        })
             .on('click', '.pts-toolbox-back-btn[data-target]', function () {
-                openToolbox($(this).data('task'), $(this).data('user'), $(this).data('target'));
-            })
+            openToolbox($(this).data('task'), $(this).data('user'), $(this).data('target'));
+        })
             .on('click', '.pts-delete-user-btn[data-user]', function () {
-                var $button = $(this),
-                    user = settings.users[$button.data('user')];
+            var $button = $(this),
+                user = settings.users[$button.data('user')];
 
-                if ($button.attr('data-confirm') == 'false') {
-                    $button.text(settings.i18n.confirm);
-                    $button.attr('data-confirm', true);
-                    setTimeout(function () {
-                        $button.text(settings.i18n.remove);
-                        $button.attr('data-confirm', false);
-                    }, 2000);
-                    return;
-                }
-                if (user) {
-                    removeUser(user);
-                }
-            })
+            if ($button.attr('data-confirm') == 'false') {
+                $button.text(settings.i18n.confirm);
+                $button.attr('data-confirm', true);
+                setTimeout(function () {
+                    $button.text(settings.i18n.remove);
+                    $button.attr('data-confirm', false);
+                }, 2000);
+                return;
+            }
+            if (user) {
+                removeUser(user);
+            }
+        })
             .on('click', '.pts-edit-user-btn[data-user]', function () {
-                openToolbox(null, $(this).data('user'), 'editUser');
-            })
+            openToolbox(null, $(this).data('user'), 'editUser');
+        })
             .on('click', '.pts-assign-user-btn[data-user]', function () {
-                openToolbox(null, $(this).data('user'), 'assignUser');
-            })
+            openToolbox(null, $(this).data('user'), 'assignUser');
+        })
             .on('click', '.pts-edit-user-confirm-btn[data-user]', function () {
-                var newData = {};
+            var newData = {};
 
-                newData.name = $('#pts-edit-user-input-name').val();
-                newData.group = $('#pts-edit-user-input-group').val();
-                if (newData.name.length <= 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
-                editUser($(this).data('user'), newData);
-            })
+            newData.name = $('#pts-edit-user-input-name').val();
+            newData.group = $('#pts-edit-user-input-group').val();
+            if (newData.name.length <= 1) return $('#pts-edit-user-err-name').html(settings.i18n.requiredField);
+            editUser($(this).data('user'), newData);
+        })
             .on('click', '.pts-button-see-all', function (e) {
-                e.stopPropagation();
-                openToolbox(null, null, 'seeAll');
-            })
+            e.stopPropagation();
+            openToolbox(null, null, 'seeAll');
+        })
             .on('click', '.pts-notif-undo-btn[data-notification]', function (e) {
-                e.stopPropagation();
-                var notifId = $(this).data('notification'),
-                    undo = settings.undo[notifId];
-                if (undo) {
-                    settings.tasks = undo.tasks;
-                    settings.users = undo.users;
-                    settings.groups = undo.groups;
-                    getUsersTasksInTasks();
-                    initUsers();
-                    initGroup();
-                    updateDisplay(settings.currentDisplay);
-                    $('.alert[data-id=' + notifId + ']').remove();
-                }
-            })
+            e.stopPropagation();
+            var notifId = $(this).data('notification'),
+                undo = settings.undo[notifId];
+            if (undo) {
+                settings.tasks = undo.tasks;
+                settings.users = undo.users;
+                settings.groups = undo.groups;
+                getUsersTasksInTasks();
+                initUsers();
+                initGroup();
+                updateDisplay(settings.currentDisplay);
+                $('.alert[data-id=' + notifId + ']').remove();
+            }
+        })
             .on('click', '.pts-user-edit-task[data-task][data-user]', function (e) {
                 $('td').css('display', 'table-cell');
                 $(this).parent().css('display', 'none');
@@ -2561,13 +2659,13 @@ var i18n = {
                 openToolbox(null, null, 'filters');
             })
             .on('click', '.pts-create-filter', function (e) {
-                generateNewFilter();
+               generateNewFilter();
             })
             .on('click', '.pts-filter-switch[data-target]', function (e) {
-                var target = $(this).data('target'),
-                    $parent = $(this).closest('.input-group-btn'),
-                    $input = $parent.parent().children('input.pts-filter-value'),
-                    $button = $parent.children('button.dropdown-toggle');
+               var target = $(this).data('target'),
+                   $parent = $(this).closest('.input-group-btn'),
+                   $input = $parent.parent().children('input.pts-filter-value'),
+                   $button = $parent.children('button.dropdown-toggle');
                 $button.html((target == 'in' ? settings.i18n.contains : settings.i18n.notContains) + ' <span class="caret"></span>');
                 $input.data('contains', target);
 
@@ -2579,7 +2677,7 @@ var i18n = {
                         target: $('.pts-filter-target[data-filter=' + $(this).data('filter') + ']').val(),
                         value: $parent.children('input.pts-filter-value').val(),
                         type: $parent.children('input.pts-filter-value').data('contains')
-                    };
+                };
                 if (!filter.value) {
                     return $parent.parent().children('.pts-filter-err').html(settings.i18n.allInputRequired);
                 } else {
@@ -2641,20 +2739,20 @@ var i18n = {
                 });
             })
             .on('mousedown', '.pts-task-resizer[data-task][data-user][data-end]', function (e) {
-                e.stopPropagation();
-                settings.resize = {
-                    origin:  $(this).offset().left,
-                    element: $(this).parent(),
-                    count: 0,
-                    task: $(this).data('task'),
-                    user: $(this).data('user'),
-                    end_date: $(this).data('end'),
-                    timeout: setInterval(function () {
-                        $(document).css('cursor', 'e-resize');
-                    }, 200)
-                };
-            });
-
+            e.stopPropagation();
+            settings.resize = {
+                origin:  $(this).offset().left,
+                element: $(this).parent(),
+                count: 0,
+                task: $(this).data('task'),
+                user: $(this).data('user'),
+                end_date: $(this).data('end'),
+                timeout: setInterval(function () {
+                    $(document).css('cursor', 'e-resize');
+                }, 200)
+            };
+        });
+        
         /********* callback functions *********/
 
         $.fn.pitScheduler.default = function () {
@@ -2718,6 +2816,6 @@ var i18n = {
             };
         };
 
-        return $scheduler;
+                return $scheduler;
     };
 }(jQuery));
