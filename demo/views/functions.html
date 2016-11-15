@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="chuck-durst">
+
+    <title>pit-scheduler</title>
+
+    <link  rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link  rel="stylesheet" type="text/css" href="../css/demo.css">
+
+</head>
+
+<body data-spy="scroll" data-target=".bs-sidebar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">pit-scheduler</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../index.html">Pit-scheduler</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="installing.html">Installing</a></li>
+                <li><a href="options.html">Options</a></li>
+                <li class="active"><a href="functions.html">Functions</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="changelog.html">Changelog</a></li>
+                <li><a href="faq.html">FAQs</a></li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="https://github.com/chuck-durst/pit-scheduler">
+                            <img width="20" src="http://www.uidownload.com/files/236/359/742/code-coding-development-github-program-programming-icon.png" alt="github"> Github
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="main-container container-fluid row">
+    <div class="sidebar-container col-sm-3 hidden-xs">
+        <div class="bs-sidebar hidden-print affix well" role="complementary">
+            <ul class="nav bs-sidenav">
+                <li class="active"><a href="#options">options</a></li>
+                <li><a href="#hide">hide</a></li>
+                <li><a href="#show">show</a></li>
+                <li><a href="#date">date</a></li>
+                <li><a href="#locale">locale</a></li>
+                <li><a href="#locale">viewMode</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-8 col-xs-12">
+        <h1>Functions</h1>
+        <h4>The default functions below can be called after having declared the scheduler and let you access to some useful features.</h4>
+       Follow this pattern to use them:
+        <pre><code>$.fn.pitScheduler.default().functionName();</code></pre>
+        <section id="options">
+            <h2>options()</h2>
+            <pre>Accepts: 'users', 'tasks', null</pre>
+            Using this function with no parameters will return the <b>whole settings variable</b> that contains the major part of data used with the <code>scheduler</code>.<br>
+            However, you can use the arguments 'users' or 'tasks' to only get <code>users</code> or <code>tasks</code> data. <br>
+            <div class="alert alert-warning" role="alert"><b>Note:</b> 'Settings' is an object that contains not only the main data but also all the data required to make the <code>scheduler</code> works. These data will probably be of no use to you. </div>
+        </section>
+        <section id="hide">
+            <h2>hide()</h2>
+            <pre>Accepts: null</pre>
+            Calling this function will hide the <code>scheduler</code> using a <code>display:none</code> style. <br>
+        </section>
+        <section id="show">
+            <h2>show()</h2>
+            <pre>Accepts: null</pre>
+            Calling this function with simply show the <code>scheduler</code> up again. <br>
+        </section>
+        <section id="date">
+            <h2>date()</h2>
+            <pre>Accepts: valid Date, null</pre>
+            Calling this function <b>with no argument</b> will simply return the current <code>date</code> used by the <code>scheduler</code>.<br>
+            If you want to set a new <code>date</code>, simply call this function with the requested <code>date</code> as argument.<br>
+        </section>
+        <section id="locale">
+            <h2>locale()</h2>
+            <pre>Accepts: 'en', 'fr', null</pre>
+            Calling this function <b>with no argument</b> will simply return the current <code>locale</code> used by the <code>scheduler</code>.<br>
+            You can also use this function to set a new <code>locale</code> by passing it as argument.<br>
+            <div class="alert alert-warning" role="alert"><b>Note:</b> Before doing anything, be sure that the <code>locale</code> exist and has been correctly defined!</div>
+        </section>
+        <section id="viewMode">
+            <h2>viewMode()</h2>
+            <pre>Accepts: 'days', 'months', 'list', null</pre>
+            Calling this function <b>with no argument</b> will simply return the current <code>viewMode</code> used by the <code>scheduler</code>.<br>
+            You can also use this function to set a new <code>viewMode</code> by passing it as argument. It will automatically update the <code>scheduler</code>.<br>
+        </section>
+        <div class="blank-footer"></div>
+    </div>
+</div>
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>
