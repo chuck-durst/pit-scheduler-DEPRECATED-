@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="chuck-durst">
+
+    <title>pit-scheduler</title>
+
+    <link  rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link  rel="stylesheet" type="text/css" href="../css/demo.css">
+
+</head>
+
+<body data-spy="scroll" data-target=".bs-sidebar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">pit-scheduler</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../index.html">Pit-scheduler</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="installing.html">Installing</a></li>
+                <li><a href="options.html">Options</a></li>
+                <li><a href="functions.html">Functions</a></li>
+                <li class="active"><a href="events.html">Events</a></li>
+                <li><a href="changelog.html">Changelog</a></li>
+                <li><a href="faq.html">FAQs</a></li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="https://github.com/chuck-durst/pit-scheduler">
+                            <img width="20" src="http://www.uidownload.com/files/236/359/742/code-coding-development-github-program-programming-icon.png" alt="github"> Github
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="main-container container-fluid row">
+    <div class="sidebar-container col-sm-3 hidden-xs">
+        <div class="bs-sidebar hidden-print affix well" role="complementary">
+            <ul class="nav bs-sidenav">
+                <li class="active"><a href="#onChange">onChange</a></li>
+                <li><a href="#onTaskCreation">onTaskCreation</a></li>
+                <li><a href="#onTaskAssignation">onTaskAssignation</a></li>
+                <li><a href="#onTaskEdition">onTaskEdition</a></li>
+                <li><a href="#onTaskRemoval">onTaskRemoval</a></li>
+                <li><a href="#onUserCreation">onUserCreation</a></li>
+                <li><a href="#onUserEdition">onUserEdition</a></li>
+                <li><a href="#onUserTaskDeletion">onUserTaskDeletion</a></li>
+                <li><a href="#onUserRemoval">onUserRemoval</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-8 col-xs-12">
+        <h1>Events</h1>
+        <h4>The event functions is one of the most important features. These are callback functions that let you do stuff after each modification.</h4>
+        <h5>For example, you can call a function on each user update that will synchronize the changes with your database using an Ajax call!</h5>
+        <br> All that functions are considered as options and must be declared <b>at the same time</b> than the other options:
+        <pre><code>$("#pit-scheduler").pitScheduler({ /** Options and events **/});</code></pre>
+        <div class="alert alert-success" role="alert"><b>Note:</b> All the event functions first argument is the <b>'settings' variable</b> of the scheduler. This object allows you to access all the needed data to do whatever you want!</div>
+        <section id="onChange">
+            <h2>onChange()</h2>
+            <pre><code>/** ... **/<br>onChange: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This is the <b>most important</b> event function. It is called after <b>EVERY</b> data update that can append inside the <code>scheduler</code>. <br>
+            This also means that this function will be called <b>at the same time</b> than any other event function! <br>
+        </section>
+        <section id="onTaskCreation">
+            <h2>onTaskCreation()</h2>
+            <pre><code>/** ... **/<br>onTaskCreation: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>task</code> <b>creation</b>. <br>
+        </section>
+        <section id="onTaskAssignation">
+            <h2>onTaskAssignation()</h2>
+            <pre><code>/** ... **/<br>onTaskAssignation: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>task</code> <b>assignation</b>. <br>
+        </section>
+        <section id="onTaskEdition">
+            <h2>onTaskEdition()</h2>
+            <pre><code>/** ... **/<br>onTaskEdition: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>task</code> <b>edition</b>. <br>
+        </section>
+        <section id="onTaskRemoval">
+            <h2>onTaskRemoval()</h2>
+            <pre><code>/** ... **/<br>onTaskRemoval: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>task</code> <b>deletion</b>. <br>
+        </section>
+        <section id="onUserCreation">
+            <h2>onUserCreation()</h2>
+            <pre><code>/** ... **/<br>onUserCreation: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>user</code> <b>creation</b>. <br>
+        </section>
+        <section id="onUserEdition">
+            <h2>onUserEdition()</h2>
+            <pre><code>/** ... **/<br>onUserEdition: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>user</code> <b>edition</b>. <br>
+        </section>
+        <section id="onUserTaskDeletion">
+            <h2>onUserTaskDeletion()</h2>
+            <pre><code>/** ... **/<br>onUserTaskDeletion: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>user task</code> <b>deletion</b>. <br>
+        </section>
+        <section id="onUserRemoval">
+            <h2>onUserRemoval()</h2>
+            <pre><code>/** ... **/<br>onUserRemoval: function (settings) {<br> /** Your stuff here **/<br>},</code></pre>
+            This event will be called after each <code>user</code> <b>deletion</b>. <br>
+        </section>
+        <div class="blank-footer"></div>
+    </div>
+</div>
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "pit-scheduler",
+  "version": "2.0.0",
+  "description": "A complet scheduler build with jQuery and Boostrap",
+  "main": "__assets__/jquery.pitscheduler.js",
+  "dependencies": {
+    "bootstrap-datetimepicker": "^0.0.7",
+    "jquery": "^3.1.1",
+    "momentjs": "^1.1.17",
+    "bootstrap": "^3.3.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuck-durst/pit-scheduler.git"
+  },
+  "keywords": [
+    "scheduler",
+    "jquery",
+    "bootstrap",
+    "organizer",
+    "calendar",
+    "permission",
+    "task",
+    "planning"
+  ],
+  "author": "Chuck Durst",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chuck-durst/pit-scheduler/issues"
+  },
+  "homepage": "https://github.com/chuck-durst/pit-scheduler#readme"
+}

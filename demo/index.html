@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="chuck-durst">
+
+    <title>pit-scheduler</title>
+
+    <link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link  rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
+    <link  rel="stylesheet" type="text/css" href="../dist/css/pitscheduler.min.css">
+    <link  rel="stylesheet" type="text/css" href="css/demo.css">
+</head>
+
+<body data-spy="scroll" data-target=".bs-sidebar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">pit-scheduler</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Pit-scheduler</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="views/installing.html">Installing</a></li>
+                <li><a href="views/options.html">Options</a></li>
+                <li><a href="views/functions.html">Functions</a></li>
+                <li><a href="views/events.html">Events</a></li>
+                <li><a href="views/changelog.html">Changelog</a></li>
+                <li><a href="views/faq.html">FAQs</a></li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                       <a href="https://github.com/chuck-durst/pit-scheduler">
+                           <img width="20" src="http://www.uidownload.com/files/236/359/742/code-coding-development-github-program-programming-icon.png" alt="github"> Github
+                       </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="main-container container-fluid row">
+    <div class="demo-container">
+        <h1 class="text-center">jQuery Pit-scheduler v2.O</h1><br>
+        <h4 class="text-center">Pit-scheduler is a jQuery plugin that lets you manage tasks through a complete interface. It has been developed to be used for permissions management but is compatible with both usages.</h4><br>
+        <div id="pit-scheduler"></div>
+    </div>
+</div>
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/moment-with-locales.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="../dist/js/pitscheduler.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#pit-scheduler").pitScheduler({
+            locale: 'en',
+            defaultDisplay: 'months',
+            hideEmptyLines: true,
+            disableLabelsMovement: false,
+            defaultGroupName: 'Default group',
+            defaultDate: '2016-09-01 16:30',
+            disableNotifications: false,
+            notificationDuration: 4000,
+            hideSpinner: true,
+            onChange: '',
+            onTaskCreation: '',
+            onUserCreation: '',
+            onTaskRemoval: '',
+            onUserRemoval: '',
+            onUserEdition: '',
+            onTaskAssignation: '',
+            onUserTaskDeletion: '',
+            onTaskEdition: '',
+            disableUndo: false,
+            resizeTask: true,
+            tasks:  [
+                {
+                    id: 'djJ3d7sjk928S0',
+                    name: 'Jacuzzi access',
+                    description: 'Allows users to access to the jacuzzi',
+                    color: '#fcd720',
+                    tag: 'limited places',
+                    tagColor: '#50d371'
+                },
+                {
+                    id: 'fJD67Bd4jh7',
+                    name: 'SPA access',
+                    description: 'Allows usesr to access to the SPA',
+                    color: '#E91E63'
+                },
+                {
+                    id: 'dj8aA9nL0Su7',
+                    name: 'Internet access',
+                    description: 'Allows users to access to internet',
+                    color: '#536DFE'
+                },
+                {
+                    id: 'fLKd67zPkj',
+                    name: 'VIP services',
+                    color: '#50d371',
+                    tag: 'Only VIPs',
+                    tagColor: '#d200a5'
+                }
+            ],
+            users: [
+                   {
+                    name: 'Ai WeiWei',
+                    group: 'Group A',
+                    tasks: [
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2015-09-10 00:00',
+                            end_date: '2016-09-20 00:00'
+                        },
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-28 6:00',
+                            end_date: '2017-09-28 18:30'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-09-08 10:40',
+                            end_date: '2016-09-21 16:00'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-09-23 10:10',
+                            end_date: '2016-09-29 16:50'
+                        },
+                        {
+                            id: 'fLKd67zPkj',
+                            start_date: '2016-09-10 08:00',
+                            end_date: '2016-09-12 20:00'
+                        }
+                    ]
+                },
+                {
+                    name: 'Michel Petrucciani',
+                    group: 'Group A',
+                    tasks: [
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-01 06:00',
+                            end_date: '2016-09-04 00:00'
+                        },
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-04 11:00',
+                            end_date: '2016-09-08 18:00'
+                        },
+                        {
+                            id: 'fLKd67zPkj',
+                            start_date: '2016-09-07 17:00',
+                            end_date: '2016-09-11 20:00'
+                        }
+                    ]
+                },
+                {
+                    name: 'Jimi Hendrix',
+                    group: 'Group B',
+                    tasks: [
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-01 02:30',
+                            end_date: '2016-09-03 09:00'
+                        },
+                        {
+                            id: 'djJ3d7sjk928S0',
+                            start_date: '2016-09-04 17:30',
+                            end_date: '2016-09-24 07:42'
+                        },
+                        {
+                            id: 'dj8aA9nL0Su7',
+                            start_date: '2016-09-02 17:30',
+                            end_date: '2016-09-11 07:42'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-09-13 10:00',
+                            end_date: '2016-09-26 16:00'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-09-30 10:00',
+                            end_date: '2016-10-05 16:00'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-10-23 10:00',
+                            end_date: '2016-11-04 16:00'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-11-06 10:00',
+                            end_date: '2016-11-09 16:00'
+                        },
+                        {
+                            id: 'fJD67Bd4jh7',
+                            start_date: '2016-11-10 10:00',
+                            end_date: '2016-11-21 16:00'
+                        },
+                        {
+                            id: 'fLKd67zPkj',
+                            start_date: '2016-09-01 08:00',
+                            end_date: '2016-09-10 18:00'
+                        },
+                        {
+                            id: 'fLKd67zPkj',
+                            start_date: '2016-09-12 08:00',
+                            end_date: '2016-09-21 18:00'
+                        }
+                    ]
+                }
+            ]
+        });
+
+    });
+
+</script>
+</body>
+</html>
