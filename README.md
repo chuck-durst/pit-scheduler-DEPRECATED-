@@ -1,4 +1,4 @@
-# jQuery pit-scheduler V2
+# jQuery pit-scheduler V2 [DEPRECATED]
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/payintech/jquery-easy-search-ui/master/LICENSE)
 ### Pit-scheduler is a jQuery plugin that lets you manage tasks through a complete interface. It has been developed to be used for permissions management but is compatible with both usages.
 
